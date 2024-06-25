@@ -1,0 +1,15 @@
+export const color = {
+  primary:  'rgb(249,249,249)',
+  secondary: 'rgb(219,48,34)',
+  white: 'rgb(255, 255, 255)',
+  darkGray: 'rgb(155,155,155)',
+  veryDarkGray: 'rgb(45,45,45)',
+  success: 'rgb(42,169,82)',
+  error: 'rgb(240,31,14)',
+  lightOrange: 'rgb(255,186,73)',
+  mostlyBlack: 'rgb(34,34,34)',
+  transparent: 'rgba(0, 0, 0, 0)',
+  customTransparent: opacity => `rgba(0, 0, 0,${opacity ?? 1})`,
+  customWhite: opacity => `rgba(255, 255, 255,${opacity ?? 1})`,
+  customBlack: opacity => `rgba(0, 0, 0,${opacity ?? 1})`,
+};

@@ -1,0 +1,22 @@
+{
+  "demo_screen": {
+    "screen_title": "Demo screen"
+  },
+  "login_screen": {
+    "button_title": "Next",
+    "heading_text": "Enter Your Mobile Number to get otp.",
+    "placeHolder_text": "Enter mobile number",
+    "placeHolder_textTwo": "Enter your name",
+    "header_otp": "We have sent OTP to verify your mobile number."
+  },
+  "home_Screen": {
+    "app_name": "WIA ",
+    "title": "Referral List",
+    "courses": "courses :",
+    "welcome": "Welcome"
+  },
+  "profile_Screen": {
+    "description": "Are you sure you want to delete your account?",
+    "title": "Delete Account?"
+  }
+}
