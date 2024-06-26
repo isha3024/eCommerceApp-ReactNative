@@ -4,7 +4,7 @@ import { color, fontSize, fonts } from '../../theme'
 import * as styles from './styles'
 import { Text } from '../text'
 
-const InputField = ({
+export const InputField = ({
   error,
   placeholder,
   value,
@@ -89,5 +89,3 @@ const InputField = ({
     </Animated.View>
   )
 }
-
-export default InputField

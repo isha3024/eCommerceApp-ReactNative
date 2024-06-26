@@ -8,14 +8,17 @@ export const mainBottomContainer = () => ({
   borderTopLeftRadius: size.moderateScale(12),
   borderTopRightRadius: size.moderateScale(12),
   backgroundColor: color.white,
-  elevation: size.moderateScale(10)
+  elevation: size.moderateScale(10),
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  width: size.deviceWidth,
 })
 
 export const bottomBarItem = () => ({
   alignItems: 'center',
 })
-
-
 
 export const iconView = () => ({
   alignItems: 'center',

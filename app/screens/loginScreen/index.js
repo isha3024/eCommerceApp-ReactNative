@@ -2,19 +2,16 @@ import React, { useState } from 'react'
 import { LayoutAnimation, Platform, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
-import { Button, Screen, Text } from '../../components'
 import * as styles from './styles'
-import Header from '../../components/header'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
-import Title from '../../components/title'
-import InputField from '../../components/inputField'
 import { EmailValidation } from '../../utils/functions'
+import { Button, Header, InputField, Screen, Text, Title } from '../../components'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
 
-const LoginScreen = () => {
+export const LoginScreen = () => {
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
   
@@ -37,7 +34,7 @@ const LoginScreen = () => {
         email: '',
         password: ''
       })
-      navigation.navigate('homeScreen')
+      navigation.navigate('homeStackNavigation')
     }
   }
 
@@ -139,5 +136,3 @@ const LoginScreen = () => {
     </Screen>
   )
 }
-
-export default LoginScreen

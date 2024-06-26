@@ -24,15 +24,16 @@ export const Screen = props => {
     keyboardShouldPersistTaps,
     extraScrollHeight,
     loading,
+    translucent
   } = props;
 
   if (withScroll) {
     return (
       <SafeAreaView style={styles.mainContainer(bgColor)}>
         <StatusBar
-          translucent
+          translucent={translucent}
           backgroundColor={bgColor ?? color.white}
-          barStyle={bgColor ? 'dark-content' : 'dark-content'}
+          barStyle={bgColor ? 'dark-content' : 'light-content'}
         />
         {loading && <Loader />}
         <KeyboardAwareScrollView
@@ -56,7 +57,7 @@ export const Screen = props => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <SafeAreaView style={styles.container(bgColor)}>
           <StatusBar
-            translucent
+            translucent={translucent}
             backgroundColor={bgColor ?? color.white}
             barStyle={bgColor ? 'dark-content' : 'dark-content'}
           />

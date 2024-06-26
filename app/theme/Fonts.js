@@ -6,6 +6,7 @@ export const fonts = {
   poppinsBold: 'Poppins-Bold', // 700
   poppinsExBold: 'Poppins-ExBold', // 800
   
+  metropolisBlack: 'Metropolis-Black',
   metropolisLight: 'Metropolis-Light', // 300
   metropolisRegular: 'Metropolis-Regular', // 400
   metropolisMedium: 'Metropolis-Medium', // 500

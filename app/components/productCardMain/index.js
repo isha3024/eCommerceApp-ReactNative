@@ -4,10 +4,10 @@ import { Image, TouchableOpacity, View } from 'react-native'
 import * as styles from './styles'
 import { IcClose, IcFilledHeart, IcHeart, color, size } from '../../theme'
 import { Text } from '../text'
-import StarRatings from '../starRatings'
+import { StarRatings } from '../starRatings'
 
 
-const ProductCardMain = ({
+export const ProductCardMain = ({
   productHorizontal,
   brandName,
   productTitle,
@@ -36,42 +36,42 @@ const ProductCardMain = ({
   }
 
   if (!productHorizontal) {
-    return(
-<TouchableOpacity style={styles.mainProductCard()} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
-      <View style={styles.imageView()}>
-        <Image source={productImage} style={styles.image()} />
-        <TouchableOpacity style={[styles.addToFavoriteBtn(), flotingBtnStyle]} onPress={onAddToFavorite}>
+    return (
+      <TouchableOpacity style={styles.mainProductCard()} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
+        <View style={styles.imageView()}>
+          <Image source={productImage} style={styles.image()} />
+          <TouchableOpacity style={[styles.addToFavoriteBtn(), flotingBtnStyle]} onPress={onAddToFavorite}>
+            {
+              filledHeart ?
+                (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+                : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+            }
+          </TouchableOpacity>
+          <View style={styles.badge(saleProduct, newProduct)}>
+            {
+              saleProduct ? (
+                <Text style={styles.badgeText()}>-{saleProduct}%</Text>
+              )
+                : newProduct ? (
+                  <Text style={styles.badgeText()}>NEW</Text>
+                ) : null
+            }
+          </View>
           {
-            filledHeart ?
-              (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-              : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-          }
-        </TouchableOpacity>
-        <View style={styles.badge(saleProduct, newProduct)}>
-          {
-            saleProduct ? (
-              <Text style={styles.badgeText()}>-{saleProduct}%</Text>
+            topRightIcon && (
+              <TouchableOpacity style={styles.closeIcon()}>
+                <IcClose width={size.moderateScale(12)} height={size.moderateScale(12)} fill={color.darkGray} />
+              </TouchableOpacity>
             )
-              : newProduct ? (
-                <Text style={styles.badgeText()}>New</Text>
-              ) : null
           }
         </View>
-        {
-          topRightIcon && (
-            <TouchableOpacity style={styles.closeIcon()}>
-              <IcClose width={size.moderateScale(12)} height={size.moderateScale(12)} fill={color.darkGray}  />
-            </TouchableOpacity>
-          )
-        }
-      </View>
-      <View style={styles.productInfo()}>
-        <View style={styles.ratingsContainer()}>
-          <StarRatings ratings={ratings} ratingsCounts={ratingsCounts} />
-        </View>
-        <Text style={styles.brandName()}>{brandName}</Text>
-        <Text style={styles.productTitle()}>{productTitle}</Text>
-        {
+        <View style={styles.productInfo()}>
+          <View style={styles.ratingsContainer()}>
+            <StarRatings ratings={ratings} ratingsCounts={ratingsCounts} />
+          </View>
+          <Text style={styles.brandName()}>{brandName}</Text>
+          <Text style={styles.productTitle()}>{productTitle}</Text>
+          {
             oldPrice && newPrice ? (
               <View style={styles.priceContainer()}>
                 <Text style={styles.oldPrice()}>${oldPrice}</Text>
@@ -79,9 +79,9 @@ const ProductCardMain = ({
               </View>
             ) : (<Text style={styles.regularPrice()}>{regularPrice}$</Text>)
           }
-      </View>
-    </TouchableOpacity>
-    );  
+        </View>
+      </TouchableOpacity>
+    );
   }
   else {
     return (
@@ -89,15 +89,15 @@ const ProductCardMain = ({
         <View style={styles.imageViewHorizontal()}>
           <Image source={productImage} style={styles.imageHorizontal()} />
           <View style={styles.badgeHorizontal(saleProduct, newProduct)}>
-          {
-            saleProduct ? (
-              <Text style={styles.badgeText()}>-{saleProduct}%</Text>
-            )
-            : newProduct ? (
-              <Text style={styles.badgeText()}>NEW</Text>
-            ) : (<Text></Text>)
-          }
-        </View>
+            {
+              saleProduct ? (
+                <Text style={styles.badgeText()}>-{saleProduct}%</Text>
+              )
+                : newProduct ? (
+                  <Text style={styles.badgeText()}>NEW</Text>
+                ) : (<Text></Text>)
+            }
+          </View>
         </View>
         <View style={styles.productInfoHorizontal()}>
           <Text style={styles.productTitle()}>{productTitle}</Text>
@@ -111,8 +111,8 @@ const ProductCardMain = ({
               </View>
             ) : (<Text style={styles.regularPrice()}>{regularPrice}$</Text>)
           }
-          
-          <TouchableOpacity style={[styles.addToFavoriteBtnHorizontal(),flotingBtnStyle]} onPress={onAddToFavorite}>
+
+          <TouchableOpacity style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
             {
               filledHeart ?
                 (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
@@ -120,12 +120,10 @@ const ProductCardMain = ({
             }
           </TouchableOpacity>
           <TouchableOpacity style={styles.closeIcon()}>
-            <IcClose width={size.moderateScale(12)} height={size.moderateScale(12)} fill={color.darkGray}  />
+            <IcClose width={size.moderateScale(12)} height={size.moderateScale(12)} fill={color.darkGray} />
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
   }
 }
-
-export default ProductCardMain

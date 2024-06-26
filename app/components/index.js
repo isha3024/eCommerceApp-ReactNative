@@ -3,3 +3,8 @@ export * from './button';
 export * from './screen';
 export * from './title'
 export * from './inputField'
+export * from './header'
+export * from './loader'
+export * from './starRatings'
+export * from './productCardMain'
+export * from './customBottomTabBar'

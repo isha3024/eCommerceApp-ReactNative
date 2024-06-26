@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
 import { View } from 'react-native'
-import Header from '../../components/header'
 import * as styles from './styles'
 import { IcBackArrow, IcClose, color, size } from '../../theme'
-import Title from '../../components/title'
-import InputField from '../../components/inputField'
 import { useNavigation } from '@react-navigation/native'
-import { Button, Screen, Text } from '../../components'
+import { Button, Header, InputField, Screen, Text, Title } from '../../components'
 import { EmailValidation } from '../../utils/functions'
 
-const ForgetPassword = () => {
+export const ForgetPassword = () => {
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -90,5 +87,3 @@ const ForgetPassword = () => {
       </Screen>
   )
 }
-
-export default ForgetPassword

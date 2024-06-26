@@ -19,6 +19,7 @@ export const fontSize = {
   littleLarge: size.moderateScale(31),
   middleLarge: size.moderateScale(34),
   large: size.moderateScale(39),
+  extraLarge: size.moderateScale(48)
 };
 // available font size in design file
 // 8 —> littleTiny

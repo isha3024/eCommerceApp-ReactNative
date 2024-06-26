@@ -1,15 +1,14 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen } from '../../screens';
-
+import { ShopScreen } from '../../screens';
 
 
 const Stack = createNativeStackNavigator();
 
-export const HomeStackNavigation = () => {
+export const ShopStackNavigation = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen component={HomeScreen} name='homeScreen'/>
+      <Stack.Screen component={ShopScreen} name='shopScreen'/>
     </Stack.Navigator>
   );
 };

@@ -4,7 +4,7 @@ export const full = () => ({
 });
 export const mainContainer = secondary => ({
   flex: 1,
-  backgroundColor: secondary ? secondary : color.primary,
+  backgroundColor: secondary ? color.primary : color.primary,
 });
 export const container = (style, secondary) => [
   {

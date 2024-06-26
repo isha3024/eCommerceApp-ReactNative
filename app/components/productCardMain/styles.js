@@ -4,7 +4,7 @@ import { color, fontSize, fonts, size } from "../../theme"
 export const mainProductCard = () => ({
   backgroundColor: color.primary,
   width: size.deviceWidth * 0.4,
-  marginHorizontal: size.moderateScale(10),
+  marginRight: size.moderateScale(10),
   borderRadius: size.moderateScale(8)
 })
 
@@ -77,7 +77,7 @@ export const badge = (sale, newProduct) => ({
   width: size.moderateScale(40),
   height: size.moderateScale(24),
   backgroundColor: sale ? color.secondary : newProduct ? color.mostlyBlack : color.transparent,
-  borderRadius: size.moderateScale(40),
+  borderRadius: size.moderateScale(29),
   alignItems: 'center',
   justifyContent: 'center',
   top: size.moderateScale(8),

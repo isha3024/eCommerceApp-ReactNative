@@ -1,17 +1,18 @@
 import React, { useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { LayoutAnimation, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-
-import { Button, Text } from '../../components'
-import { Screen } from 'react-native-screens'
 import * as styles from './styles'
-import Header from '../../components/header'
-import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
-import Title from '../../components/title'
-import InputField from '../../components/inputField'
+import { IcBackArrow, IcCheck, IcCheckMark, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
+import { Button, Header, InputField, Screen, Text, Title } from '../../components'
 
-const RegisterScreen = () => {
+if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+export const RegisterScreen = () => {
+
+  const [expanded, setExpanded] = useState(false);
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -28,8 +29,11 @@ const RegisterScreen = () => {
   };
 
   const handleSubmit = () => {
+    LayoutAnimation.configureNext(
+      LayoutAnimation.create(300, 'linear', 'opacity')
+    );
+    setExpanded(!expanded);
     if(handleValidations()){
-      console.log('formData: ', formData)
       setErrors({
         name: '',
         email: '',
@@ -50,7 +54,6 @@ const RegisterScreen = () => {
     }else if (!EmailValidation(formData.email)){
       newErrors.email = 'Not a valid email address. Should be your@email.com'
     }
-
     if(!formData.password) {
       newErrors.password = 'Password is required'
     }else if(formData.password.length < 8){
@@ -62,13 +65,15 @@ const RegisterScreen = () => {
       return false;
     }
     else{
-      console.log('formData: ', formData);
       return true;
     }
   }
 
   return (
-    <Screen withScroll style={styles.mainView()}>
+    <Screen withScroll bgColor={color.primary} style={styles.mainView()}>
+    <StatusBar
+      translucent={true}
+    />
       <Header
         headerLeftIcon
         leftIcon={() => {
@@ -84,17 +89,20 @@ const RegisterScreen = () => {
           value={formData.name}
           placeholder={'Name'}
           label={'Name'}
-          onChangeText={(val) => handleChange('name', val)}
+          onChangeText={(val) => {
+            handleChange('name', val)
+            handleValidations()
+          }}
           keyboardType='default'
           icon
           iconPlace='right'
           renderRightIcon={() => (
             errors.name ? (
               <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            ): null
+            ): <IcCheckMark width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.success} />
           )}
         />
-        {errors.name && (
+        {errors.name && expanded && (
          <Text style={styles.errorText()}>{errors.name}</Text>
         )}
         <InputField 
@@ -102,7 +110,10 @@ const RegisterScreen = () => {
           value={formData.email}
           placeholder={'Email'}
           label={'Email'}
-          onChangeText={(val) => handleChange('email', val)}
+          onChangeText={(val) => {
+            handleChange('email', val)
+            handleValidations()
+            }}
           keyboardType='email-address'
           icon
           iconPlace='right'
@@ -112,7 +123,7 @@ const RegisterScreen = () => {
             ): null
           )}
         />
-        {errors.email && (
+        {errors.email && expanded && (
          <Text style={styles.errorText()}>{errors.email}</Text>
         )}
         <InputField
@@ -120,7 +131,10 @@ const RegisterScreen = () => {
           value={formData.password}
           placeholder={'Password'}
           label={'Password'}
-          onChangeText={(val) => handleChange('password', val)}
+          onChangeText={(val) => {
+            handleChange('password', val)
+            handleValidations()
+            }}
           keyboardType='default'
           icon
           iconPlace='right'
@@ -130,7 +144,7 @@ const RegisterScreen = () => {
             ): null
           )}
         />
-        {errors.password && (
+        {errors.password && expanded && (
          <Text style={styles.errorText()}>{errors.password}</Text>
         )}
         <View style={styles.textAlignRight()}>
@@ -156,5 +170,3 @@ const RegisterScreen = () => {
     </Screen>
   )
 }
-
-export default RegisterScreen

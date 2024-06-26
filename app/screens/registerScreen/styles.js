@@ -59,7 +59,8 @@ export const buttonWithText = () => ({
 export const buttonContainer = () => ({
   flexDirection: 'row',
   gap: size.moderateScale(16),
-  marginTop: size.moderateScale(12)
+  marginTop: size.moderateScale(12),
+  paddingBottom: size.moderateScale(12),
 })
 
 export const button = () => ({

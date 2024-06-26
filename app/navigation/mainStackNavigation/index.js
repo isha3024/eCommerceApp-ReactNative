@@ -1,26 +1,16 @@
 import React, {useEffect, useState, useSelector} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {CardStyleInterpolators} from '@react-navigation/stack'
-import HomeScreen from '../../screens/homeScreen';
-import {SplashScreen} from '../../screens/splashScreen';
-import {AuthStackNavigation} from '../authStackNavigation';
-import { DemoScreen } from '../../screens';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import CustomBottomTabBar from '../../components/customBottomTabBar';
-import ProfileScreen from '../../screens/profileScreen';
-import { IcCall, IcHomeMain, color, size } from '../../theme';
-import { HomeStackNavigation } from '../homeStacknavigation';
+import { SplashScreen } from '../../screens';
+import { AuthStackNavigation } from '../authStackNavigation';
+import { BottomStackNavigation } from '../bottomStackNavigation';
 
 const Stack = createNativeStackNavigator();
 
 
 export const MainStackNavigation = () => {
   const [showSplashScreen, setHideSplashScreen] = useState(true);
-  
-  // const isUserLogin = useSelector(state => {
-  //   return state?.authReducer?.isUserLogin;
-  // });
+
   useEffect(() => {
     // localStorageValueGet();
     setTimeout(() => {
@@ -31,7 +21,7 @@ export const MainStackNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* {showSplashScreen ? (
+        {showSplashScreen ? (
           <Stack.Screen
             name="splashScreen"
             component={SplashScreen}
@@ -50,20 +40,11 @@ export const MainStackNavigation = () => {
             }}
           />
         } */}
-        {/* <Stack.Screen
-          name="homeScreen"
-          component={HomeScreen}
-          options={{
-            headerShown: false,
-          
-          }}
-        /> */}
         <Stack.Screen
-          name="homeStackNavigation"
-          component={HomeStackNavigation}
+          name="bottomStackNavigation"
+          component={BottomStackNavigation}
           options={{
             headerShown: false,
-          
           }}
         />
       </Stack.Navigator>

@@ -2,8 +2,8 @@ import React from 'react'
 import { TouchableOpacity, View } from 'react-native';
 
 import * as styles from './styles'
-import { Text } from '../text';
 import { IcCart, IcCartActive, IcFavorite, IcFavoriteActive, IcHomeActive, IcHomeInactive, IcPerson, IcPersonActive, IcShop, IcShopActive, size } from '../../theme';
+import { Text } from '../text';
 
 
 export const CustomBottomTabBar = ({state, descriptors, navigation}) => {
@@ -19,22 +19,24 @@ export const CustomBottomTabBar = ({state, descriptors, navigation}) => {
             ? options.title
             : route.name;
         const isFocused = state.index === index;
-        console.log('isFocused: ', isFocused)
 
         let Icon;
-        if(route.name == 'Home'){
+        {/* if(route.name == 'homeScreen'){
+          Icon = state.index === index ? IcHomeActive : IcHomeInactive;
+        } */}
+        if(route.name == 'homeScreen'){
           Icon = state.index === index ? IcHomeActive : IcHomeInactive;
         }
-        else if(route.name == 'Shop'){
+        else if(route.name == 'shopScreen'){
           Icon = state.index === index ? IcShopActive : IcShop;
         }
-        else if(route.name == 'Bag'){
+        else if(route.name == 'bagScreen'){
           Icon = state.index === index ? IcCartActive : IcCart;
         }
-        else if(route.name == 'Favorite'){
+        else if(route.name == 'favoriteScreen'){
           Icon = state.index === index ? IcFavoriteActive : IcFavorite;
         }
-        else if(route.name == 'Profile'){
+        else if(route.name == 'profileScreen'){
           Icon = state.index === index ? IcPersonActive : IcPerson;
         }
         
@@ -68,7 +70,7 @@ export const CustomBottomTabBar = ({state, descriptors, navigation}) => {
             style={styles.bottomBarItem()}
             key={index.toString()}
           >
-            <Icon height={size.moderateScale(26)} width={size.moderateScale(30)} />
+            {Icon && <Icon height={size.moderateScale(26)} width={size.moderateScale(30)} />}
             <Text style={styles.screenLabel(isFocused)}>{label}</Text>
           </TouchableOpacity>
         )

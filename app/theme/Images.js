@@ -10,4 +10,12 @@ export const images = {
   imgAppNewLogo: require('./image/images/chandukaka.png'),
   ImgCheck: require('./image/images/ImgCheck.png'),
   ImgCard: require('./image/images/ImageCard.png'),
+  ImgBanner: require('./image/images/MainBanner.png'),
+  imgOnBoardingImageBanner: require('./image/images/OnBoardingImageBanner.png'),
+  imgOnBoardingImageBlack: require('./image/images/OnBoardingImageBlack.png'),
+  imgOnBoardingImageMenHoodie: require('./image/images/OnBoardingImageMenHoodie.png'),
+  imgNewCategory: require('./image/images/newCategoryImg.png'),
+  imgClothesCategory: require('./image/images/clothesCategoryImg.png'),
+  imgShoesCategory: require('./image/images/shoesCategoryImg.png'),
+  imgAccessoriesCategory: require('./image/images/accessoriesCategoryImg.png'),
 };
