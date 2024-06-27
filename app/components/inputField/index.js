@@ -45,7 +45,7 @@ export const InputField = ({
   return (
     <Animated.View 
       style={[
-        styles.rootContainer(error),]}>
+        styles.rootContainer(error)]}>
       {isFocused && <Animated.Text style={[
         styles.labelText(),
         {

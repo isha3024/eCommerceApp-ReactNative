@@ -2,12 +2,27 @@
   "demo_screen": {
     "screen_title": "Demo screen"
   },
+  "register_screen": {
+    "screen_title": "Sign up",
+    "placeHolder_text_name": "Name",
+    "label_name": "Name",
+    "placeHolder_text_email": "Email",
+    "label_email": "Email",
+    "placeHolder_text_password": "Password",
+    "label_password": "Password",
+    "link_to_login": "Already have an account?",
+    "button_title": "SIGN UP",
+    "social_account_signUp": "Or sign up with social account"
+  },
   "login_screen": {
-    "button_title": "Next",
-    "heading_text": "Enter Your Mobile Number to get otp.",
-    "placeHolder_text": "Enter mobile number",
-    "placeHolder_textTwo": "Enter your name",
-    "header_otp": "We have sent OTP to verify your mobile number."
+    "screen_title": "Login",
+    "placeHolder_text_email": "Email",
+    "label_email": "Email",
+    "placeHolder_text_password": "Password",
+    "label_password": "Password",
+    "forget_password": "Forget your password?",
+    "button_title": "Login",
+    "social_account_signUp": "Or sign up with social account"
   },
   "home_Screen": {
     "app_name": "WIA ",

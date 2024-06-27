@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { LayoutAnimation, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
+import { Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
-import { IcBackArrow, IcCheck, IcCheckMark, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
+import { IcBackArrow, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Screen, Text, Title } from '../../components'
 
@@ -12,60 +12,51 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 
 export const RegisterScreen = () => {
 
-  const [expanded, setExpanded] = useState(false);
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
+  const [inputField, setInputField] = useState({
     name: '',
     email: '',
     password: ''
   })
   
-  const handleChange = (field, value) => {
-    setFormData({
-      ...formData,
+  const handleChange = (value, field) => {
+    setInputField({
+      ...inputField,
       [field]: value
     });
   };
 
+  const validateForm = () => {
+    let newError = {};
+    if(!inputField.name){
+      newError.name = 'Name is required'
+    }
+
+    if(!inputField.email){
+      newError.email = 'Email is required'
+    }else if(EmailValidation(inputField)){
+      newError.email = 'Not a valid email address. Should be your@email.com'
+    }
+
+    if(!inputField.password){
+      newError.password = 'Password is required'
+    }else if(inputField.password.length < 8){
+      newError.password = 'Password length must be greater than 8'
+    }
+
+    setErrors(newError)
+    return Object.keys(newError).length === 0
+  }
+
   const handleSubmit = () => {
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(300, 'linear', 'opacity')
-    );
-    setExpanded(!expanded);
-    if(handleValidations()){
+    if(validateForm()){
       setErrors({
         name: '',
         email: '',
         password: ''
       })
       navigation.navigate('Login')
-    }
-  }
-
-  const handleValidations = () => {
-    let newErrors = {};
-    if(!formData.name){
-      newErrors.name = 'Name is required'
-    }
-
-    if(!formData.email) {
-      newErrors.email = 'Email is required'
-    }else if (!EmailValidation(formData.email)){
-      newErrors.email = 'Not a valid email address. Should be your@email.com'
-    }
-    if(!formData.password) {
-      newErrors.password = 'Password is required'
-    }else if(formData.password.length < 8){
-      newErrors.password = 'Password length must be greater than 8'
-    }
-
-    if(Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return false;
-    }
-    else{
-      return true;
     }
   }
 
@@ -86,65 +77,57 @@ export const RegisterScreen = () => {
       <View style={styles.middleContainer()}>
         <InputField 
           error={errors.name}
-          value={formData.name}
+          value={inputField?.name}
           placeholder={'Name'}
           label={'Name'}
-          onChangeText={(val) => {
-            handleChange('name', val)
-            handleValidations()
-          }}
+          onChangeText={(val) => handleChange(val, 'name')}
           keyboardType='default'
           icon
           iconPlace='right'
           renderRightIcon={() => (
-            errors.name ? (
+            errors.name && (
               <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            ): <IcCheckMark width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.success} />
+            )
           )}
         />
-        {errors.name && expanded && (
+        {errors.name &&  (
          <Text style={styles.errorText()}>{errors.name}</Text>
         )}
         <InputField 
           error={errors.email}
-          value={formData.email}
+          value={inputField?.email}
           placeholder={'Email'}
           label={'Email'}
-          onChangeText={(val) => {
-            handleChange('email', val)
-            handleValidations()
-            }}
+          onChangeText={(val) => handleChange(val, 'email')}
           keyboardType='email-address'
           icon
           iconPlace='right'
           renderRightIcon={() => (
-            errors.email ? (
+            errors.email && (
               <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            ): null
+            )
           )}
         />
-        {errors.email && expanded && (
+        {errors.email &&  (
          <Text style={styles.errorText()}>{errors.email}</Text>
         )}
         <InputField
           error={errors.password}
-          value={formData.password}
+          value={inputField?.password}
           placeholder={'Password'}
           label={'Password'}
-          onChangeText={(val) => {
-            handleChange('password', val)
-            handleValidations()
-            }}
+          secureTextEntry={true}
+          onChangeText={(val) => handleChange(val, 'password')}
           keyboardType='default'
           icon
           iconPlace='right'
           renderRightIcon={() => (
-            errors.password ? (
+            errors.password && (
               <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            ): null
+            )
           )}
         />
-        {errors.password && expanded && (
+        {errors.password && (
          <Text style={styles.errorText()}>{errors.password}</Text>
         )}
         <View style={styles.textAlignRight()}>

@@ -3,7 +3,7 @@ import { LayoutAnimation, Platform, TouchableOpacity, UIManager, View } from 're
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
-import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
+import { IcBackArrow, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Screen, Text, Title } from '../../components'
 
@@ -15,7 +15,7 @@ export const LoginScreen = () => {
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
   
-  const [formData, setFormData] = useState({
+  const [inputField, setInputField] = useState({
     email: '',
     password: ''
   })
@@ -78,7 +78,7 @@ export const LoginScreen = () => {
       <View style={styles.middleContainer()}>
         <InputField 
           error={errors.email}
-          value={formData.email}
+          value={inputField.email}
           placeholder={'Email'}
           label={'Email'}
           onChangeText={(val) => handleChange('email', val)}
@@ -96,7 +96,7 @@ export const LoginScreen = () => {
         )}
         <InputField
           error={errors.password}
-          value={formData.password}
+          value={inputField.password}
           placeholder={'Password'}
           label={'Password'}
           onChangeText={(val) => handleChange('password', val)}

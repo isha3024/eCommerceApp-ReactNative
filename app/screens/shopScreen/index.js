@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import { Header, Screen, Text } from '../../components'
 import { IcBackArrow, IcSearch, color, images, size } from '../../theme'
 
@@ -81,13 +81,39 @@ const kidsData = [
   },
 ]
 
+
 export const ShopScreen = () => {
   const [categoryTab, setCategoryTab] = useState(['women', 'men', 'kids']);
   const [selectedCategory, setSelectedCategory] = useState(categoryTab);
 
+  const renderCategoryItem = ({item, index}) => {
+    return (
+      <TouchableOpacity style={styles.categoryItem()}>
+        <View style={styles.categoryItemNameView()}>
+         <Text style={styles.categoryItemName()}>{item.categoryName}</Text>
+        </View>
+        <Image
+          style={styles.categoryItemImg()}
+          source={item.categoryImg}
+        />
+      </TouchableOpacity>
+    )
+  }
+  
+  const getCategoryData = () => {
+    switch(selectedCategory) {
+      case 'women':
+        return womenData;
+      case 'men':
+        return menData;
+      case 'kids':
+        return kidsData;
+    }
+  }
+
   useEffect(() => {
     setSelectedCategory('women')
-  }, [])
+  }, [categoryTab])
   return (
     <Screen bgColor={color.white}>
       <Header 
@@ -116,68 +142,20 @@ export const ShopScreen = () => {
           })
         }
       </View>
-      <View style={styles.categoriesSection()}>
+      <ScrollView style={styles.categoriesSection()}>
         <TouchableOpacity activeOpacity={0.5} style={styles.summerSale()}>
           <Text style={styles.title()}>SUMMER SALE</Text>
           <Text style={styles.text()}>Up to 50% off</Text>
         </TouchableOpacity>
         <View style={styles.selectedCategoriesList()}>
-          {selectedCategory === 'women' && 
-            <FlatList
-              data={womenData}
-              keyExtractor={item => item.categoryName}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableOpacity style={styles.categoryItem()}>
-                    <View style={styles.categoryItemNameView()}>
-                     <Text style={styles.categoryItemName()}>{item.categoryName}</Text>
-                    </View>
-                    <Image
-                      style={styles.categoryItemImg()}
-                      source={item.categoryImg}
-                    />
-                  </TouchableOpacity>
-                )
-              }} 
-             />
-          }
-          {selectedCategory === 'men' && 
-            <FlatList
-              data={menData}
-              keyExtractor={item => item.categoryName}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableOpacity style={styles.categoryItem()}>
-                    <Text style={styles.categoryItemName()}>{item.categoryName}</Text>
-                    <Image
-                      style={styles.categoryItemImg()}
-                      source={item.categoryImg}
-                    />
-                  </TouchableOpacity>
-                )
-              }} 
-              contentContainerStyle={{
-                flexGrow: 1,
-              }}
-             />}
-          {selectedCategory === 'kids' && 
-            <FlatList
-              data={kidsData}
-              keyExtractor={item => item.categoryName}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableOpacity style={styles.categoryItem()}>
-                    <Text style={styles.categoryItemName()}>{item.categoryName}</Text>
-                    <Image
-                      style={styles.categoryItemImg()}
-                      source={item.categoryImg}
-                    />
-                  </TouchableOpacity>
-                )
-              }} 
-             />}
+          <FlatList 
+            data={getCategoryData()}
+            renderItem={renderCategoryItem}
+            keyExtractor={item => item.categoryName}
+            contentContainerStyle={styles.flatList()}
+          />
         </View>
-      </View>
+      </ScrollView>
      
     </Screen>
   )

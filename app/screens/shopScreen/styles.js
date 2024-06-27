@@ -58,6 +58,11 @@ export const selectedCategoriesList = () => ({
   marginTop: 0, 
 })
 
+export const flatList = () => ({
+  flexGrow: 1, 
+  paddingBottom: size.moderateScale(100), 
+})
+
 export const categoryItem = () => ({
   flexDirection: 'row',
   alignItems: 'center',
