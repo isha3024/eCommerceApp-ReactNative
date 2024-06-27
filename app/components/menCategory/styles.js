@@ -1,44 +1,21 @@
 import { color, fontSize, fonts, size } from "../../theme";
 
-export const header = () => ({
-  backgroundColor: color.white,
-  elevation: size.moderateScale(10),
-})
-
-export const categoriesTab = () => ({
-  flexDirection: 'row',
-  marginTop: size.moderateScale(10),
-  backgroundColor: color.white
-})
-
-export const categoryView = (active) => ({
-  width: size.deviceWidth * 0.333,
-  paddingVertical: size.moderateScale(15),
-  borderBottomColor: active ? color.secondary : color.transparent,
-  borderBottomWidth: size.moderateScale(4)
-})
-
-export const categoryText = () => ({
-  color: color.mostlyBlack,
-  fontSize: fontSize.littleMedium,
-  fontFamily: fonts.metropolisSemiBold,
-  textTransform: 'capitalize',
-  textAlign: 'center',
-})
 export const categoriesSection = () => ({
-  paddingVertical: size.moderateScale(15),
+  paddingTop: size.moderateScale(15),
   backgroundColor: color.primary,
+  paddingHorizontal: size.moderateScale(16),
+  paddingBottom: size.moderateScale(100)
 })
 
 export const summerSale = () => ({
-  marginHorizontal: size.moderateScale(16),  
-  width: size.moderateScale(343),
+  // marginHorizontal: size.moderateScale(16),
   height: size.moderateScale(100),
   backgroundColor: color.secondary,
   borderRadius: size.moderateScale(8),
   alignItems: 'center',
   justifyContent: 'center',
-  gap: size.moderateScale(5)
+  gap: size.moderateScale(5),
+  marginBottom: size.moderateScale(16)
 })
 
 export const title = () => ({
@@ -59,18 +36,18 @@ export const selectedCategoriesList = () => ({
 
 export const flatList = () => ({
   flexGrow: 1, 
-  paddingBottom: size.moderateScale(100), 
+  marginBottom: size.moderateScale(100), 
 })
 
 export const categoryItem = () => ({
   flexDirection: 'row',
   alignItems: 'center',
-  marginTop: size.moderateScale(16),
+  marginBottom: size.moderateScale(16),
   height: size.moderateScale(100),
   borderRadius: size.moderateScale(8),
   backgroundColor: color.white,
-  elevation: size.moderateScale(5),
-  marginHorizontal: size.moderateScale(16)
+  // elevation: size.moderateScale(5),
+  zIndex: 5
 })
 
 export const categoryItemNameView = () => ({

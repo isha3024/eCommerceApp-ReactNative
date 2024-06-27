@@ -6,15 +6,12 @@ export const MainContextProvider = props => {
   // console.log('🚀 ~ MainContextProvider ~ screenState:', screenState);
   const [validateNumber, setValidateNumber] = useState(false);
   const [mobileNumber, setMobileNumber] = useState('');
-  console.log('🚀 ~ MainContextProvider ~ mobileNumber:', mobileNumber);
   const [userName, setUserName] = useState('');
-  console.log('🚀 ~ MainContextProvider ~ userName:', userName);
   // console.log('🚀 ~ MainContextProvider ~ mobileNumber:', mobileNumber);
   const [name, setName] = useState([]);
   const [otp, setOtp] = useState('');
   const [playerId, setPlayerId] = useState('');
   const [isRegistered, setIsRegistered] = useState(true);
-  console.log('🚀 ~ MainContextProvider ~ isRegistered:', isRegistered);
   const [id, setId] = useState([]);
 
   const value = useMemo(() => {

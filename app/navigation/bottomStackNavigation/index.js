@@ -1,5 +1,5 @@
 import React from 'react';
-import { CartScreen, FavoriteScreen, HomeScreen, OnBoardingScreen, ProfileScreen, ShopScreen } from '../../screens';
+import { CartScreen, FavoriteScreen, HomeScreen, OnBoardingScreen, ProfileScreen, ShopScreen, ShopScreenV2 } from '../../screens';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CustomBottomTabBar } from '../../components';
 
@@ -19,7 +19,7 @@ export const BottomStackNavigation = () => {
       {/* <Tab.Screen name='onBoardingScreen' component={OnBoardingScreen} options={{
         tabBarLabel: 'Home'
       }}/> */}
-      <Tab.Screen name='shopScreen' component={ShopScreen}options={{
+      <Tab.Screen name='shopScreenV2' component={ShopScreenV2}options={{
         tabBarLabel: 'Shop'
       }}/>
       <Tab.Screen name='bagScreen' component={CartScreen}options={{
