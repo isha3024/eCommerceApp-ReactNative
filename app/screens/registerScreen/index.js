@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
-import { Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Animated, Easing, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
 import { IcBackArrow, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Screen, Text, Title } from '../../components'
+import { opacity } from '../loginScreen/styles'
+
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -19,7 +21,23 @@ export const RegisterScreen = () => {
     email: '',
     password: ''
   })
-  
+
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const opacityStyle = {opacity: opacityAnim}
+  const animate = () => {
+    Animated.timing(opacityAnim, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: true
+    }).start(() => {
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }).start()
+    })
+  }
+
   const handleChange = (value, field) => {
     setInputField({
       ...inputField,
@@ -46,6 +64,7 @@ export const RegisterScreen = () => {
     }
 
     setErrors(newError)
+    animate()
     return Object.keys(newError).length === 0
   }
 
@@ -75,24 +94,28 @@ export const RegisterScreen = () => {
         <Title title={'Sign up'} />
       </View>
       <View style={styles.middleContainer()}>
-        <InputField 
-          error={errors.name}
-          value={inputField?.name}
-          placeholder={'Name'}
-          label={'Name'}
-          onChangeText={(val) => handleChange(val, 'name')}
-          keyboardType='default'
-          icon
-          iconPlace='right'
-          renderRightIcon={() => (
-            errors.name && (
-              <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            )
-          )}
-        />
-        {errors.name &&  (
-         <Text style={styles.errorText()}>{errors.name}</Text>
-        )}
+        <View style={styles.inputView()}>
+          <InputField 
+            error={errors.name}
+            value={inputField?.name}
+            placeholder={'Name'}
+            label={'Name'}
+            onChangeText={(val) => handleChange(val, 'name')}
+            keyboardType='default'
+            icon
+            iconPlace='right'
+            renderRightIcon={() => (
+              errors.name && (
+                <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
+              )
+            )}
+          />
+          {errors.name ? 
+            (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.name}</Animated.Text>) 
+            : (<Text style={styles.noError()}></Text>)
+          }
+        </View>
+        <View style={styles.inputView()}>
         <InputField 
           error={errors.email}
           value={inputField?.email}
@@ -108,9 +131,12 @@ export const RegisterScreen = () => {
             )
           )}
         />
-        {errors.email &&  (
-         <Text style={styles.errorText()}>{errors.email}</Text>
-        )}
+        {errors.email ? 
+        (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.email}</Animated.Text>) 
+        : (<Text style={styles.noError()}></Text>)
+        }
+        </View>
+        <View style={styles.inputView()}>
         <InputField
           error={errors.password}
           value={inputField?.password}
@@ -127,15 +153,15 @@ export const RegisterScreen = () => {
             )
           )}
         />
-        {errors.password && (
-         <Text style={styles.errorText()}>{errors.password}</Text>
-        )}
-        <View style={styles.textAlignRight()}>
-          <Text style={styles.text()}>Already have an account?</Text>
-          <TouchableOpacity style={styles.iconView()} activeOpacity={0.5} onPress={() => navigation.navigate('Login')}>
-            <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
-          </TouchableOpacity>
+        {errors.password ? 
+          (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.password}</Animated.Text>) 
+          : (<Text style={styles.noError()}></Text>)
+        }
         </View>
+        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.text()}>Already have an account?</Text>
+          <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
+        </TouchableOpacity>
         {/* <Button btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={() => navigation.navigate('Login')} /> */}
         <Button btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={handleSubmit} />
       </View>

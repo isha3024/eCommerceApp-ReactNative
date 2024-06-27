@@ -4,6 +4,7 @@ import { FlatList, Image, TouchableOpacity, View } from 'react-native'
 import * as styles from './styles'
 import { images } from '../../theme'
 import { Text } from '../text'
+import { useNavigation } from '@react-navigation/native'
 
 const womenData = [
   {
@@ -46,6 +47,7 @@ const womenData = [
 
 export const WomenCategories = () => {
 
+  const navigation = useNavigation();
   const renderCategoryItem = ({item, index}) => {
     return (
       <TouchableOpacity style={styles.categoryItem()}>

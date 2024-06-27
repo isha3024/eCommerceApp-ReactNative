@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { View } from 'react-native'
+import React, { useRef, useState } from 'react'
+import { Animated, StatusBar, View } from 'react-native'
 import * as styles from './styles'
 import { IcBackArrow, IcClose, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
@@ -9,20 +9,35 @@ import { EmailValidation } from '../../utils/functions'
 export const ForgetPassword = () => {
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
+  const [inputField, setInputField] = useState({
     email: '',
   })
 
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const opacityStyle = {opacity: opacityAnim}
+  const animate = () => {
+    Animated.timing(opacityAnim, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: true
+    }).start(() => {
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }).start()
+    })
+  }
+
   const handleChange = (field, value) => {
-    setFormData({
-      ...formData,
+    setInputField({
+      ...inputField,
       [field]: value
     });
   };
 
   const handleSubmit = () => {
     if(handleValidations()){
-      console.log('formData: ', formData)
       setErrors({
         email: ''
       })
@@ -33,23 +48,21 @@ export const ForgetPassword = () => {
   const handleValidations = () => {
     let newErrors = {};
 
-    if(!formData.email) {
+    if(!newErrors.email) {
       newErrors.email = 'Email is required'
-    }else if (!EmailValidation(formData.email)){
+    }else if (!EmailValidation(newErrors.email)){
       newErrors.email = 'Not a valid email address. Should be your@email.com'
     }
 
-    if(Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return false;
-    }
-    else{
-      console.log('formData: ', formData);
-      return true;
-    }
+    setErrors(newErrors)
+    animate()
+    return Object.keys(newErrors).length === 0
   }
   return (
-    <Screen withScroll style={styles.mainView()}>
+    <Screen withScroll bgColor={color.primary} style={styles.mainView()}>
+      <StatusBar
+        translucent={true}
+      />
       <Header
         leftIconPress={() => navigation.goBack()}
         headerLeftIcon
@@ -64,9 +77,10 @@ export const ForgetPassword = () => {
         <Text style={styles.text()}>
         Please, enter your email address. You will receive a link to create a new password via email.
         </Text>
+        <View style={styles.inputView()}>
         <InputField 
           error={errors.email}
-          value={formData.email}
+          value={inputField.email}
           placeholder={'Email'}
           label={'Email'}
           onChangeText={(val) => handleChange('email', val)}
@@ -79,9 +93,11 @@ export const ForgetPassword = () => {
             ): null
           )}
         />
-        {errors.email && (
-         <Text style={styles.errorText()}>{errors.email}</Text>
-        )}
+        {errors.email ? 
+          (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.email}</Animated.Text>) 
+          : (<Text style={styles.noError()}></Text>)
+        }
+        </View>
         <Button btnStyle={styles.buttonWithText()} title='SEND' disabled={false} onPress={handleSubmit} />
       </View>
       </Screen>

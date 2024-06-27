@@ -19,16 +19,16 @@ export const BottomStackNavigation = () => {
       {/* <Tab.Screen name='onBoardingScreen' component={OnBoardingScreen} options={{
         tabBarLabel: 'Home'
       }}/> */}
-      <Tab.Screen name='shopScreenV2' component={ShopScreenV2}options={{
+      <Tab.Screen name='shopScreenV2' component={ShopScreenV2} options={{
         tabBarLabel: 'Shop'
       }}/>
-      <Tab.Screen name='bagScreen' component={CartScreen}options={{
+      <Tab.Screen name='bagScreen' component={CartScreen} options={{
         tabBarLabel: 'Bag'
       }}/>
-      <Tab.Screen name='favoriteScreen' component={FavoriteScreen}options={{
+      <Tab.Screen name='favoriteScreen' component={FavoriteScreen} options={{
         tabBarLabel: 'Favorite'
       }}/>
-      <Tab.Screen name='profileScreen' component={ProfileScreen}options={{
+      <Tab.Screen name='profileScreen' component={ProfileScreen} options={{
         tabBarLabel: 'Profile'
       }}/>
     </Tab.Navigator>

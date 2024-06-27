@@ -13,7 +13,11 @@ export const topContainer = () => ({
 export const middleContainer = () => ({
   padding: size.moderateScale(15),
   marginTop: size.moderateScale(60),
-  gap: size.moderateScale(10)
+  gap: size.moderateScale(22)
+})
+
+export const inputView = () => ({
+  position: 'relative'
 })
 
 export const bottomContainer = () => ({
@@ -48,8 +52,17 @@ export const errorText = () => ({
   color: color.error,
   fontSize: fontSize.mediumSmall,
   fontFamily: fonts.metropolisRegular,
-  marginTop: size.moderateScale(-5),
-  textAlign: 'center'
+  marginTop: size.moderateScale(-10),
+  textAlign: 'center',
+  position: 'absolute',
+  bottom: -15,
+  width: '100%'
+})
+
+export const noError = () => ({
+  position: 'absolute',
+  bottom: -13,
+  width: '100%'
 })
 
 export const buttonWithText = () => ({

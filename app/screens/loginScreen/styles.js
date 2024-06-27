@@ -13,7 +13,11 @@ export const topContainer = () => ({
 export const middleContainer = () => ({
   padding: size.moderateScale(15),
   marginTop: size.moderateScale(60),
-  gap: size.moderateScale(10)
+  gap: size.moderateScale(22)
+})
+
+export const inputView = () => ({
+  position: 'relative'
 })
 
 export const bottomContainer = () => ({
@@ -31,13 +35,6 @@ export const textAlignRight = () => ({
   gap: size.moderateScale(4),
 })
 
-export const iconView = () => ({
-  width: size.deviceWidth * 0.06,
-  height: size.deviceHeight * 0.02,
-  alignItems: 'center',
-  justifyContent: 'center'
-})
-
 export const text = () => ({
   color: color.mostlyBlack,
   fontSize: fontSize.small,
@@ -50,6 +47,15 @@ export const errorText = () => ({
   fontFamily: fonts.metropolisRegular,
   marginTop: size.moderateScale(-5),
   textAlign: 'center',
+  position: 'absolute',
+  bottom: -15,
+  width: '100%'
+})
+
+export const noError = () => ({
+  position: 'absolute',
+  bottom: -15,
+  width: '100%'
 })
 
 export const buttonWithText = () => ({
@@ -59,7 +65,8 @@ export const buttonWithText = () => ({
 export const buttonContainer = () => ({
   flexDirection: 'row',
   gap: size.moderateScale(16),
-  marginTop: size.moderateScale(12)
+  marginTop: size.moderateScale(12),
+  paddingBottom: size.moderateScale(12),
 })
 
 export const button = () => ({

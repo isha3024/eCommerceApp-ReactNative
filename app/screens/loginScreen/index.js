@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { LayoutAnimation, Platform, TouchableOpacity, UIManager, View } from 'react-native'
+import React, { useRef, useState } from 'react'
+import { Animated, LayoutAnimation, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
@@ -13,23 +13,37 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
-  const [errors, setErrors] = useState({});
-  
+  const [errors, setErrors] = useState({}); 
   const [inputField, setInputField] = useState({
     email: '',
     password: ''
   })
+
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const opacityStyle = {opacity: opacityAnim}
+  const animate = () => {
+    Animated.timing(opacityAnim, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: true
+    }).start(() => {
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }).start()
+    })
+  }
   
   const handleChange = (field, value) => {
     setFormData({
-      ...formData,
+      ...inputField,
       [field]: value
     });
   };
 
   const handleSubmit = () => {
     if(handleValidations()){
-      console.log('formData: ', formData)
       setErrors({
         email: '',
         password: ''
@@ -41,30 +55,30 @@ export const LoginScreen = () => {
   const handleValidations = () => {
     let newErrors = {};
 
-    if(!formData.email) {
+    if(!newErrors.email) {
       newErrors.email = 'Email is required'
-    }else if (!EmailValidation(formData.email)){
+    }else if (!EmailValidation(newErrors.email)){
       newErrors.email = 'Not a valid email address. Should be your@email.com'
     }
 
-    if(!formData.password) {
+    if(!newErrors.password) {
       newErrors.password = 'Password is required'
-    }else if(formData.password.length < 8){
+    }else if(newErrors.password.length < 8){
       newErrors.password = 'Password length must be greater than 8'
     }
 
-    if(Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return false;
-    }
-    else{
-      console.log('formData: ', formData);
-      return true;
-    }
+    
+    setErrors(newErrors)
+    animate()
+    return Object.keys(newErrors).length === 0
+    
   }
 
   return (
-    <Screen withScroll style={styles.mainView()}>
+    <Screen withScroll bgColor={color.primary} style={styles.mainView()}>
+      <StatusBar
+        translucent={true}
+      />
       <Header
         leftIconPress={() => navigation.goBack()}
         headerLeftIcon
@@ -76,6 +90,7 @@ export const LoginScreen = () => {
         <Title title={'Login'} />
       </View>
       <View style={styles.middleContainer()}>
+        <View style={styles.inputView()}>
         <InputField 
           error={errors.email}
           value={inputField.email}
@@ -91,9 +106,12 @@ export const LoginScreen = () => {
             ): null
           )}
         />
-        {errors.email && (
-         <Text style={styles.errorText()}>{errors.email}</Text>
-        )}
+        {errors.email ? 
+          (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.email}</Animated.Text>) 
+          : (<Text style={styles.noError()}></Text>)
+        }
+        </View>
+        <View style={styles.inputView()}>
         <InputField
           error={errors.password}
           value={inputField.password}
@@ -109,17 +127,15 @@ export const LoginScreen = () => {
             ): null
           )}
         />
-        <View>
-        {errors.password && (
-         <Text style={styles.errorText()}>{errors.password}</Text>
-        )}
+        {errors.password ? 
+          (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.password}</Animated.Text>) 
+          : (<Text style={styles.noError()}></Text>)
+        }
         </View>
-        <View style={styles.textAlignRight()}>
+        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={() => navigation.navigate('ForgetPassword')}>
           <Text style={styles.text()}>Forget your password?</Text>
-          <TouchableOpacity style={styles.iconView()} activeOpacity={0.5} onPress={() => navigation.navigate('ForgetPassword')}>
-            <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
-          </TouchableOpacity>
-        </View>
+          <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
+        </TouchableOpacity>
         <Button btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={handleSubmit} />
       </View>
       <View style={styles.bottomContainer()}>
