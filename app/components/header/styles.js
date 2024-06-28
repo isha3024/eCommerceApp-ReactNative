@@ -1,4 +1,5 @@
 import { color, fontSize, fonts, size } from "../../theme"
+import { badgeText } from "../productCardMain/styles"
 
 export const mainContainer = statusBarheight => ({
   flexDirection: 'row',

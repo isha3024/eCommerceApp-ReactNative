@@ -4,8 +4,8 @@ import { color, fontSize, fonts, size } from "../../theme"
 export const mainProductCard = () => ({
   backgroundColor: color.primary,
   width: size.deviceWidth * 0.4,
-  marginRight: size.moderateScale(10),
-  borderRadius: size.moderateScale(8)
+  // marginRight: size.moderateScale(10),
+  borderRadius: size.moderateScale(8),
 })
 
 export const mainProductCardHorizontal = () => ({
@@ -19,7 +19,7 @@ export const mainProductCardHorizontal = () => ({
 })
 
 export const imageView = () => ({
-  width: size.deviceWidth * 0.4,
+  width: '100%',
   height: size.moderateScale(184),
 })
 

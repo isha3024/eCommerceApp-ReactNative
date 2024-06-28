@@ -6,7 +6,7 @@ import * as styles from './styles';
 export const SplashScreen = () => {
   return (
     <View style={styles.rootContainer()}>
-      <Image source={images.imgAppNewLogo} style={styles.appLogo()} />
+      <Image source={images.imgAppLogoMain} style={styles.appLogo()} />
     </View>
   );
 };

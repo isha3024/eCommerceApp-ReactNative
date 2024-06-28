@@ -65,13 +65,10 @@ export const LoginScreen = () => {
       newErrors.password = 'Password is required'
     }else if(newErrors.password.length < 8){
       newErrors.password = 'Password length must be greater than 8'
-    }
-
-    
+    }    
     setErrors(newErrors)
     animate()
     return Object.keys(newErrors).length === 0
-    
   }
 
   return (
