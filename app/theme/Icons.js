@@ -16,7 +16,7 @@ import {Share} from './image/svgIcons/IcShare';
 import {Search} from './image/svgIcons/IcSearch'
 import {ForwardArrow} from './image/svgIcons/IcForwardArrow'
 import {Google} from './image/svgIcons/IcGoogle'
-import {Facebook} from './image/svgIcons/IcFacebook'
+import {Facebook, Sort} from './image/svgIcons/IcFacebook'
 import {Heart} from './image/svgIcons/IcHeart'
 import {Star} from './image/svgIcons/IcStar'
 import { FilledHeart } from './image/svgIcons/IcFilledHeart';
@@ -31,6 +31,9 @@ import { ShopActive } from './image/svgIcons/IcBagFilled';
 import { CartActive } from './image/svgIcons/IcCartActive';
 import { FavoriteActive } from './image/svgIcons/IcFavroiteActive';
 import { PersonActive } from './image/svgIcons/IcPersonActive';
+import { Filter } from './image/svgIcons/IcFilter';
+import { SortIcon } from './image/svgIcons/IcSort';
+import { Grid } from './image/svgIcons/IcGrid';
 
 export const IcHome = props => <Home {...props} />;
 export const IcPhone = props => <Phone {...props} />;
@@ -62,3 +65,6 @@ export const IcShopActive = props => <ShopActive {...props} />;
 export const IcCartActive = props => <CartActive {...props} />;
 export const IcFavoriteActive = props => <FavoriteActive {...props} />;
 export const IcPersonActive = props => <PersonActive {...props} />;
+export const IcFilter = props => <Filter {...props} />;
+export const IcSortIcon = props => <SortIcon {...props} />;
+export const IcGrid = props => <Grid {...props} />;

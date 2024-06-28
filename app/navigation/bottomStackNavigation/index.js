@@ -2,6 +2,8 @@ import React from 'react';
 import { CartScreen, FavoriteScreen, HomeScreen, OnBoardingScreen, ProfileScreen, ShopScreen, ShopScreenV2 } from '../../screens';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CustomBottomTabBar } from '../../components';
+import { ShopStackNavigation } from '../shopStackNavigation';
+import { HomeStackNavigation } from '../homeStacknavigation';
 
 
 const Tab = createBottomTabNavigator()
@@ -13,13 +15,16 @@ export const BottomStackNavigation = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Tab.Screen name='homeScreen' component={HomeScreen} options={{
+      <Tab.Screen name='homeStackNavigation' component={HomeStackNavigation} options={{
         tabBarLabel: 'Home'
       }}/>
       {/* <Tab.Screen name='onBoardingScreen' component={OnBoardingScreen} options={{
         tabBarLabel: 'Home'
       }}/> */}
-      <Tab.Screen name='shopScreenV2' component={ShopScreenV2} options={{
+      {/* <Tab.Screen name='shopScreenV2' component={ShopScreenV2} options={{
+        tabBarLabel: 'Shop'
+      }}/> */}
+      <Tab.Screen name='shopStackNavigation' component={ShopStackNavigation} options={{
         tabBarLabel: 'Shop'
       }}/>
       <Tab.Screen name='bagScreen' component={CartScreen} options={{
