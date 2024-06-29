@@ -9,7 +9,7 @@ export const color = {
   lightOrange: 'rgb(255,186,73)',
   mostlyBlack: 'rgb(34,34,34)',
   transparent: 'rgba(0, 0, 0, 0)',
-  customTransparent: opacity => `rgba(0, 0, 0,${opacity ?? 1})`,
+  customTransparent: opacity => `rgba(0, 0, 0, 0.2)`,
   customWhite: opacity => `rgba(255, 255, 255,${opacity ?? 1})`,
   customBlack: opacity => `rgba(0, 0, 0,${opacity ?? 1})`,
 };

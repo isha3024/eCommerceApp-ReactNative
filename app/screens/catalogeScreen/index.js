@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react' 
 import { View, StatusBar, FlatList, TouchableOpacity, Animated, Platform, UIManager, LayoutAnimation } from 'react-native'
-import { Header, ProductCardMain, Screen, Text, Title } from '../../components'
+import { BottomSheetContainer, Header, ProductCardMain, Screen, SortBy, Text, Title } from '../../components'
 import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSort, IcSortIcon, color, size } from '../../theme'
 
 import * as styles from './styles'
 import * as data from '../../json'
 import { useNavigation } from '@react-navigation/native'
-
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -49,22 +49,28 @@ const renderWomenTop = ({item}) => {
 const products = data.productList;
 
 
-export const CatalogeScreen = () => {
-  const navigation = useNavigation();
+export const CatalogeScreen = ({navigation}) => {
+  const [isSheetVisible, setSheetVisible] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
   const [title, showTitle] = useState(false);
 
+
+  const handleOpenPress = () => {
+    setSheetVisible(true);
+  }
+  const handleClosePress = () => {
+    setSheetVisible(false);
+  }
+
   const toggleLayout = () => {
     LayoutAnimation.configureNext({
-      duration: 500,
+      duration: 1000,
       create: {type: 'linear', property: 'opacity'},
-      update: {type: 'spring', springDamping: 0.4},
+      update: {type: 'spring', springDamping: 1},
       delete: {type: 'linear', property: 'opacity'},
     });
     setShowGrid(!showGrid);
     showTitle(!title);
-    console.log('title: ',title)
-    console.log('showGrid: ',showGrid) 
   } 
 
   const renderProducts = ({item}) => {   
@@ -85,6 +91,7 @@ export const CatalogeScreen = () => {
     }
 
   return (
+    <GestureHandlerRootView>
     <Screen bgColor={color.white}>
       <StatusBar translucent={true}/>
       <Header
@@ -121,7 +128,7 @@ export const CatalogeScreen = () => {
               <IcFilter />
               <Text style={styles.filterItemText()}>Filter</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.filterItem()}>
+            <TouchableOpacity onPress={handleOpenPress} style={styles.filterItem()}>
               <IcSortIcon />
               <Text style={styles.filterItemText()}>Price: Low to High</Text>
             </TouchableOpacity>
@@ -161,5 +168,11 @@ export const CatalogeScreen = () => {
         } 
       </View>
     </Screen>
+    <BottomSheetContainer 
+      isVisible={isSheetVisible} 
+      onClose={handleClosePress} 
+      navigation={navigation}
+    />
+    </GestureHandlerRootView>
   )
 }
