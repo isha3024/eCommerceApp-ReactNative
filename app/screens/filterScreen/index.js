@@ -156,7 +156,7 @@ const category = [
           </View>
           <View style={styles.filterItem()}>
             <Text style={styles.filterItemText()}>Category</Text>
-            <View style={styles.innerFilterItem()}>
+            <View style={styles.categoryFilterItem()}>
               {
                 category.map((item) => {
                   return (
@@ -177,8 +177,8 @@ const category = [
         </View>
       </Screen>
       <View style={styles.bottomView()}>
-        <Button title='Discard' border />
-        <Button title='Apply' />
+        <Button title='Discard' border btnStyle={styles.button()} />
+        <Button title='Apply' btnStyle={styles.button()} />
       </View>
     </>
   )

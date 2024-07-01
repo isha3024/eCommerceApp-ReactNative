@@ -4,9 +4,20 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CustomBottomTabBar } from '../../components';
 import { ShopStackNavigation } from '../shopStackNavigation';
 import { HomeStackNavigation } from '../homeStacknavigation';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator();
+
+const getRouteName = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route);
+  switch (routeName) {
+    case 'filterScreen':
+      return 'none';
+    case 'brandScreen':
+      return 'none';
+  }
+}
 
 export const BottomStackNavigation = () => {
   return (
@@ -24,9 +35,14 @@ export const BottomStackNavigation = () => {
       {/* <Tab.Screen name='shopScreenV2' component={ShopScreenV2} options={{
         tabBarLabel: 'Shop'
       }}/> */}
-      <Tab.Screen name='shopStackNavigation' component={ShopStackNavigation} options={{
-        tabBarLabel: 'Shop'
-      }}/>
+      <Tab.Screen 
+        name='shopStackNavigation' 
+        component={ShopStackNavigation} 
+        options={({ route }) => ({
+          tabBarLabel: 'Shop',
+          tabBarStyle: {display: getRouteName(route)},
+        })} 
+      />
       <Tab.Screen name='bagScreen' component={CartScreen} options={{
         tabBarLabel: 'Bag'
       }}/>

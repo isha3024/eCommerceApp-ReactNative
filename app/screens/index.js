@@ -12,4 +12,5 @@ export * from './onBoardingScreen';
 export * from './shopScreenV2';
 export * from './catalogeScreen';
 export * from './filterScreen';
+export * from './brandScreen';
 // export * from './referScreen';

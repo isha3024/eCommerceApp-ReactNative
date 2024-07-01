@@ -4,7 +4,7 @@ import { Text } from '../../components'
 
 import * as styles from './styles'
 
-const BrandScreen = ({label, onPress}) => {
+export const BrandScreen = ({label, onPress}) => {
   return (
     <TouchableOpacity style={styles.brandContainer()} onPress={onPress}>
       <Text>{label}</Text>
@@ -12,5 +12,3 @@ const BrandScreen = ({label, onPress}) => {
     </TouchableOpacity>
   )
 }
-
-export default BrandScreen

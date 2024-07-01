@@ -68,7 +68,7 @@ export const CatalogeScreen = () => {
     LayoutAnimation.configureNext({
       duration: 1000,
       create: {type: 'linear', property: 'opacity'},
-      update: {type: 'spring', springDamping: 1},
+      update: {type: 'linear', property: 'opacity'},
       delete: {type: 'linear', property: 'opacity'},
     });
     setShowGrid(!showGrid);

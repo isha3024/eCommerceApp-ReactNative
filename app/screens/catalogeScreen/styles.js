@@ -9,7 +9,7 @@ export const header = (title) => ({
   paddingLeft: size.moderateScale(16),
   backgroundColor: color.white,
   zIndex: title ? 1 : size.moderateScale(2),
-  elevation: title ? size.moderateScale(6) : 0
+  elevation: title ? size.moderateScale(3) : 0
 })
 
 export const title = () => ({

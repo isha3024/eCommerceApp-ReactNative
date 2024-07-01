@@ -33,6 +33,17 @@ export const innerFilterItem = () => ({
   elevation: size.moderateScale(4)
 })
 
+export const categoryFilterItem = () => ({
+  backgroundColor: color.white,
+  paddingVertical: size.moderateScale(24),
+  paddingHorizontal: size.moderateScale(16),
+  flexDirection: 'row',
+  alignItem: 'center',
+  flexWrap: 'wrap',
+  gap: size.moderateScale(15),
+  elevation: size.moderateScale(4)
+})
+
 export const colorItem = (active) => ({
   width: size.moderateScale(44),
   height: size.moderateScale(44),
@@ -108,20 +119,24 @@ export const forwardArrow = () => ({
 
 export const bottomView = () => ({
   position: 'absolute',
-  bottom: 40,
-  zIndex: 10,
+  bottom: 0,
   width: '100%',
   backgroundColor: color.white,
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-around',
-  paddingTop: size.moderateScale(20)
+  paddingVertical: size.moderateScale(20),
+})
+
+export const button = () => ({
+  width: size.moderateScale(165),
+  // height: size.moderateScale(36),
+  paddingVertical: size.moderateScale(13)
 })
 
 export const sliderContainer = () => ({
   backgroundColor: color.white,
   width: '100%',
-  marginVertical: size.moderateScale(16)
 })
 
 export const slider = () => ({
