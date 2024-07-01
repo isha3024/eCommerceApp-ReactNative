@@ -4,14 +4,17 @@ import { IcBackArrow, IcSearch, color, fontSize, fonts, size } from '../../theme
 
 import * as styles from './styles'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import { useNavigation } from '@react-navigation/native'
 
 const Tab = createMaterialTopTabNavigator();
 
 export const ShopScreenV2 = () => {
+  const navigation = useNavigation();
   return (
     <Screen bgColor={color.white}>
       <Header 
         headerStyle={styles.header()}
+        leftIconPress={() => navigation.goBack()}
         headerLeftIcon
         leftIcon={() => {
           return (<IcBackArrow fill={color.mostlyBlack} width={size.moderateScale(10)} height={size.moderateScale(16)} />)

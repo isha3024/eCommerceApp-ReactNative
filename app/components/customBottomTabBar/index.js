@@ -21,12 +21,6 @@ export const CustomBottomTabBar = ({state, descriptors, navigation}) => {
         const isFocused = state.index === index;
 
         let Icon;
-        {/* if(route.name == 'homeScreen'){
-          Icon = state.index === index ? IcHomeActive : IcHomeInactive;
-        } */}
-         {/* else if(route.name == 'shopScreen'){
-          Icon = state.index === index ? IcShopActive : IcShop;
-        } */}
         if(route.name == 'homeStackNavigation'){
           Icon = state.index === index ? IcHomeActive : IcHomeInactive;
         }

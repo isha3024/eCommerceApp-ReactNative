@@ -3,7 +3,7 @@ import { color, size } from "../../theme"
 
 export const overlay = () => ({
   ...StyleSheet.absoluteFillObject,
-  backgroundColor: color.customTransparent(0.5),
+  backgroundColor: color.customTransparent(0.7),
   zIndex: 1,
 })
 

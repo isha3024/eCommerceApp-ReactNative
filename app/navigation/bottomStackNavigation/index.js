@@ -13,7 +13,7 @@ export const BottomStackNavigation = () => {
     <Tab.Navigator
       tabBar={props => <CustomBottomTabBar {...props} />}
       screenOptions={{
-        headerShown: false,
+        headerShown: false
       }}>
       <Tab.Screen name='homeStackNavigation' component={HomeStackNavigation} options={{
         tabBarLabel: 'Home'

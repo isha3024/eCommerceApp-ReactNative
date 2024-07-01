@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react' 
-import { View, StatusBar, FlatList, TouchableOpacity, Animated, Platform, UIManager, LayoutAnimation } from 'react-native'
-import { BottomSheetContainer, Header, ProductCardMain, Screen, SortBy, Text, Title } from '../../components'
-import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSort, IcSortIcon, color, size } from '../../theme'
+import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation } from 'react-native'
+import { BottomSheetContainer, Header, ProductCardMain, Screen, Text } from '../../components'
+import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 
 import * as styles from './styles'
 import * as data from '../../json'
@@ -49,10 +49,11 @@ const renderWomenTop = ({item}) => {
 const products = data.productList;
 
 
-export const CatalogeScreen = ({navigation}) => {
+export const CatalogeScreen = () => {
   const [isSheetVisible, setSheetVisible] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
   const [title, showTitle] = useState(false);
+  const navigation = useNavigation()
 
 
   const handleOpenPress = () => {
@@ -124,7 +125,7 @@ export const CatalogeScreen = ({navigation}) => {
           />
           </View>
           <View style={styles.filterContainer()}>
-            <TouchableOpacity style={styles.filterItem()}>
+            <TouchableOpacity onPress={() => navigation.navigate('filterScreen')} style={styles.filterItem()}>
               <IcFilter />
               <Text style={styles.filterItemText()}>Filter</Text>
             </TouchableOpacity>
