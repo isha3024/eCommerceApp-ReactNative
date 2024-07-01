@@ -1,14 +1,26 @@
 import { StyleSheet } from "react-native"
-import { color, size } from "../../theme"
+import { color, fontSize, fonts, size } from "../../theme"
 
 export const overlay = () => ({
   ...StyleSheet.absoluteFillObject,
-  backgroundColor: color.customTransparent(0.7),
-  zIndex: 1,
+  backgroundColor: color.customTransparent(0.8),
+  zIndex: 100,
 })
 
 export const contentContainer = () => ({
-  flex: 1,
+  backgroundColor: color.white
+})
+
+export const bottomSheet = () => ({
+  backgroundColor: color.darkGray
+})
+
+export const title = () => ({
+  fontSize: fontSize.middleMedium,
+  fontFamily: fonts.metropolisSemiBold,
+  color: color.mostlyBlack,
+  textAlign: 'center',
+  marginBottom: size.moderateScale(10)
 })
 
 export const handleComponent = () => ({

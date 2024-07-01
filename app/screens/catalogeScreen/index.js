@@ -38,6 +38,7 @@ const womenTopCategory = [
     name: 'Oversized',
   },
 ]
+
 const renderWomenTop = ({item}) => {
   return(
     <View style={styles.listItem()}>
@@ -93,87 +94,88 @@ export const CatalogeScreen = () => {
 
   return (
     <GestureHandlerRootView>
-    <Screen bgColor={color.white}>
-      <StatusBar translucent={true}/>
-      <Header
-        title={title ? true : false}
-        headerTitle={"Women's top"}
-        headerStyle={styles.header(title)}
-        leftIconPress={() => navigation.goBack()}
-        headerLeftIcon
-        leftIcon={() => {
-          return (<IcBackArrow />)
-        }} 
-        headerRightIcon
-        rightIcon={() => {
-          return <IcSearch />
-        }}
-      />
-      <View style={styles.topContainer()}>
-        <View style={styles.mainView()}>
-          {title ? null : (<Text style={styles.title()}>Women's tops</Text>)}
-        </View>
-        <View style={styles.horizontalScroll(title)}>
-          <View style={styles.flatList()}>
-          <FlatList
-            horizontal
-            contentContainerStyle={{paddingRight:10}}
-            showsHorizontalScrollIndicator={false}
-            data={womenTopCategory}
-            renderItem={renderWomenTop}
-            keyExtractor={item => item.id}
-          />
+      <Screen bgColor={color.white}>
+        <StatusBar translucent={true}/>
+        <Header
+          title={title ? true : false}
+          headerTitle={"Women's top"}
+          headerStyle={styles.header(title)}
+          leftIconPress={() => navigation.goBack()}
+          headerLeftIcon
+          leftIcon={() => {
+            return (<IcBackArrow />)
+          }} 
+          headerRightIcon
+          rightIcon={() => {
+            return <IcSearch />
+          }}
+        />
+        <View style={styles.topContainer()}>
+          <View style={styles.mainView()}>
+            {title ? null : (<Text style={styles.title()}>Women's tops</Text>)}
           </View>
-          <View style={styles.filterContainer()}>
-            <TouchableOpacity onPress={() => navigation.navigate('filterScreen')} style={styles.filterItem()}>
-              <IcFilter />
-              <Text style={styles.filterItemText()}>Filter</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleOpenPress} style={styles.filterItem()}>
-              <IcSortIcon />
-              <Text style={styles.filterItemText()}>Price: Low to High</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={toggleLayout} style={styles.filterIcon()}>
-              {
-                showGrid ? ( <IcGrid /> ) : ( <IcList /> )
-              }
-            </TouchableOpacity>
+          <View style={styles.horizontalScroll(title)}>
+            <View style={styles.flatList()}>
+            <FlatList
+              horizontal
+              contentContainerStyle={{paddingRight:10}}
+              showsHorizontalScrollIndicator={false}
+              data={womenTopCategory}
+              renderItem={renderWomenTop}
+              keyExtractor={item => item.id}
+            />
+            </View>
+            <View style={styles.filterContainer()}>
+              <TouchableOpacity onPress={() => navigation.navigate('filterScreen')} style={styles.filterItem()}>
+                <IcFilter />
+                <Text style={styles.filterItemText()}>Filter</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleOpenPress} style={styles.filterItem()}>
+                <IcSortIcon />
+                <Text style={styles.filterItemText()}>Price: Low to High</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={toggleLayout} style={styles.filterIcon()}>
+                {
+                  showGrid ? ( <IcGrid /> ) : ( <IcList /> )
+                }
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-      <View 
-        style={styles.bottomContainer()}>
-        {
-          showGrid ? (
-            <FlatList
-              key={'_'}
-              keyExtractor={item => '_'+item.name}
-              horizontal={false}
-              contentContainerStyle={{ paddingBottom: 80 }}
-              style={{ height: '95%' }}
-              data={products}
-              renderItem={renderProducts}
-            />
-          ) : (
-            <FlatList
-              key={'#'}
-              keyExtractor={item => '#'+item.name}
-              horizontal={false}
-              numColumns={2}
-              contentContainerStyle={{ paddingBottom: 80 }}
-              style={{ height: '95%' }}
-              data={products}
-              renderItem={renderProducts}
-            />
-          )
-        } 
-      </View>
-    </Screen>
-    <BottomSheetContainer 
-      isVisible={isSheetVisible} 
-      onClose={handleClosePress} 
-      navigation={navigation}
-    />
+        <View 
+          style={styles.bottomContainer()}>
+          {
+            showGrid ? (
+              <FlatList
+                key={'_'}
+                keyExtractor={item => '_'+item.name}
+                horizontal={false}
+                contentContainerStyle={{ paddingBottom: 80 }}
+                style={{ height: '95%' }}
+                data={products}
+                renderItem={renderProducts}
+              />
+            ) : (
+              <FlatList
+                key={'#'}
+                keyExtractor={item => '#'+item.name}
+                horizontal={false}
+                numColumns={2}
+                contentContainerStyle={{ paddingBottom: 80 }}
+                style={{ height: '95%' }}
+                data={products}
+                renderItem={renderProducts}
+              />
+            )
+          } 
+        </View>
+        <BottomSheetContainer 
+          isVisible={isSheetVisible} 
+          onClose={handleClosePress} 
+          navigation={navigation}
+          onPress={handleClosePress}
+        />
+      </Screen>
     </GestureHandlerRootView>
   )
 }

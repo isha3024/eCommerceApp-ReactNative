@@ -5,13 +5,14 @@ import { IcBackArrow, IcSearch, color, fontSize, fonts, size } from '../../theme
 import * as styles from './styles'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { useNavigation } from '@react-navigation/native'
+import { StatusBar } from 'react-native'
 
 const Tab = createMaterialTopTabNavigator();
 
 export const ShopScreenV2 = () => {
   const navigation = useNavigation();
   return (
-    <Screen bgColor={color.white}>
+    <Screen bgColor={color.white} translucent={true}>
       <Header 
         headerStyle={styles.header()}
         leftIconPress={() => navigation.goBack()}

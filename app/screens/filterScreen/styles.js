@@ -128,18 +128,3 @@ export const slider = () => ({
   width: '100%',
   height: size.moderateScale(20)
 })
-
-export const lowPrice = () => ({
-  position: 'absolute',
-  left: size.moderateScale(10),
-  top: size.moderateScale(-15),
-  color: color.mostlyBlack,
-  zIndex: size.moderateScale(2)
-})
-export const highPrice = () => ({
-  position: 'absolute',
-  right: size.moderateScale(10),
-  top: size.moderateScale(-15),
-  color: color.mostlyBlack,
-  zIndex: size.moderateScale(2)
-})

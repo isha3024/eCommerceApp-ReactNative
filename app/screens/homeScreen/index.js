@@ -67,11 +67,7 @@ const data = [
 
 export const HomeScreen = () => {
   return (
-    <Screen withScroll bgColor>
-    <StatusBar
-      backgroundColor="transparent"
-      translucent={true}
-    />
+    <Screen withScroll bgColor={color.transparent} translucent={true}>
       <View style={styles.topView()}>
         <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
         <LinearGradient 

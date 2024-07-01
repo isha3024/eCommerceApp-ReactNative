@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { StatusBar, View, FlatList, TouchableOpacity } from 'react-native'
 import { Button, Header, PriceRange, Screen, Text } from '../../components'
-import { IcBackArrow, color } from '../../theme'
+import { IcBackArrow, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
@@ -82,6 +82,10 @@ const category = [
 
   export const FilterScreen = () => {
     const [active, setActive] = useState(false);
+    const MIN_DEFAULT = 10;
+    const MAX_DEFAULT = 500;
+    const [minValue, setMinValue] = useState(MIN_DEFAULT);
+    const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -109,9 +113,16 @@ const category = [
             <Text style={styles.filterItemText()}>Price range</Text>
             <View style={styles.innerFilterItem()}>
             <View style={styles.sliderContainer()}>
-              <Text style={styles.lowPrice()}>$ {0}</Text>  
-              <Text style={styles.highPrice()}>$ {500}</Text>  
-              <PriceRange />
+              <PriceRange 
+                min={MIN_DEFAULT}
+                max={MAX_DEFAULT}
+                steps={1}
+                sliderWidth={Math.floor(size.deviceWidth)}
+                onValueChange={(range) => {
+                  setMinValue(range.min);
+                  setMaxValue(range.max);
+                }}
+              />
             </View>
             </View>
           </View>
@@ -158,7 +169,7 @@ const category = [
             </View>
           </View>
           <View style={styles.filterItem()}>
-            <TouchableOpacity style={styles.brandContainer()}>
+            <TouchableOpacity onPress={() => navigation.navigate('brandScreen')} style={styles.brandContainer()}>
               <Text style={styles.text()}>Brand</Text>
               <IcBackArrow style={styles.forwardArrow()} />
             </TouchableOpacity>

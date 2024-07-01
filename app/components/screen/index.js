@@ -59,7 +59,7 @@ export const Screen = props => {
           <StatusBar
             translucent={translucent}
             backgroundColor={bgColor ?? color.white}
-            barStyle={bgColor ? 'dark-content' : 'dark-content'}
+            barStyle={bgColor ? 'dark-content' : 'light-content'}
           />
           {loading && <Loader />}
 

@@ -37,8 +37,6 @@ export const SortBy = () => {
   const [isSelected, setIsSelected] = useState(false);
 
   const renderSortProductTypes = ({item}) => {
-    console.log('item id: ', item.id);
-    console.log('Selected item id: ', isSelected?.id);
     return(
       <TouchableOpacity activeOpacity={0.7} onPress={() => setIsSelected(item)} style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
         <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>

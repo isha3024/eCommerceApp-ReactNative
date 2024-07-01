@@ -1,11 +1,5 @@
 import { color, fontSize, fonts, size } from "../../theme";
 
-export const title = () => ({
-  fontSize: fontSize.middleMedium,
-  fontFamily: fonts.metropolisSemiBold,
-  color: color.darkGray
-})
-
 export const sortListItem = () => ({
   flex: 1,
   // width: '100%',

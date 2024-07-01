@@ -1,20 +1,27 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import BottomSheet from '@gorhom/bottom-sheet';
+import { View } from 'react-native';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { SortBy } from '../sortBy';
 
 import * as styles from './styles'
+import { Text } from '../text';
 
-export const BottomSheetContainer = ({isVisible, onClose, navigation}) => {
+export const BottomSheetContainer = ({isVisible, onClose}) => {
   
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ['1%', '40%'], []);
+  const snapPoints = useMemo(() => ["1%", "45%"], []);
 
-  useEffect(() => {
-    if (navigation) {
-      navigation.setOptions({tabBarVisible: !isVisible})
-    }
-  }, [isVisible, navigation]);
+  const handleClosePress = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
+  const renderBackdrop = useCallback((props) => (
+  <BottomSheetBackdrop
+    {...props}
+    disappearsOnIndex={-1}
+    appearsOnIndex={0}
+    onPress={handleClosePress}
+  />),[]);
 
   return (
     <>
@@ -25,6 +32,13 @@ export const BottomSheetContainer = ({isVisible, onClose, navigation}) => {
               ref={bottomSheetRef}
               index={1}
               snapPoints={snapPoints}
+              backdropComponent={renderBackdrop}
+              onChange={(index) => {
+                if(index === -1) {
+                  onClose();
+                }
+              }}
+              style={styles.bottomSheet()}
               handleComponent={() => {
                 return(
                   <View style={styles.handleComponent()}>
@@ -33,13 +47,9 @@ export const BottomSheetContainer = ({isVisible, onClose, navigation}) => {
                 )
               }}
               enablePanDownToClose={true}
-              onChange={(index) => {
-                if(index === -1) {
-                  onClose();
-                }
-              }}
             >
               <View style={styles.contentContainer()}>
+                <Text style={styles.title()}>Sort by</Text>
                 <SortBy />
               </View>
             </BottomSheet>
