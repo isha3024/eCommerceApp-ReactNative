@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { View } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import { SortBy } from '../sortBy';
 
 import * as styles from './styles'
-import { Text } from '../text';
 
-export const BottomSheetContainer = ({isVisible, onClose}) => {
+export const BottomSheetContainer = ({isVisible, onClose, children}) => {
   
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["1%", "45%"], []);
@@ -46,11 +44,9 @@ export const BottomSheetContainer = ({isVisible, onClose}) => {
                   </View>
                 )
               }}
-              enablePanDownToClose={true}
             >
               <View style={styles.contentContainer()}>
-                <Text style={styles.title()}>Sort by</Text>
-                <SortBy />
+                {children}
               </View>
             </BottomSheet>
           </View>

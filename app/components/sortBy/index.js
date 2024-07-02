@@ -28,13 +28,14 @@ const sortProductType = [
   },
   {
     id: 5,
-    name: 'Price: hight to lowest'
+    name: 'Price: highest to low'
   }
 ]
 
 export const SortBy = () => {
 
   const [isSelected, setIsSelected] = useState(false);
+  console.log('isSelected: ', isSelected.name);
 
   const renderSortProductTypes = ({item}) => {
     return(
@@ -46,9 +47,6 @@ export const SortBy = () => {
 
   return (
     <>
-      {/* <View>
-        <Text styles={{color: color.mostlyBlack}}>Sort By</Text>
-      </View> */}
       <FlatList
         data={sortProductType}
         renderItem={renderSortProductTypes}

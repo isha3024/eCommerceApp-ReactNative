@@ -2,68 +2,73 @@ import React from 'react'
 import {TextInput, View } from 'react-native'
 
 import * as styles from './styles'
-import Animated, { useAnimatedStyle, useSharedValue, useAnimatedGestureHandler, useAnimatedProps, runOnJS} from 'react-native-reanimated'
-import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler'
+import Animated, { useAnimatedStyle, useSharedValue, useAnimatedProps, runOnJS} from 'react-native-reanimated'
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
 
 export const PriceRange = ({min, max, steps, onValueChange, sliderWidth}) => {
 
   const position = useSharedValue(0);
-  const positionTwo = useSharedValue(sliderWidth - 58);
+  const positionTwo = useSharedValue(sliderWidth);
   const zIndex = useSharedValue(0);
   const zIndexTwo = useSharedValue(0);
+  const context = useSharedValue(0);
+  const contextTwo = useSharedValue(0);
 
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart: (_, ctx) => {
-      ctx.startX = position.value;
-    },
-    onActive: (e, ctx) => {
-      if(ctx.startX + e.translationX < 0){
+  const pan = Gesture.Pan()
+    .onBegin(() => {
+      context.value = position.value;
+    })
+    .onUpdate(e => {
+      if (context.value + e.translationX < 0) {
         position.value = 0;
-      }else if(ctx.startX + e.translationX > positionTwo.value){
+      } else if (context.value + e.translationX > positionTwo.value) {
         position.value = positionTwo.value;
         zIndex.value = 1;
         zIndexTwo.value = 0;
-      }else {
-        position.value = ctx.startX + e.translationX;
+      } else {
+        position.value = context.value + e.translationX;
       }
-    },
-    onEnd: () => {
+    })
+    .onEnd(() => {
       runOnJS(onValueChange)({
-        min: min +
-        Math.floor(position.value / (sliderWidth / ((max - min) / steps))) * 
-        steps,
-        max: min + 
-        Math.floor(positionTwo.value / (sliderWidth / ((max- min) / steps))) * 
-        steps
-      })
-    }
-  })
+        min:
+          min +
+          Math.floor(position.value / (sliderWidth / ((max - min) / steps))) *
+            steps,
+        max:
+          min +
+          Math.floor(positionTwo.value / (sliderWidth / ((max - min) / steps))) *
+            steps,
+      });
+    });
 
-  const gestureHandlerTwo = useAnimatedGestureHandler({
-    onStart: (_, ctx) => {
-      ctx.startX = positionTwo.value;
-    },
-    onActive: (e, ctx) => {
-      if(ctx.startX + e.translationX > sliderWidth - 58){
-        positionTwo.value = sliderWidth - 58;
-      }else if(ctx.startX + e.translationX < position.value){
-        positionTwo.value = position.value
+    const panTwo = Gesture.Pan()
+    .onBegin(() => {
+      contextTwo.value = positionTwo.value;
+    })
+    .onUpdate(e => {
+      if (contextTwo.value + e.translationX > sliderWidth) {
+        positionTwo.value = sliderWidth;
+      } else if (contextTwo.value + e.translationX < position.value) {
+        positionTwo.value = position.value;
         zIndex.value = 0;
         zIndexTwo.value = 1;
-      }else {
-        positionTwo.value = ctx.startX + e.translationX;
+      } else {
+        positionTwo.value = contextTwo.value + e.translationX;
       }
-    },
-    onEnd: () => {
+    })
+    .onEnd(() => {
       runOnJS(onValueChange)({
-        min: min +
-        Math.floor(position.value / (sliderWidth / ((max - min) / steps))) * steps,
-        max: min + 
-        Math.floor(positionTwo.value / (sliderWidth / ((max- min) / steps))) * 
-        steps
-      })
-    }
-  })
+        min:
+          min +
+          Math.floor(position.value / (sliderWidth / ((max - min) / steps))) *
+            steps,
+        max:
+          min +
+          Math.floor(positionTwo.value / (sliderWidth / ((max - min) / steps))) *
+            steps,
+      });
+    });
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -133,12 +138,12 @@ export const PriceRange = ({min, max, steps, onValueChange, sliderWidth}) => {
         <View>
           <View style={styles.trackBack()} />
           <Animated.View style={[styles.trackFront(), sliderStyle]} />
-          <PanGestureHandler onGestureEvent={gestureHandler}>
+          <GestureDetector gesture={pan}>
             <Animated.View style={[styles.thumb(), animatedStyle]} />
-          </PanGestureHandler>
-          <PanGestureHandler onGestureEvent={gestureHandlerTwo}>
+          </GestureDetector>
+          <GestureDetector gesture={panTwo}>
             <Animated.View style={[styles.thumb(), animatedStyleTwo]} />
-          </PanGestureHandler>
+          </GestureDetector>
         </View>
       </View>
     </GestureHandlerRootView>

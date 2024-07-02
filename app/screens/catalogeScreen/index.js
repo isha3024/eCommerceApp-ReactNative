@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react' 
+import React, { useEffect, useRef, useState } from 'react' 
 import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation } from 'react-native'
-import { BottomSheetContainer, Header, ProductCardMain, Screen, Text } from '../../components'
+import { BottomSheetContainer, Header, ProductCardMain, Screen, SortBy, Text } from '../../components'
 import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 
 import * as styles from './styles'
@@ -47,15 +47,76 @@ const renderWomenTop = ({item}) => {
   )
 }
 
-const products = data.productList;
 
+const sortProductType = [
+  {
+    id: 1,
+    name: 'Popular'
+  },
+  {
+    id: 2,
+    name: 'Newest'
+  },
+  {
+    id: 3,
+    name: 'Customer review'
+  },
+  {
+    id: 4,
+    name: 'Price: lowest to high'
+  },
+  {
+    id: 5,
+    name: 'Price: highest to low'
+  }
+]
 
 export const CatalogeScreen = () => {
+  const navigation = useNavigation();
+  const products = data.productList;
+  const [showProductList, setShowProductList] = useState(products);
   const [isSheetVisible, setSheetVisible] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
   const [title, showTitle] = useState(false);
-  const navigation = useNavigation()
+  const [isSelected, setIsSelected] = useState(null);
+  const [sortedProducts, setSortedProducts] = useState([]);
+  console.log('showProductList: ', showProductList);
 
+  useEffect(() => {
+    const preSelectedSortItem = sortProductType.find(item => item.name === 'Price: lowest to high');
+    setIsSelected(preSelectedSortItem);
+    setSortedProducts(preSelectedSortItem);
+  },[]);
+
+  const sortProducts = (sortOption) => {
+    let sortedList = [...products];
+    switch (sortOption.id) {
+      case 1:
+        sortedList.sort((a, b) => a.regularPrice - b.regularPrice);
+        break;
+      case 2:
+        sortedList.sort((a, b) => b.regularPrice - a.regularPrice);
+        break;
+      default:
+        break;
+    }
+    setShowProductList(sortedList);
+  };
+
+  const renderSortProductTypes = ({item}) => {
+    return(
+      <TouchableOpacity 
+        activeOpacity={0.7} 
+        onPress={() => {
+          setIsSelected(item);
+          sortProducts(item);
+          setSheetVisible(false);
+        }} 
+        style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
+        <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>
+      </TouchableOpacity>
+    )
+  }
 
   const handleOpenPress = () => {
     setSheetVisible(true);
@@ -66,7 +127,7 @@ export const CatalogeScreen = () => {
 
   const toggleLayout = () => {
     LayoutAnimation.configureNext({
-      duration: 1000,
+      duration: 400,
       create: {type: 'linear', property: 'opacity'},
       update: {type: 'linear', property: 'opacity'},
       delete: {type: 'linear', property: 'opacity'},
@@ -75,7 +136,7 @@ export const CatalogeScreen = () => {
     showTitle(!title);
   } 
 
-  const renderProducts = ({item}) => {   
+  const renderProducts = ({item}) => {
     return (
         <ProductCardMain 
           productHorizontal={showGrid ? true : false}
@@ -85,7 +146,7 @@ export const CatalogeScreen = () => {
           ratingsCounts={item?.rating_count}
           regularPrice={item?.regularPrice}
           newProduct={item?.isProductNew}
-          productImage={item.images}
+          productImage={item?.images}
           topRightIcon={false}
           customProductStyle={showGrid ? null : styles.productCardGridItem()}
         />
@@ -132,7 +193,7 @@ export const CatalogeScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity onPress={handleOpenPress} style={styles.filterItem()}>
                 <IcSortIcon />
-                <Text style={styles.filterItemText()}>Price: Low to High</Text>
+                <Text style={styles.filterItemText()}>{isSelected ? isSelected.name : 'Sort'}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={toggleLayout} style={styles.filterIcon()}>
                 {
@@ -147,34 +208,40 @@ export const CatalogeScreen = () => {
           {
             showGrid ? (
               <FlatList
-                key={'_'}
-                keyExtractor={item => '_'+item.name}
                 horizontal={false}
                 contentContainerStyle={{ paddingBottom: 80 }}
                 style={{ height: '95%' }}
-                data={products}
+                data={showProductList}
                 renderItem={renderProducts}
+                key={'_'}
+                keyExtractor={item => '_'+item.name}
               />
             ) : (
               <FlatList
-                key={'#'}
-                keyExtractor={item => '#'+item.name}
                 horizontal={false}
                 numColumns={2}
                 contentContainerStyle={{ paddingBottom: 80 }}
-                style={{ height: '95%' }}
-                data={products}
+                style={{height: '95%' }}
+                data={showProductList}
                 renderItem={renderProducts}
+                key={'#'}
+                keyExtractor={(item) => item.id.toString()}
               />
             )
           } 
         </View>
-        <BottomSheetContainer 
-          isVisible={isSheetVisible} 
-          onClose={handleClosePress} 
+        <BottomSheetContainer
+          isVisible={isSheetVisible}
+          onClose={handleClosePress}
           navigation={navigation}
-          onPress={handleClosePress}
-        />
+          onPress={handleClosePress}>
+          <Text style={styles.titleSort()}>Sort by</Text>
+          <FlatList
+            data={sortProductType}
+            renderItem={renderSortProductTypes}
+            keyExtractor={(item) => item.id}
+          />
+        </BottomSheetContainer>
       </Screen>
     </GestureHandlerRootView>
   )

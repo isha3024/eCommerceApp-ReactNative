@@ -8,11 +8,11 @@ export const overlay = () => ({
 })
 
 export const contentContainer = () => ({
-  backgroundColor: color.white
+  backgroundColor: color.white,
 })
 
 export const bottomSheet = () => ({
-  backgroundColor: color.darkGray
+  // backgroundColor: color.darkGray
 })
 
 export const title = () => ({
@@ -24,9 +24,9 @@ export const title = () => ({
 })
 
 export const handleComponent = () => ({
-    alignItems: 'center',
-    paddingVertical: size.moderateScale(10),
-    marginBottom: size.moderateScale(16)
+  alignItems: 'center',
+  paddingVertical: size.moderateScale(10),
+  marginBottom: size.moderateScale(16)
 })
 
 export const handle = () => ({

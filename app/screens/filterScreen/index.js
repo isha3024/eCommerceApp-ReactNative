@@ -6,94 +6,70 @@ import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
 
-const colorsList = [
-  {
-    colorName: 'black',
-    colorBg: '#020202'
-  },
-  {
-    colorName: 'white',
-    colorBg: '#F6F6F6'
-  },
-  {
-    colorName: 'red',
-    colorBg: '#B82222'
-  },
-  {
-    colorName: 'plum',
-    colorBg: '#BEA9A9'
-  },
-  {
-    colorName: 'beige',
-    colorBg: '#E2BB8D'
-  },
-  {
-    colorName: 'blue',
-    colorBg: '#151867'
-  },
-]
+const colorsList = ['#020202', '#F6F6F6', '#B82222', '#BEA9A9', '#E2BB8D', '#151867'];
 
-const sizeList = [
-  {
-    sizeName: 'ExtraSmall',
-    sizeValue: 'XS'
-  },
-  {
-    sizeName: 'Small',
-    sizeValue: 'S'
-  },
-  {
-    sizeName: 'Medium',
-    sizeValue: 'M'
-  },
-  {
-    sizeName: 'Large',
-    sizeValue: 'L'
-  },
-  {
-    sizeName: 'ExtraLarge',
-    sizeValue: 'XL'
-  },
-  
-]
+const sizeList = ['XS', 'S', 'M', "L", 'XL']
 
-const category = [
-  {
-    id: 1,
-    name: 'All'
-  },
-  {
-    id: 2,
-    name: 'Women'
-  },
-  {
-    id: 3,
-    name: 'Men'
-  },
-  {
-    id: 4,
-    name: 'Boys'
-  },
-  {
-    id: 5,
-    name: 'Girls'
-  },
-]
 
-  export const FilterScreen = () => {
-    const [active, setActive] = useState(false);
-    const MIN_DEFAULT = 10;
-    const MAX_DEFAULT = 500;
-    const [minValue, setMinValue] = useState(MIN_DEFAULT);
-    const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
-    const navigation = useNavigation();
+const category = ['All', 'Women', 'Men', 'Boys', 'Girls']
 
-    useEffect(() => {
-        navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' }, tabBarVisible: false });
-        return () =>
-            navigation.getParent()?.setOptions({ tabBarStyle: undefined, tabBarVisible: undefined });
-    }, [navigation]);
+export const FilterScreen = () => {
 
+  const [selectColors, setSelectColors] = useState([]);
+  const [selectSize, setSelectSize] = useState([]);
+  const [selectCategory, setSelectCategory] = useState([]);
+
+  const toggleColors = (color) => {
+    if(selectColors.includes(color)){
+      setSelectColors(selectColors.filter(col => col !== color));
+    }else {
+      setSelectColors([...selectColors, color]);
+    }
+  }
+  const toggleSizes = (size) => {
+    if(selectSize.includes(size)){
+      setSelectSize(selectSize.filter(s => s !== size));
+    }else {
+      setSelectSize([...selectSize, size]);
+    }
+  } 
+  const toggleCategory = (cat) => {
+    if(selectCategory.includes(cat)){
+      setSelectCategory(selectCategory.filter(c => c !== cat));
+    }else {
+      setSelectCategory([...selectCategory, cat]);
+    }
+  }
+
+  useEffect(() => {
+    if(selectColors.length === 0){
+      setSelectColors([colorsList[0], colorsList[4]])
+    }
+    if(selectSize.length === 0){
+      setSelectSize([sizeList[1], sizeList[2]])
+    }
+    if(selectCategory.length === 0){
+      setSelectCategory([category[0]])
+    }
+  })
+
+  const applyFilters = () => {
+    navigation.navigate('catalogeScreen');
+  }
+ 
+  const discardFilters = () => {
+    setSelectColors(['']);
+    setSelectSize(['']);
+    setSelectCategory(['']);
+    setMinValue(MIN_DEFAULT);
+    setMaxValue(MAX_DEFAULT);
+  }
+
+  const MIN_DEFAULT = 10;
+  const MAX_DEFAULT = 500;
+  const [minValue, setMinValue] = useState(MIN_DEFAULT);
+  const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
+  const navigation = useNavigation();
   return (
     <>
       <Screen bgColor={color.white} withScroll>
@@ -117,7 +93,7 @@ const category = [
                 min={MIN_DEFAULT}
                 max={MAX_DEFAULT}
                 steps={1}
-                sliderWidth={Math.floor(size.deviceWidth)}
+                sliderWidth={353}
                 onValueChange={(range) => {
                   setMinValue(range.min);
                   setMaxValue(range.max);
@@ -130,10 +106,10 @@ const category = [
             <Text style={styles.filterItemText()}>Color</Text>
             <View style={styles.innerFilterItem()}>
               {
-                colorsList.map((item) => {
+                colorsList.map((color) => {
                   return (
-                    <TouchableOpacity activeOpacity={0.7} style={styles.colorItem()} key={item.colorName}>
-                      <View style={styles.colors(item.colorBg)}></View>
+                    <TouchableOpacity onPress={() => toggleColors(color)} activeOpacity={0.7} style={[styles.colorItem(), selectColors.includes(color) && styles.colorItemActive()]} key={color}>
+                      <View style={styles.colors(color)}></View>
                     </TouchableOpacity>
                   )
                 })
@@ -144,10 +120,10 @@ const category = [
             <Text style={styles.filterItemText()}>Size</Text>
             <View style={styles.innerFilterItem()}>
               {
-                sizeList.map((item) => {
+                sizeList.map((size, index) => {
                   return (
-                    <TouchableOpacity activeOpacity={0.5} style={styles.sizeItem()} key={item.sizeName}>
-                      <Text style={styles.sizes(active)}>{item.sizeValue}</Text>
+                    <TouchableOpacity onPress={() => toggleSizes(size)} activeOpacity={0.5} style={[styles.sizeItem(), selectSize.includes(size) && styles.sizeItemActive()]} key={index}>
+                      <Text style={[styles.sizes(), selectSize.includes(size) && styles.activeSizes()]}>{size}</Text>
                     </TouchableOpacity>
                   )
                 })
@@ -160,25 +136,26 @@ const category = [
               {
                 category.map((item) => {
                   return (
-                    <TouchableOpacity activeOpacity={0.5} style={styles.categoryItem()} key={item.id}>
-                      <Text style={styles.categoryText(active)}>{item.name}</Text>
+                    <TouchableOpacity onPress={() => toggleCategory(item)} activeOpacity={0.5} style={[styles.categoryItem(), selectCategory.includes(item) && styles.categoryItemActive()]} key={item}>
+                      <Text style={[styles.categoryText(), selectCategory.includes(item) && styles.categoryTextActive()]}>{item}</Text>
                     </TouchableOpacity>
                   )
-                })
+                }) 
               }
             </View>
           </View>
           <View style={styles.filterItem()}>
             <TouchableOpacity onPress={() => navigation.navigate('brandScreen')} style={styles.brandContainer()}>
               <Text style={styles.text()}>Brand</Text>
-              <IcBackArrow style={styles.forwardArrow()} />
+              <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(8)} height={size.moderateScale(12)} />
             </TouchableOpacity>
+            <Text style={styles.brandText()}>adidas Original, Jack & Jones, s.Oliver</Text>
           </View>
         </View>
       </Screen>
       <View style={styles.bottomView()}>
-        <Button title='Discard' border btnStyle={styles.button()} />
-        <Button title='Apply' btnStyle={styles.button()} />
+        <Button title='Discard' onPress={() => discardFilters()} border btnStyle={styles.button()} />
+        <Button title='Apply'  onPress={() => applyFilters()} btnStyle={styles.button()} />
       </View>
     </>
   )

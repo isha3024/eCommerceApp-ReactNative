@@ -2,7 +2,7 @@ import { color, fontSize, fonts, size } from "../../theme";
 
 export const header = () => ({
   backgroundColor: color.white,
-  elevation: size.moderateScale(7),
+  elevation: size.moderateScale(10),
   paddingHorizontal: size.moderateScale(14)
 })
 
@@ -30,7 +30,7 @@ export const innerFilterItem = () => ({
   alignItem: 'center',
   flexWrap: 'wrap',
   gap: size.moderateScale(15),
-  elevation: size.moderateScale(4)
+  elevation: size.moderateScale(2)
 })
 
 export const categoryFilterItem = () => ({
@@ -41,61 +41,85 @@ export const categoryFilterItem = () => ({
   alignItem: 'center',
   flexWrap: 'wrap',
   gap: size.moderateScale(15),
-  elevation: size.moderateScale(4)
+  elevation: size.moderateScale(2)
 })
 
-export const colorItem = (active) => ({
+export const colorItem = () => ({
   width: size.moderateScale(44),
   height: size.moderateScale(44),
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: size.moderateScale(50),
-  borderWidth: size.moderateScale(2),
-  borderColor: active ? color.secondary : color.transparent
+  borderWidth: size.moderateScale(1),
+  borderColor: color.transparent
+})
+
+export const colorItemActive = () => ({
+  borderColor: color.secondary
 })
 
 export const colors = (colorBg) => ({
   position: 'absolute',
   backgroundColor: colorBg ? colorBg : color.white,
-  width: '80%',
-  height: '80%',
+  width: '85%',
+  height: '85%',
   borderRadius: size.moderateScale(50)
 })
 
-export const sizeItem = (active) => ({
+export const sizeItem = () => ({
   width: size.moderateScale(40),
   height: size.moderateScale(40),
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: active ? color.secondary : color.white,
+  backgroundColor: color.white,
   borderRadius: size.moderateScale(8),
   borderWidth: size.moderateScale(1),
-  borderColor: active ? color.secondary : color.darkGray
+  borderColor: color.darkGray
+})
+export const sizeItemActive = () => ({
+  backgroundColor: color.secondary,
+  borderColor: color.secondary
 })
 
-export const sizes = (active) => ({
+export const sizes = () => ({
   position: 'absolute',
-  color: active ? color.white : color.mostlyBlack,
+  color: color.mostlyBlack,
   fontSize: fontSize.small,
   fontFamily: fonts.metropolisMedium
 })
 
-export const categoryItem = (active) => ({
+export const activeSizes = () => ({
+  position: 'absolute',
+  color: color.white,
+  fontSize: fontSize.small,
+  fontFamily: fonts.metropolisMedium
+})
+
+export const categoryItem = () => ({
   width: size.moderateScale(100),
   height: size.moderateScale(40),
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: active ? color.secondary : color.white,
-  borderColor: active ? color.transparent : color.darkGray,
+  backgroundColor: color.white,
+  borderColor: color.darkGray,
   borderWidth: size.moderateScale(1),
   borderRadius: size.moderateScale(8)
 })
 
-export const categoryText = (active) => ({
-  color: active ? color.white : color.mostlyBlack,
+export const categoryItemActive = () => ({
+  backgroundColor: color.secondary,
+  borderColor: color.secondary,
+})
+
+export const categoryText = () => ({
+  color: color.mostlyBlack,
   fontSize: fontSize.small,
   fontFamily: fonts.metropolisMedium
+})
+
+export const categoryTextActive = () => ({
+  color: color.white,
 })
 
 
@@ -131,7 +155,8 @@ export const bottomView = () => ({
 export const button = () => ({
   width: size.moderateScale(165),
   // height: size.moderateScale(36),
-  paddingVertical: size.moderateScale(13)
+  paddingVertical: size.moderateScale(13),
+  shadowColor: color.secondary
 })
 
 export const sliderContainer = () => ({
@@ -142,4 +167,11 @@ export const sliderContainer = () => ({
 export const slider = () => ({
   width: '100%',
   height: size.moderateScale(20)
+})
+
+export const brandText = () => ({
+  color: color.darkGray,
+  fontSize: fontSize.mediumSmall,
+  fontFamily: fonts.metropolisRegular,
+  paddingHorizontal: size.moderateScale(16)
 })

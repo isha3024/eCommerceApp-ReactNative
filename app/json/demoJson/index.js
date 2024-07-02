@@ -2,6 +2,7 @@ import { images } from "../../theme";
 
 export const productList = [
   {
+    id: 1,
     name: "Evening Dress",
     brand: "Dorothy Perkins",
     images: images.ImgCard,
@@ -12,6 +13,7 @@ export const productList = [
     isProductNew: true
   },
   {
+    id: 2,
     name: "Dorothi Perkins",
     merchant: "Sports Dress",
     brand: "Shoemaster",
@@ -24,6 +26,7 @@ export const productList = [
     isProductNew: true
   },
   {
+    id: 3,
     name: "Sport Dress",
     merchant: "Example Store",
     brand: "Sitlly",
@@ -36,6 +39,7 @@ export const productList = [
     isProductNew: true
   },
   {
+    id: 4,
     name: "Dinner Dress",
     merchant: "Example Store",
     brand: "Puma",
@@ -47,6 +51,7 @@ export const productList = [
     isProductNew: true
   },
   {
+    id: 5,
     name: "Shorts",
     merchant: "Example Store",
     brand: "H&M",

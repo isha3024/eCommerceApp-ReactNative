@@ -35,6 +35,8 @@ import { Filter } from './image/svgIcons/IcFilter';
 import { SortIcon } from './image/svgIcons/IcSort';
 import { Grid } from './image/svgIcons/IcGrid';
 import { List } from './image/svgIcons/IcList';
+import { CheckBoxInactive } from './image/svgIcons/IcCheckboxInactive';
+import { CheckBoxActive } from './image/svgIcons/IcCheckboxActive';
 
 export const IcHome = props => <Home {...props} />;
 export const IcPhone = props => <Phone {...props} />;
@@ -70,3 +72,5 @@ export const IcFilter = props => <Filter {...props} />;
 export const IcSortIcon = props => <SortIcon {...props} />;
 export const IcGrid = props => <Grid {...props} />;
 export const IcList = props => <List {...props} />;
+export const IcCheckBoxInactive = props => <CheckBoxInactive {...props} />;
+export const IcCheckBoxActive = props => <CheckBoxActive {...props} />;
