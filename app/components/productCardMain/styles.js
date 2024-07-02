@@ -52,8 +52,8 @@ export const addToFavoriteBtn = () => ({
   borderRadius: size.moderateScale(40),
   alignItems: 'center',
   justifyContent: 'center',
-  right: size.moderateScale(0),
-  bottom: size.moderateScale(-15),
+  right: size.moderateScale(16),
+  top: size.moderateScale(163),
   zIndex: size.moderateScale(10),
   elevation: size.moderateScale(4)
 })
@@ -66,17 +66,17 @@ export const addToFavoriteBtnHorizontal = () => ({
   borderRadius: size.moderateScale(40),
   alignItems: 'center',
   justifyContent: 'center',
-  right: size.moderateScale(0),
-  bottom: size.moderateScale(-15),
+  bottom: size.moderateScale(-5),
+  right: size.moderateScale(10),
   zIndex: size.moderateScale(10),
   elevation: size.moderateScale(4)
 })
 
-export const badge = (sale, newProduct) => ({
+export const badge = (newProduct) => ({
   position: 'absolute',
   width: size.moderateScale(40),
   height: size.moderateScale(24),
-  backgroundColor: sale ? color.secondary : newProduct ? color.mostlyBlack : color.transparent,
+  backgroundColor: newProduct ? color.mostlyBlack : color.transparent,
   borderRadius: size.moderateScale(29),
   alignItems: 'center',
   justifyContent: 'center',
@@ -84,16 +84,20 @@ export const badge = (sale, newProduct) => ({
   left: size.moderateScale(8),
 })
 
-export const badgeHorizontal = (sale, newProduct) => ({
+export const badgeHorizontal = () => ({
   position: 'absolute',
   width: size.moderateScale(40),
   height: size.moderateScale(24),
-  backgroundColor: sale ? color.secondary : newProduct ? color.mostlyBlack : color.transparent,
+  // backgroundColor: newProduct ? color.mostlyBlack : color.transparent,
   borderRadius: size.moderateScale(29),
   alignItems: 'center',
   justifyContent: 'center',
   top: size.moderateScale(8),
   left: size.moderateScale(8),
+})
+
+export const discountBadge = () => ({
+  backgroundColor: color.secondary,
 })
 
 export const badgeText = () => ({

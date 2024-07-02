@@ -14,7 +14,7 @@ const data = [
     rating: 5,
     rating_scale: 10.0,
     rating_count: 12,
-    regularPrice: 17.99,
+    originalPrice: 17.99,
     isProductNew: true
   },
   {
@@ -26,8 +26,9 @@ const data = [
     rating: 4,
     rating_scale: 10.0,
     rating_count: 4,
-    regularPrice: 22,
-    isProductNew: true
+    originalPrice: 22,
+    sellingPrice: 11,
+    isProductNew: false
   },
   {
     name: "Sport Dress",
@@ -38,8 +39,8 @@ const data = [
     rating: 1,
     rating_scale: 10.0,
     rating_count: 22,
-    regularPrice: 14,
-    isProductNew: true
+    originalPrice: 14,
+    isProductNew: false
   },
   {
     name: "Dinner Dress",
@@ -49,7 +50,7 @@ const data = [
     rating: 2,
     rating_scale: 10.0,
     rating_count: 12,
-    regularPrice: 17,
+    originalPrice: 17,
     isProductNew: true
   },
   {
@@ -60,8 +61,9 @@ const data = [
     rating: 4,
     rating_scale: 10.0,
     rating_count: 12,
-    regularPrice: 30,
-    isProductNew: true
+    originalPrice: 30,
+    sellingPrice: 20.76,
+    isProductNew: false
   }
 ]
 
@@ -94,17 +96,17 @@ export const HomeScreen = () => {
         </View>
         <FlatList 
           horizontal
-          contentContainerStyle={{paddingBottom: size.moderateScale(20)}}
+          contentContainerStyle={{paddingBottom: size.moderateScale(80)}}
           data={data}
           renderItem={(item, index) => {
             return (
               <ProductCardMain 
+                customProductStyle={styles.productCardHome()}
                 productImage={item.item.images}
                 brandName={item.item.brand}
                 productTitle={item.item.name}
-                oldPrice={item.item?.oldPrice} 
-                newPrice={item.item?.salePrice}
-                regularPrice={item.item?.regularPrice}
+                originalPrice={item.item?.originalPrice}
+                sellingPrice={item.item?.sellingPrice} 
                 ratings={item.item.rating}
                 ratingsCounts={item.item.rating_count}
                 newProduct={item.item?.isProductNew}

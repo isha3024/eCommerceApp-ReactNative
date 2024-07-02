@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react' 
 import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation } from 'react-native'
-import { BottomSheetContainer, Header, ProductCardMain, Screen, SortBy, Text } from '../../components'
+import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, SortBy, Text } from '../../components'
 import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 
 import * as styles from './styles'
@@ -71,6 +71,8 @@ const sortProductType = [
   }
 ]
 
+const sizes = ['XS', 'S', 'M', 'L', 'XL'];
+
 export const CatalogeScreen = () => {
   const navigation = useNavigation();
   const products = data.productList;
@@ -80,7 +82,8 @@ export const CatalogeScreen = () => {
   const [title, showTitle] = useState(false);
   const [isSelected, setIsSelected] = useState(null);
   const [sortedProducts, setSortedProducts] = useState([]);
-  console.log('showProductList: ', showProductList);
+  const [isSizeSheetVisible, setSizeSheetVisible] = useState(false);
+  const [userSizeOption, setUserSizeOption] = useState(false);
 
   useEffect(() => {
     const preSelectedSortItem = sortProductType.find(item => item.name === 'Price: lowest to high');
@@ -101,21 +104,33 @@ export const CatalogeScreen = () => {
         break;
     }
     setShowProductList(sortedList);
+    console.log('sortedList: ', sortedList);
   };
+
+  const handleSortOptionChange = (sortOption) => {
+    setIsSelected(sortOption);
+    setSheetVisible(false);
+    sortProducts(sortOption);
+  };
+  useEffect(() => {
+    const preSelectedSortItem = sortProductType.find(item => item.name === 'Price: lowest to high');
+    setIsSelected(preSelectedSortItem);
+    sortProducts(preSelectedSortItem);
+  }, []);
 
   const renderSortProductTypes = ({item}) => {
     return(
       <TouchableOpacity 
         activeOpacity={0.7} 
-        onPress={() => {
-          setIsSelected(item);
-          sortProducts(item);
-          setSheetVisible(false);
-        }} 
+        onPress={() => handleSortOptionChange(item)} 
         style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
         <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>
       </TouchableOpacity>
     )
+  }
+
+  const selectSizeHandler = (size) => {
+    setUserSizeOption(size);
   }
 
   const handleOpenPress = () => {
@@ -123,6 +138,13 @@ export const CatalogeScreen = () => {
   }
   const handleClosePress = () => {
     setSheetVisible(false);
+  }
+
+  const handleOpenPressSizeSheet = () => {
+    setSizeSheetVisible(true);
+  }
+  const handleClosePressSizeSheet = () => {
+    setSizeSheetVisible(false);
   }
 
   const toggleLayout = () => {
@@ -139,15 +161,16 @@ export const CatalogeScreen = () => {
   const renderProducts = ({item}) => {
     return (
         <ProductCardMain 
+          onProductPress={handleOpenPressSizeSheet}
           productHorizontal={showGrid ? true : false}
           productTitle={item?.name}
           brandName={item?.brand}
           ratings={item?.rating}
           ratingsCounts={item?.rating_count}
-          regularPrice={item?.regularPrice}
-          newProduct={item?.isProductNew}
+          originalPrice={item?.regularPrice}
           productImage={item?.images}
           topRightIcon={false}
+          flotingBtnStyle={showGrid ? null : styles.flotingButton()}
           customProductStyle={showGrid ? null : styles.productCardGridItem()}
         />
       )
@@ -234,13 +257,38 @@ export const CatalogeScreen = () => {
           isVisible={isSheetVisible}
           onClose={handleClosePress}
           navigation={navigation}
+          customHeight={'45%'}
           onPress={handleClosePress}>
-          <Text style={styles.titleSort()}>Sort by</Text>
+          <Text style={styles.titleBottomSheet()}>Sort by</Text>
           <FlatList
             data={sortProductType}
             renderItem={renderSortProductTypes}
             keyExtractor={(item) => item.id}
           />
+        </BottomSheetContainer>
+        <BottomSheetContainer
+          isVisible={isSizeSheetVisible}
+          onClose={handleClosePressSizeSheet}
+          customHeight={'50%'}
+          navigation={navigation}>
+          <Text style={styles.titleBottomSheet()}>Select Size</Text>
+          <View style={styles.sizeContainer()}>
+          {
+            sizes.map((size, index) => {
+            const isSelected = size === userSizeOption;
+              return (
+                <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={[styles.sizeItem(), isSelected && styles.sizeItemActive()]} key={index}>
+                  <Text style={[styles.sizeText(), isSelected && styles.sizeTextActive()]}>{size}</Text>
+                </TouchableOpacity>
+              )
+            })
+          }
+          </View>
+          <TouchableOpacity style={styles.sizeInfo()}>
+            <Text style={styles.sizeInfoText()}>Size info</Text>
+            <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
+          </TouchableOpacity>
+          <Button title='ADD TO CART' btnStyle={styles.button()} />
         </BottomSheetContainer>
       </Screen>
     </GestureHandlerRootView>

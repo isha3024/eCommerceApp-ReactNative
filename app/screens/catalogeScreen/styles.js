@@ -1,4 +1,5 @@
 import { color, fontSize, fonts, size } from "../../theme";
+import { rightContainer } from "../profileScreen/styles";
 
 export const topContainer = () => ({
   backgroundColor: color.white,  
@@ -88,6 +89,9 @@ export const productCardGridItem = () => ({
   marginHorizontal: size.moderateScale(8),
   marginBottom: size.moderateScale(26)
 })
+export const flotingButton = () => ({
+  right: size.moderateScale(9)
+})
 
 // export const productCardGridItem = () => ({
 //   width: size.moderateScale(164),
@@ -95,12 +99,16 @@ export const productCardGridItem = () => ({
 //   marginBottom: size.moderateScale(26)
 // })
 
-export const titleSort = () => ({
+export const titleBottomSheet = () => ({
   fontSize: fontSize.middleMedium,
   fontFamily: fonts.metropolisSemiBold,
   color: color.mostlyBlack,
   textAlign: 'center',
-  marginBottom: size.moderateScale(10)
+  marginBottom: size.moderateScale(10),
+})
+
+export const bottomSheetStyle = () => ({
+  backgroundColor: color.primary
 })
 
 export const sortListItem = () => ({
@@ -108,7 +116,7 @@ export const sortListItem = () => ({
   // width: '100%',
   paddingVertical: size.moderateScale(16),
   paddingHorizontal: size.moderateScale(16),
-  backgroundColor: color.white
+  backgroundColor: color.primary
   // backgroundColor: color.secondary
 })
 
@@ -126,3 +134,67 @@ export const selectedItemText = () => ({
   color: color.white,
   fontFamily: fonts.metropolisSemiBold
 })
+
+export const sizeItem = () => ({
+  width: size.moderateScale(100),
+  height: size.moderateScale(40),
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: color.white,
+  borderColor: color.darkGray,
+  borderWidth: size.moderateScale(1),
+  borderRadius: size.moderateScale(8)
+})
+
+export const sizeItemActive = () => ({
+  backgroundColor: color.secondary,
+  borderColor: color.secondary,
+})
+
+export const sizeText = () => ({
+  color: color.mostlyBlack,
+  fontSize: fontSize.small,
+  fontFamily: fonts.metropolisMedium
+})
+
+export const sizeTextActive = () => ({
+  color: color.white,
+})
+
+export const sizeContainer = () => ({
+  marginHorizontal: size.moderateScale(16),
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: size.moderateScale(22),
+  marginTop: size.moderateScale(22)
+})
+
+export const sizeInfo = () => ({
+  marginTop: size.moderateScale(22),
+  borderTopWidth: size.moderateScale(0.5),
+  borderBottomWidth: size.moderateScale(0.5),
+  borderTopColor: color.darkGray,
+  borderBottomColor: color.darkGray,
+  padding: size.moderateScale(16),
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between'
+})
+
+export const sizeInfoText = () => ({
+  fontSize: fontSize.littleMedium,
+  fontFamily: fonts.metropolisRegular,
+  color: color.mostlyBlack
+})
+
+export const forwardArrow = () => ({
+  transform: [{rotate: '180deg'}],
+})
+
+export const button = () => ({
+  marginTop: size.moderateScale(28),
+  marginHorizontal: size.moderateScale(16)
+})
+
+

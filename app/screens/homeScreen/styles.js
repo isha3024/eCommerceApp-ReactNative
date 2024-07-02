@@ -31,7 +31,7 @@ export const buttonTop = () => ({
 
 export const bottomTabView = () => ({
   marginTop: size.moderateScale(30),
-  paddingLeft: size.moderateScale(15)
+  paddingLeft: size.moderateScale(15),
 });
 
 export const productListHorizontalTop = () => ({
@@ -54,5 +54,9 @@ export const textLight = () => ({
   fontFamily: fonts.metropolisRegular,
   marginTop: size.moderateScale(4),
   marginBottom: size.moderateScale(20)
+});
+
+export const productCardHome = () => ({
+  marginRight: size.moderateScale(16)
 });
 

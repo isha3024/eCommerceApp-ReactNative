@@ -16,9 +16,8 @@ export const ProductCardMain = ({
   customProductImageStyle,
   onProductPress,
   activeOpacity,
-  regularPrice,
-  oldPrice,
-  newPrice,
+  originalPrice,
+  sellingPrice,
   ratings,
   ratingsCounts,
   saleProduct,
@@ -29,6 +28,7 @@ export const ProductCardMain = ({
   // onAddToFavorite
 }) => {
   const [filledHeart, setFilledHeart] = useState(false);
+  const discount = Math.floor((sellingPrice/originalPrice) * 100);
 
   const onAddToFavorite = () => {
     if (filledHeart) {
@@ -40,17 +40,19 @@ export const ProductCardMain = ({
 
   if (productHorizontal) {
     return (
+      <View>
       <TouchableOpacity style={[styles.mainProductCardHorizontal(),customProductStyle]} activeOpacity={activeOpacity ?? 0.7}>
         <View style={styles.imageViewHorizontal()}>
           <Image source={productImage} style={styles.imageHorizontal()} />
-          <View style={styles.badgeHorizontal(saleProduct, newProduct)}>
+          <View style={[styles.badgeHorizontal(newProduct), sellingPrice && styles.discountBadge()]}>
             {
-              saleProduct ? (
-                <Text style={styles.badgeText()}>-{saleProduct}%</Text>
+              sellingPrice ? 
+              (
+                <Text style={styles.badgeText()}>-{discount}%</Text>
               )
-                : newProduct ? (
+              : newProduct ? (
                   <Text style={styles.badgeText()}>NEW</Text>
-                ) : (<Text></Text>)
+              ) : (<Text></Text>)
             }
           </View>
         </View>
@@ -59,21 +61,13 @@ export const ProductCardMain = ({
           <Text style={styles.brandName()}>{brandName}</Text>
           <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
           {
-            oldPrice && newPrice ? (
+            originalPrice && sellingPrice ? (
               <View style={styles.priceContainer()}>
-                <Text style={styles.oldPrice()}>${oldPrice}</Text>
-                <Text style={styles.newPrice()}>${newPrice}</Text>
+                <Text style={styles.oldPrice()}>${originalPrice}</Text>
+                <Text style={styles.newPrice()}>${sellingPrice}</Text>
               </View>
-            ) : (<Text style={styles.regularPrice()}>{regularPrice}$</Text>)
+            ) : (<Text style={styles.regularPrice()}>{originalPrice}$</Text>)
           }
-
-          <TouchableOpacity style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
-            {
-              filledHeart ?
-                (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-                : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-            }
-          </TouchableOpacity>
           {
             showTopRightIcon ? (
               <TouchableOpacity style={styles.closeIcon()}>
@@ -83,24 +77,26 @@ export const ProductCardMain = ({
           }
         </View>
       </TouchableOpacity>
+      <TouchableOpacity style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
+      {
+        filledHeart ?
+          (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+          : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+      }
+      </TouchableOpacity>
+      </View>
     );
   }
   else {
     return (
+      <View>
       <TouchableOpacity style={[styles.mainProductCard(),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
         <View style={styles.imageView()}>
           <Image source={productImage} style={[styles.image(), customProductImageStyle]} />
-          <TouchableOpacity style={[styles.addToFavoriteBtn(), flotingBtnStyle]} onPress={onAddToFavorite}>
+          <View style={[styles.badge(newProduct),  sellingPrice && styles.discountBadge()]}>
             {
-              filledHeart ?
-                (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-                : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-            }
-          </TouchableOpacity>
-          <View style={styles.badge(saleProduct, newProduct)}>
-            {
-              saleProduct ? (
-                <Text style={styles.badgeText()}>-{saleProduct}%</Text>
+              sellingPrice ? (
+                <Text style={styles.badgeText()}>-{discount}%</Text>
               )
                 : newProduct ? (
                   <Text style={styles.badgeText()}>NEW</Text>
@@ -122,15 +118,23 @@ export const ProductCardMain = ({
           <Text style={styles.brandName()}>{brandName}</Text>
           <Text style={styles.productTitle()}>{productTitle}</Text>
           {
-            oldPrice && newPrice ? (
+            originalPrice && sellingPrice ? (
               <View style={styles.priceContainer()}>
-                <Text style={styles.oldPrice()}>${oldPrice}</Text>
-                <Text style={styles.newPrice()}>${newPrice}</Text>
+                <Text style={styles.oldPrice()}>${originalPrice}</Text>
+                <Text style={styles.newPrice()}>${sellingPrice}</Text>
               </View>
-            ) : (<Text style={styles.regularPrice()}>{regularPrice}$</Text>)
+            ) : (<Text style={styles.regularPrice()}>{originalPrice}$</Text>)
           }
         </View>
       </TouchableOpacity>
+      <TouchableOpacity style={[styles.addToFavoriteBtn(), flotingBtnStyle]} onPress={onAddToFavorite}>
+        {
+          filledHeart ?
+            (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+            : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+        }
+      </TouchableOpacity>
+      </View>
     );
   }
 }
