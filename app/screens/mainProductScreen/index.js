@@ -17,7 +17,6 @@ export const MainProductScreen = ({route}) => {
 
   const productId = route.params.productId;
   const selectedSize = route.params.selectedSize;
-  console.log('selectedSize: ', selectedSize);
   const selectedProduct = productDetail.find(product => product.id === productId);
 
   const navigation = useNavigation()
@@ -25,7 +24,6 @@ export const MainProductScreen = ({route}) => {
   const [isSizeBottomSheetVisible, setIsSizeBottomSheetVisible] = useState(false);
   const [isColorBottomSheetVisible, setIsColorBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(selectedSize);
-  console.log('userSizeOptions: ', userSizeOption);
   const [selectColors, setSelectColors] = useState([]);
 
   const onAddToFavorite = () => {
@@ -64,8 +62,13 @@ export const MainProductScreen = ({route}) => {
     setUserSizeOption(size);
   }
 
+  const handleRatingsReviews = () => {
+    navigation.navigate('ratingsReviewsScreen', {productReview: selectedProduct.ratings})
+  }
+
   return (
-    <GestureHandlerRootView>
+<>
+
     <View style={styles.topView()}>
     <Header
         title={true} 
@@ -115,7 +118,9 @@ export const MainProductScreen = ({route}) => {
             <Text style={styles.productPrice()}>${selectedProduct.originalPrice}</Text>
           </View>
           <Text style={styles.productTitle()}>{selectedProduct.name}</Text>
-          <StarRatings ratings={selectedProduct.ratings} ratingsCounts={selectedProduct.rating_count} customStarRatingStyle={styles.starRatings()} />
+          <TouchableOpacity onPress={handleRatingsReviews}> 
+           <StarRatings ratings={selectedProduct.ratings} ratingsCounts={selectedProduct.rating_count} customStarRatingStyle={styles.starRatings()} />
+          </TouchableOpacity>
           <Text style={styles.productDescription()}>{selectedProduct.description}</Text>
         </View>
         <TouchableOpacity activeOpacity={0.5} style={styles.productDetails()}>
@@ -207,6 +212,7 @@ export const MainProductScreen = ({route}) => {
           </View>
           <Button title='ADD TO CART' btnStyle={styles.button()} />
       </BottomSheetContainer>
-    </GestureHandlerRootView>
+</>
+
   )
 }

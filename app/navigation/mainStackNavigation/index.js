@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useSelector} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BrandScreen, FilterScreen, MainProductScreen, SplashScreen } from '../../screens';
+import { BrandScreen, FilterScreen, MainProductScreen, RatingsReviewsScreen, SplashScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
 
@@ -15,7 +15,7 @@ export const MainStackNavigation = () => {
     // localStorageValueGet();
     setTimeout(() => {
       setHideSplashScreen(false);
-    }, 3000);
+    }, 1000);
   }, []);
 
   return (
@@ -68,6 +68,13 @@ export const MainStackNavigation = () => {
             headerShown: false,
           }}
         />    
+        <Stack.Screen
+          name="ratingsReviewsScreen"
+          component={RatingsReviewsScreen}
+          options={{
+            headerShown: false,
+          }}
+        />   
       </Stack.Navigator>
     </NavigationContainer>
   );

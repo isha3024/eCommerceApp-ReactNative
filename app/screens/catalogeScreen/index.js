@@ -202,7 +202,7 @@ export const CatalogeScreen = () => {
   }
 
   return (
-    <GestureHandlerRootView>
+
       <Screen bgColor={color.white}>
         <StatusBar translucent={true}/>
         <Header
@@ -314,6 +314,5 @@ export const CatalogeScreen = () => {
           <Button title='ADD TO CART' btnStyle={styles.button()} />
         </BottomSheetContainer>
       </Screen>
-    </GestureHandlerRootView>
   )
 }

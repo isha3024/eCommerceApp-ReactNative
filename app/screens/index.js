@@ -14,4 +14,5 @@ export * from './catalogeScreen';
 export * from './filterScreen';
 export * from './brandScreen';
 export * from './mainProductScreen';
+export * from './ratingsReviewsScreen';
 // export * from './referScreen';

@@ -5,11 +5,13 @@ import {LocalizationProvider} from './contexts';
 import {MainContextProvider} from './contexts/MainContext';
 import {MainStackNavigation} from './navigation';
 import {color, fonts, size} from './theme';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const App = () => {
   
 
   return (
+    <GestureHandlerRootView>
     <SafeAreaView style={styles.container}>
       <MainContextProvider>
         <LocalizationProvider>
@@ -19,6 +21,7 @@ const App = () => {
         </LocalizationProvider>
       </MainContextProvider>
     </SafeAreaView>
+    </GestureHandlerRootView>
   );
 };
 const styles = StyleSheet.create({

@@ -26,13 +26,13 @@ export const FilterScreen = () => {
       setSelectColors([...selectColors, color]);
     }
   }
-    const toggleSizes = (size) => {
-      if(selectSize.includes(size)){
-        setSelectSize(selectSize.filter(s => s !== size));
-      }else {
-        setSelectSize([...selectSize, size]);
-      }
-    } 
+  const toggleSizes = (size) => {
+    if(selectSize.includes(size)){
+      setSelectSize(selectSize.filter(s => s !== size));
+    }else {
+      setSelectSize([...selectSize, size]);
+    }
+  } 
   const toggleCategory = (cat) => {
     if(selectCategory.includes(cat)){
       setSelectCategory(selectCategory.filter(c => c !== cat));

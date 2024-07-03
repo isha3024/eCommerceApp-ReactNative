@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, StatusBar, TextInput } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Header, Screen, Text } from '../../components'
 
 import * as styles from './styles'
@@ -11,6 +11,7 @@ const brands = ['adidas', 'adidas Originals', 'Blend', 'Boutique Moschino', 'Cha
 export const BrandScreen = () => {
   const [searchValue, setSearchValue] = useState('');
   const [selectBrands, setSelectBrands] = useState([]);
+  
   const toggleBrands = (brand) => {
     if(selectBrands.includes(brand)){
       setSelectBrands(selectBrands.filter(b => b !== brand));
@@ -18,6 +19,11 @@ export const BrandScreen = () => {
       setSelectBrands([...selectBrands, brand])
     }
   }
+
+  useEffect(() => {
+    if(selectBrands.length === 0){
+      setSelectBrands([brands[1], brands[6], brands[9]])
+    }})
   const navigation = useNavigation();
   return (
     <Screen bgColor={color.white} withScroll>

@@ -111,7 +111,7 @@ export const PriceRange = ({min, max, steps, onValueChange, sliderWidth}) => {
   }))
 
   return (
-    <GestureHandlerRootView>
+    <>
       <View style={styles.rangeContainer()}>
         <View style={styles.labelContainer()}>
           <AnimatedText 
@@ -146,6 +146,6 @@ export const PriceRange = ({min, max, steps, onValueChange, sliderWidth}) => {
           </GestureDetector>
         </View>
       </View>
-    </GestureHandlerRootView>
+      </>
   )
 }
