@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useSelector} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BrandScreen, FilterScreen, SplashScreen } from '../../screens';
+import { BrandScreen, FilterScreen, MainProductScreen, SplashScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
 
@@ -57,6 +57,13 @@ export const MainStackNavigation = () => {
         <Stack.Screen
           name="brandScreen"
           component={BrandScreen}
+          options={{
+            headerShown: false,
+          }}
+        />    
+        <Stack.Screen
+          name="mainProductScreen"
+          component={MainProductScreen}
           options={{
             headerShown: false,
           }}

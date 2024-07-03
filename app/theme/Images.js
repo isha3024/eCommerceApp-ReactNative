@@ -19,4 +19,6 @@ export const images = {
   imgClothesCategory: require('./image/images/clothesCategoryImg.png'),
   imgShoesCategory: require('./image/images/shoesCategoryImg.png'),
   imgAccessoriesCategory: require('./image/images/accessoriesCategoryImg.png'),
+  imgMainProductImageOne: require('./image/images/MainProductImageOne.png'),
+  imgMainProductImageTwo: require('./image/images/MainProductImageTwo.png'),
 };

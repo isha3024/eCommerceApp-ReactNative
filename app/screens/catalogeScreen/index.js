@@ -39,6 +39,7 @@ const womenTopCategory = [
   },
 ]
 
+// render function for rendering women categories at top
 const renderWomenTop = ({item}) => {
   return(
     <View style={styles.listItem()}>
@@ -47,7 +48,7 @@ const renderWomenTop = ({item}) => {
   )
 }
 
-
+//sort product array to sort the product using populariy, reviews, etc..
 const sortProductType = [
   {
     id: 1,
@@ -71,82 +72,45 @@ const sortProductType = [
   }
 ]
 
+//product sizes available
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
 export const CatalogeScreen = () => {
   const navigation = useNavigation();
+  //product data json
   const products = data.productList;
+
+  //on screen load show the products
   const [showProductList, setShowProductList] = useState(products);
+
+  //sort options bottom sheet useState
   const [isSheetVisible, setSheetVisible] = useState(false);
-  const [showGrid, setShowGrid] = useState(false);
-  const [title, showTitle] = useState(false);
+  //sort option selected useState
   const [isSelected, setIsSelected] = useState(null);
-  const [sortedProducts, setSortedProducts] = useState([]);
+
+  //toggling the product in Grid/List
+  const [showGrid, setShowGrid] = useState(false);
+
+  //toggling to show the header title and main category title
+  const [title, showTitle] = useState(false);
+
+  //toggling the size bottom sheet visibility
   const [isSizeSheetVisible, setSizeSheetVisible] = useState(false);
+
+  //showing the user selected size option
   const [userSizeOption, setUserSizeOption] = useState(false);
 
-  useEffect(() => {
-    const preSelectedSortItem = sortProductType.find(item => item.name === 'Price: lowest to high');
-    setIsSelected(preSelectedSortItem);
-    setSortedProducts(preSelectedSortItem);
-  },[]);
+  //selected product Id
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
-  const sortProducts = (sortOption) => {
-    let sortedList = [...products];
-    switch (sortOption.id) {
-      case 1:
-        sortedList.sort((a, b) => a.regularPrice - b.regularPrice);
-        break;
-      case 2:
-        sortedList.sort((a, b) => b.regularPrice - a.regularPrice);
-        break;
-      default:
-        break;
-    }
-    setShowProductList(sortedList);
-    console.log('sortedList: ', sortedList);
-  };
-
-  const handleSortOptionChange = (sortOption) => {
-    setIsSelected(sortOption);
-    setSheetVisible(false);
-    sortProducts(sortOption);
-  };
+  //on screen load sort product based on price low to high ---- not working
   useEffect(() => {
     const preSelectedSortItem = sortProductType.find(item => item.name === 'Price: lowest to high');
     setIsSelected(preSelectedSortItem);
     sortProducts(preSelectedSortItem);
   }, []);
 
-  const renderSortProductTypes = ({item}) => {
-    return(
-      <TouchableOpacity 
-        activeOpacity={0.7} 
-        onPress={() => handleSortOptionChange(item)} 
-        style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
-        <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>
-      </TouchableOpacity>
-    )
-  }
-
-  const selectSizeHandler = (size) => {
-    setUserSizeOption(size);
-  }
-
-  const handleOpenPress = () => {
-    setSheetVisible(true);
-  }
-  const handleClosePress = () => {
-    setSheetVisible(false);
-  }
-
-  const handleOpenPressSizeSheet = () => {
-    setSizeSheetVisible(true);
-  }
-  const handleClosePressSizeSheet = () => {
-    setSizeSheetVisible(false);
-  }
-
+  //toggling the layout -- grid / list and headerTitle / mainTitle 
   const toggleLayout = () => {
     LayoutAnimation.configureNext({
       duration: 400,
@@ -158,23 +122,84 @@ export const CatalogeScreen = () => {
     showTitle(!title);
   } 
 
+  /**sorting the product based on selection */
+  const sortProducts = (sortOption) => {
+    let sortedList = [...products];
+    // console.log('list: ', sortedList);
+    switch (sortOption.id) {
+      case 4:
+        sortedList.sort((a, b) => a.originalPrice - b.originalPrice);
+        break;
+      case 5:
+        sortedList.sort((a, b) => b.originalPrice - a.originalPrice);
+        break;
+      default:
+        break;
+    }
+    setShowProductList(sortedList);
+  };
+
+  //handling the sort option selected but not working as expected
+  const handleSortOptionChange = (sortOption) => {
+    setIsSelected(sortOption);
+    setSheetVisible(false);
+    sortProducts(sortOption);
+  }
+
+  //rendering the sort options using the renderItem function in FlatLists
+  const renderSortProductTypes = ({ item, isSelected }) => (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => handleSortOptionChange(item)}
+      style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
+      <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>
+    </TouchableOpacity>
+  );
+
+  //selecting the user selected size option and when the user selected the size then only navigate to mainProductScreen
+  const selectSizeHandler = (size) => {
+    setUserSizeOption(size);
+    setSizeSheetVisible(false);
+    if (selectedProductId) {
+      navigation.navigate('mainProductScreen', { selectedSize: size, productId: selectedProductId });
+      setUserSizeOption(false)
+    }
+  };
+
+  //handling the sort option bottom sheet visibility
+  const handleOpenPress = () => {
+    setSheetVisible(true);
+  }
+  const handleClosePress = () => {
+    setSheetVisible(false);
+  }
+
+  //handling the size bottom sheet visibility
+  const handleClosePressSizeSheet = () => {
+    setSizeSheetVisible(false);
+  }
+
+  //rendering the products using the renderItem function of FlatLists
   const renderProducts = ({item}) => {
     return (
         <ProductCardMain 
-          onProductPress={handleOpenPressSizeSheet}
+          onProductPress={() => {
+            setSelectedProductId(item.id);
+            setSizeSheetVisible(true);
+          }}
           productHorizontal={showGrid ? true : false}
           productTitle={item?.name}
           brandName={item?.brand}
-          ratings={item?.rating}
+          ratings={item?.ratings}
           ratingsCounts={item?.rating_count}
-          originalPrice={item?.regularPrice}
+          originalPrice={item?.originalPrice}
           productImage={item?.images}
           topRightIcon={false}
           flotingBtnStyle={showGrid ? null : styles.flotingButton()}
           customProductStyle={showGrid ? null : styles.productCardGridItem()}
         />
       )
-    }
+  }
 
   return (
     <GestureHandlerRootView>
@@ -256,7 +281,6 @@ export const CatalogeScreen = () => {
         <BottomSheetContainer
           isVisible={isSheetVisible}
           onClose={handleClosePress}
-          navigation={navigation}
           customHeight={'45%'}
           onPress={handleClosePress}>
           <Text style={styles.titleBottomSheet()}>Sort by</Text>
@@ -269,8 +293,7 @@ export const CatalogeScreen = () => {
         <BottomSheetContainer
           isVisible={isSizeSheetVisible}
           onClose={handleClosePressSizeSheet}
-          customHeight={'50%'}
-          navigation={navigation}>
+          customHeight={'50%'}>
           <Text style={styles.titleBottomSheet()}>Select Size</Text>
           <View style={styles.sizeContainer()}>
           {

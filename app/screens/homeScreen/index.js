@@ -5,6 +5,7 @@ import { color, images, size } from '../../theme'
 
 import * as styles from './styles'
 import LinearGradient from 'react-native-linear-gradient'
+import { useNavigation } from '@react-navigation/native'
 
 const data = [
   {
@@ -68,6 +69,7 @@ const data = [
 ]
 
 export const HomeScreen = () => {
+  const navigation = useNavigation()
   return (
     <Screen withScroll bgColor={color.transparent} translucent={true}>
       <View style={styles.topView()}>
@@ -98,7 +100,7 @@ export const HomeScreen = () => {
           horizontal
           contentContainerStyle={{paddingBottom: size.moderateScale(80)}}
           data={data}
-          renderItem={(item, index) => {
+          renderItem={(item) => {
             return (
               <ProductCardMain 
                 customProductStyle={styles.productCardHome()}

@@ -1,8 +1,6 @@
 import React from 'react';
-import {LogBox, SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 
-import {Text} from './components';
-import {ONE_SIGNAL_APP_ID} from './config';
 import {LocalizationProvider} from './contexts';
 import {MainContextProvider} from './contexts/MainContext';
 import {MainStackNavigation} from './navigation';
@@ -13,15 +11,13 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      
-          <MainContextProvider>
-            <LocalizationProvider>
-              {/* <Text>App</Text> */}
-              <MainStackNavigation />
-              {/* <DemoScreen /> */}
-            </LocalizationProvider>
-          </MainContextProvider>
-        
+      <MainContextProvider>
+        <LocalizationProvider>
+          {/* <Text>App</Text> */}
+          <MainStackNavigation />
+          {/* <DemoScreen /> */}
+        </LocalizationProvider>
+      </MainContextProvider>
     </SafeAreaView>
   );
 };

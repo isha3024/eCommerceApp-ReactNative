@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { View } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 
 import * as styles from './styles'
-import { Text } from '../text';
 import { color } from '../../theme';
 
 export const BottomSheetContainer = ({isVisible, onClose, children, customHeight}) => {
   
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["1%", customHeight], []);
+  const snapPoints = useMemo(() => ["1%", customHeight],[]);
 
   const handleClosePress = useCallback(() => {
     bottomSheetRef.current?.close();

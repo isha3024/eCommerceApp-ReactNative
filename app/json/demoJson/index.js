@@ -4,39 +4,47 @@ export const productList = [
   {
     id: 1,
     name: "Evening Dress",
-    brand: "Dorothy Perkins",
+    brand: "H&M",
     images: images.ImgCard,
-    rating: 5,
+    ratings: 3,
     rating_scale: 10.0,
     rating_count: 12,
-    regularPrice: 17.99,
-    isProductNew: true
+    originalPrice: 17.99,
+    isProductNew: true,
+    mainProductImageOne: images.imgMainProductImageOne,
+    mainProductImageTwo: images.imgMainProductImageTwo,
+    description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
   },
   {
     id: 2,
     name: "Dorothi Perkins",
     merchant: "Sports Dress",
     brand: "Shoemaster",
-    description: "Brilliant, colorful shoes made from recycled materials.",
     images: images.ImgCard,
-    rating: 4,
+    ratings: 4,
     rating_scale: 10.0,
     rating_count: 4,
-    regularPrice: 22,
-    isProductNew: true
+    originalPrice: 22,
+    sellingPrice: 11,
+    isProductNew: false,
+    mainProductImageOne: images.imgMainProductImageOne,
+    mainProductImageTwo: images.imgMainProductImageTwo,
+    description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
   },
   {
     id: 3,
     name: "Sport Dress",
     merchant: "Example Store",
     brand: "Sitlly",
-    description: "Brilliant, colorful shoes made from recycled materials.",
     images: images.ImgCard,
-    rating: 1,
+    ratings: 1,
     rating_scale: 10.0,
     rating_count: 22,
-    regularPrice: 14,
-    isProductNew: true
+    originalPrice: 14,
+    isProductNew: false,
+    mainProductImageOne: images.imgMainProductImageOne,
+    mainProductImageTwo: images.imgMainProductImageTwo,
+    description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
   },
   {
     id: 4,
@@ -44,11 +52,14 @@ export const productList = [
     merchant: "Example Store",
     brand: "Puma",
     images: images.ImgCard,
-    rating: 2,
+    ratings: 2,
     rating_scale: 10.0,
     rating_count: 12,
-    regularPrice: 17,
-    isProductNew: true
+    originalPrice: 17,
+    isProductNew: true,
+    mainProductImageOne: images.imgMainProductImageOne,
+    mainProductImageTwo: images.imgMainProductImageTwo,
+    description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
   },
   {
     id: 5,
@@ -56,10 +67,15 @@ export const productList = [
     merchant: "Example Store",
     brand: "H&M",
     images: images.ImgCard,
-    rating: 4,
+    ratings: 4,
     rating_scale: 10.0,
     rating_count: 12,
-    regularPrice: 30,
-    isProductNew: true
-  }
+    isProductNew: true,
+    originalPrice: 30,
+    sellingPrice: 20.76,
+    isProductNew: false,
+    mainProductImageOne: images.imgMainProductImageOne,
+    mainProductImageTwo: images.imgMainProductImageTwo,
+    description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
+  },
 ]

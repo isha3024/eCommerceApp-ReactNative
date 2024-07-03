@@ -13,4 +13,5 @@ export * from './shopScreenV2';
 export * from './catalogeScreen';
 export * from './filterScreen';
 export * from './brandScreen';
+export * from './mainProductScreen';
 // export * from './referScreen';
