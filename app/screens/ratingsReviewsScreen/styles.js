@@ -254,3 +254,74 @@ export const reviewButton = () => ({
 export const reviewButtonText = () => ({
   fontSize: fontSize.mediumSmall
 });
+
+export const bottomSheetStyle = () => ({
+  fontSize: fontSize.mediumSmall
+});
+
+export const addReviewTitle = () => ({
+  fontSize: fontSize.middleMedium,
+  fontFamily: fonts.metropolisSemiBold,
+  color: color.mostlyBlack,
+  textAlign: 'center'
+});
+
+export const rateStars = () => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: size.moderateScale(24),
+  marginTop: size.moderateScale(16)
+});
+
+export const reviewBodyText = () => ({
+  fontSize: fontSize.middleMedium,
+  fontFamily: fonts.metropolisSemiBold,
+  color: color.mostlyBlack,
+  textAlign: 'center',
+  width: '70%',
+  marginHorizontal: 'auto',
+  marginTop: size.moderateScale(32)
+});
+
+export const reviewText = () => ({
+  fontSize: fontSize.small,
+  fontFamily: fonts.metropolisRegular,
+  color: color.mostlyBlack,
+  marginTop: size.moderateScale(18),
+  marginHorizontal: size.moderateScale(16),
+  backgroundColor: color.white,
+  padding: size.moderateScale(20),
+  borderRadius: size.moderateScale(8),
+  textAlignVertical: 'top',
+  marginBottom: size.moderateScale(20),
+  elevation: size.moderateScale(4)
+});
+
+export const customerProductImages = () => ({
+  alignItem: 'flex-end',
+  gap: size.moderateScale(2),
+  paddingVertical: size.moderateScale(20),
+  paddingHorizontal: size.moderateScale(16)
+});
+
+export const cameraView = () => ({
+  width: size.moderateScale(104),
+  height: size.moderateScale(104),
+  borderRadius: size.moderateScale(8),
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: color.primary,
+  gap: size.moderateScale(12),
+  elevation: size.moderateScale(4)
+});
+
+export const cameraText = () => ({
+  fontSize: fontSize.mediumSmall,
+  fontFamily: fonts.metropolisRegular,
+  color: color.mostlyBlack,
+});
+export const buttonSendReview = () => ({
+  marginHorizontal: size.moderateScale(16),
+  marginTop: size.moderateScale(35)
+});

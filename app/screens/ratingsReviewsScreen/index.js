@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, Image, ScrollView, LayoutAnimation, Platform, StatusBar, TouchableOpacity, UIManager, View, Animated } from 'react-native'
+import { FlatList, Image, ScrollView, LayoutAnimation, Platform, StatusBar, TouchableOpacity, UIManager, View, Animated, TextInput } from 'react-native'
 
 import * as styles from './styles'
 import * as data from '../../json'
-import { Button, Header, StarRatings, StarRatingsV2, Text } from '../../components'
-import { IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcPen, IcThumb, color } from '../../theme'
+import { BottomSheetContainer, Button, CustomCamera, Header, StarRatings, StarRatingsV2, Text } from '../../components'
+import { IcBackArrow, IcCamera, IcCheckBoxActive, IcCheckBoxInactive, IcPen, IcStar, IcThumb, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -19,15 +19,8 @@ export const RatingsReviewsScreen = ({route}) => {
   
   const [showHeaderTitle, setShowHeaderTitle] = useState(false);
   const [showReviewWithImg, setShowReviewWithImg] = useState(false);
+  const [showAddReview, setShowAddReview] = useState(false)
   const showImages = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(showImages,{
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: true
-    }).start()
-  },[showReviewWithImg])
 
   const toggleReviewImages = () => {
     LayoutAnimation.configureNext({
@@ -37,6 +30,16 @@ export const RatingsReviewsScreen = ({route}) => {
       },
     });
     setShowReviewWithImg(!showReviewWithImg)
+  }
+
+  const handleAddReview = () => {
+    setShowAddReview(true);
+  }
+  const handleCloseReview = () => {
+    setShowAddReview(false);
+  }
+  const renderCamera = () => {
+    return (<CustomCamera />)
   }
 
   const handleOnScrollUP = () => {
@@ -176,7 +179,6 @@ export const RatingsReviewsScreen = ({route}) => {
               keyExtractor={(item, index) => item+index}
               onScroll={(e) => {
                 const scrolling = e.nativeEvent.contentOffset.y;
-                // console.log('scrolling: ', scrolling)
                 if(scrolling > 150){
                   handleOnScrollUP()
                 }else if(scrolling > 0 && scrolling < 500){
@@ -195,6 +197,7 @@ export const RatingsReviewsScreen = ({route}) => {
           start={{x: 0, y: 0}} 
           end={{x: 0, y: 1}} style={styles.linearGradient()}>
         <Button 
+          onPress={handleAddReview}
           title='Write a review' activeOpacity={0.8}
           icon
           renderIcon={() => (<IcPen />)}
@@ -202,6 +205,48 @@ export const RatingsReviewsScreen = ({route}) => {
           btnTextStyle={styles.reviewButtonText()} />
       </LinearGradient>
       </View>
+      <BottomSheetContainer
+        isVisible={showAddReview}
+        onClose={handleCloseReview}
+        customHeight={'73%'}>
+          <Text style={styles.addReviewTitle()}>What is your rate ?</Text>
+          <View style={styles.rateStars()}>
+            <TouchableOpacity activeOpacity={0.5}>
+              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.5}>
+              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.5}>
+              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.5}>
+              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.5}>
+              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.reviewBodyText()}>Please share your opinion about the product</Text>
+          <TextInput 
+            autoCapitalize={true}
+            placeholder='Your review'
+            placeholderTextColor={color.darkGray}
+            multiline={true}
+            numberOfLines={8}
+            style={styles.reviewText()}
+          />
+          <ScrollView 
+            horizontal={true} 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.customerProductImages()}>
+            <TouchableOpacity onPress={renderCamera} activeOpacity={0.8} style={styles.cameraView()}>
+              <IcCamera />
+              <Text style={styles.cameraText()}>Add your photos</Text>
+            </TouchableOpacity>
+          </ScrollView>
+          <Button title='SEND REVIEW' btnStyle={styles.buttonSendReview()}/>
+      </BottomSheetContainer>
     </View>
   )
 }
