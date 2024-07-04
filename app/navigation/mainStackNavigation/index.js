@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { BrandScreen, FilterScreen, MainProductScreen, RatingsReviewsScreen, SplashScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
+import { color } from '../../theme';
 
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +74,7 @@ export const MainStackNavigation = () => {
           component={RatingsReviewsScreen}
           options={{
             headerShown: false,
+            // navigationBarColor: color.primary,
           }}
         />   
       </Stack.Navigator>

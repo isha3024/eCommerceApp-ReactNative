@@ -79,7 +79,7 @@ export const HomeScreen = () => {
           start={{x: 0, y: 1}} 
           locations={[0.2, 0.5]}
           end={{x: 0, y: 0}} style={styles.linearGradient()}>
-        <View style={styles.imageOverlayText()}>
+          <View style={styles.imageOverlayText()}>
             <Title title='Fashion sale' style={styles.title()} />
             <Button title='Check' btnStyle={styles.buttonTop()} />
           </View>

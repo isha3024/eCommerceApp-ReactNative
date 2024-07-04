@@ -22,4 +22,7 @@ export const images = {
   imgMainProductImageOne: require('./image/images/MainProductImageOne.png'),
   imgMainProductImageTwo: require('./image/images/MainProductImageTwo.png'),
   imgAvatar: require('./image/images/Avatar.png'),
+  imgReviewProductImgOne: require('./image/images/ReviewProductImgOne.png'),
+  imgReviewProductImgTwo: require('./image/images/ReviewProductImgTwo.png'),
+  imgReviewProductImgThree: require('./image/images/ReviewProductImgThree.png'),
 };

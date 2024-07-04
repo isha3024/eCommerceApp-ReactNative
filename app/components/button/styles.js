@@ -1,6 +1,7 @@
 import {color, fonts, fontSize, size} from '../../theme';
 
 export const btnContainer = (isDisabled, btnBorder) => ({
+  flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   paddingVertical: size.moderateScale(12),
@@ -8,12 +9,10 @@ export const btnContainer = (isDisabled, btnBorder) => ({
   elevation: size.moderateScale(2),
   paddingVertical: size.moderateScale(15),
   borderRadius: size.moderateScale(25),
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: size.moderateScale(9),
+  gap: size.moderateScale(8),
   borderWidth: size.moderateScale(1),
   borderColor: btnBorder ? color.veryDarkGray : color.transparent,
-  elevation: btnBorder ? size.moderateScale(0) : size.moderateScale(3)
+  elevation: isDisabled ? 0 : btnBorder ? 0 : size.moderateScale(3)
 }); 
 
 export const btnBorder = () => ({

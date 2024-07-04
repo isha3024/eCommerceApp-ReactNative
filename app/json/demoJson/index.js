@@ -79,3 +79,67 @@ export const productList = [
     description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
   },
 ]
+
+export const reviewsList =[
+  {
+    customerImg: images.imgAvatar,
+    customerName: 'Helene Moore',
+    customerRatings: 4,
+    reviewPostedDate: 'June 5, 2019',
+    reviewDescription: `The dress is great! Very classy and comfortable. It fit perfectly! I'm 5'7" and 130 pounds. I am a 34B chest. This dress would be too long for those who are shorter but could be hemmed. I wouldn't recommend it for those big chested as I am smaller chested and it fit me perfectly. The underarms were not too wide and the dress was made well.`,
+    reviewProductImageOne: images.imgReviewProductImgOne,
+    reviewProductImageTwo: images.imgReviewProductImgTwo,
+    reviewProductImageThree: images.imgReviewProductImgThree,
+  },
+  {
+    customerImg: images.imgAvatar,
+    customerName: 'Aida Bugg',
+    customerRatings: 3,
+    reviewPostedDate: 'July 2, 2018',
+    reviewDescription: `The dress is great! Very classy and comfortable. It fit perfectly! I'm 5'7" and 130 pounds. I am a 34B chest. This dress would be too long for those who are shorter but could be hemmed. I wouldn't recommend it for those big chested as I am smaller chested and it fit me perfectly. The underarms were not too wide and the dress was made well.`,
+    reviewProductImageOne: images.imgReviewProductImgOne,
+    reviewProductImageTwo: images.imgReviewProductImgTwo,
+    reviewProductImageThree: images.imgReviewProductImgThree,  
+  },
+  {
+    customerImg: images.imgAvatar,
+    customerName: 'Augusta Wind',
+    customerRatings: 4,
+    reviewPostedDate: 'April 24, 2019',
+    reviewDescription: `The dress is great! Very classy and comfortable. It fit perfectly! I'm 5'7" and 130 pounds. I am a 34B chest. This dress would be too long for those who are shorter but could be hemmed. I wouldn't recommend it for those big chested as I am smaller chested and it fit me perfectly. The underarms were not too wide and the dress was made well.`,
+    reviewProductImageOne: images.imgReviewProductImgOne,
+    reviewProductImageTwo: images.imgReviewProductImgTwo,
+    reviewProductImageThree: images.imgReviewProductImgThree,  
+  },
+  {
+    customerImg: images.imgAvatar,
+    customerName: 'Bea Mine',
+    customerRatings: 1,
+    reviewPostedDate: 'Sept 5, 2022',
+    reviewDescription: `The dress is great! Very classy and comfortable. It fit perfectly! I'm 5'7" and 130 pounds. I am a 34B chest. This dress would be too long for those who are shorter but could be hemmed. I wouldn't recommend it for those big chested as I am smaller chested and it fit me perfectly. The underarms were not too wide and the dress was made well.`,
+    reviewProductImageOne: images.imgReviewProductImgOne,
+    reviewProductImageTwo: images.imgReviewProductImgTwo,
+    reviewProductImageThree: images.imgReviewProductImgThree,  
+  },
+  {
+    customerImg: images.imgAvatar,
+    customerName: 'John Dory',
+    customerRatings: 5,
+    reviewPostedDate: 'Jan 5, 2019',
+    reviewDescription: `The dress is great! Very classy and comfortable. It fit perfectly! I'm 5'7" and 130 pounds. I am a 34B chest. This dress would be too long for those who are shorter but could be hemmed. I wouldn't recommend it for those big chested as I am smaller chested and it fit me perfectly. The underarms were not too wide and the dress was made well.`,
+    reviewProductImageOne: images.imgReviewProductImgOne,
+    reviewProductImageTwo: images.imgReviewProductImgTwo,
+    reviewProductImageThree: images.imgReviewProductImgThree,  
+  },
+  {
+    customerImg: images.imgAvatar,
+    customerName: 'Mark Ateer',
+    customerRatings: 4,
+    reviewPostedDate: 'May 5, 2021',
+    reviewDescription: `The dress is great! Very classy and comfortable. It fit perfectly! I'm 5'7" and 130 pounds. I am a 34B chest. This dress would be too long for those who are shorter but could be hemmed. I wouldn't recommend it for those big chested as I am smaller chested and it fit me perfectly. The underarms were not too wide and the dress was made well.`,
+    reviewProductImageOne: images.imgReviewProductImgOne,
+    reviewProductImageTwo: images.imgReviewProductImgTwo,
+    reviewProductImageThree: images.imgReviewProductImgThree,  
+  },
+
+]

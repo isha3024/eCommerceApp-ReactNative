@@ -13,6 +13,7 @@ export const ShopScreenV2 = () => {
   const navigation = useNavigation();
   return (
     <Screen bgColor={color.white} translucent={true}>
+      <StatusBar barStyle='dark-content' />
       <Header 
         headerStyle={styles.header()}
         leftIconPress={() => navigation.goBack()}

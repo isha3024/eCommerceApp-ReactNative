@@ -12,7 +12,7 @@ export const CheckBoxActive = props => {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <Rect width={20} height={20} rx={4} fill={color.secondary} />
+      <Rect width={20} height={20} rx={4} fill={props.fill ?? color.secondary} />
       <Path
         d="M6.767 13.468L3.21 9.736 2 10.998 6.767 16 17 5.262 15.798 4l-9.031 9.468z"
         fill={color.white}

@@ -1,86 +1,207 @@
-import React, { useState } from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { FlatList, Image, ScrollView, LayoutAnimation, Platform, StatusBar, TouchableOpacity, UIManager, View, Animated } from 'react-native'
 
 import * as styles from './styles'
-import { Header, Screen, StarRatings, StarRatingsV2, Text } from '../../components'
-import { IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcStar, IcThumb, color, images } from '../../theme'
+import * as data from '../../json'
+import { Button, Header, StarRatings, StarRatingsV2, Text } from '../../components'
+import { IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcPen, IcThumb, color } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
+import LinearGradient from 'react-native-linear-gradient'
+if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
+  UIManager.setLayoutAnimationEnabledExperimental(true)
+}
+
 
 export const RatingsReviewsScreen = ({route}) => {
   // console.log('Reviews: ', route.params.productReview)
+  const reviewData = data.reviewsList;
+  // console.log('reviewData: ', reviewData);
+  
+  const [showHeaderTitle, setShowHeaderTitle] = useState(false);
+  const [showReviewWithImg, setShowReviewWithImg] = useState(false);
+  const showImages = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(showImages,{
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  },[showReviewWithImg])
+
+  const toggleReviewImages = () => {
+    LayoutAnimation.configureNext({
+      duration: 300,
+      update: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+      },
+    });
+    setShowReviewWithImg(!showReviewWithImg)
+  }
+
+  const handleOnScrollUP = () => {
+    // LayoutAnimation.configureNext({
+    //   duration: 500,
+    //   create: {type: 'linear', property: 'opacity'},
+    //   update: {type: 'linear', property: 'opacity'},
+    //   delete: {type: 'linear', property: 'opacity'}
+    // })
+    LayoutAnimation.configureNext({
+      duration: 300,
+      update: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+      },
+    });
+    setShowHeaderTitle(true)
+  }
+
+  const handleOnScrollDOWN = () => {
+    // 
+    LayoutAnimation.configureNext({
+      duration: 200,
+      update: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+      },
+    });
+    setShowHeaderTitle(false)
+  }
+
+  const renderReviewsBlock = ({item}) => { 
+    return(
+      <View style={styles.customerReviewBlock()}>
+        <View style={styles.avatar()}>
+          <Image style={styles.img()} source={item.customerImg} />
+        </View>
+        <View style={styles.customerReview()}>
+          <Text style={styles.customerName()}>{item.customerName}</Text>
+          <View style={styles.spaceBetween()}>
+            <StarRatings ratings={item.customerRatings} />
+            <Text style={styles.lightText()}>{item.reviewPostedDate}</Text>
+          </View>
+          <Text style={styles.reviewDesc()}>{item.reviewDescription}</Text>
+          {
+            showReviewWithImg && (
+              <Animated.View style={{opacity: showImages}}>
+                <ScrollView 
+                  horizontal={true} 
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.reviewProductImages()}>
+                  <Image source={item.reviewProductImageOne} style={styles.reviewProductImgItem()}/>
+                  <Image source={item.reviewProductImageTwo} style={styles.reviewProductImgItem()}/>
+                  <Image source={item.reviewProductImageThree} style={styles.reviewProductImgItem()}/>
+                </ScrollView>
+              </Animated.View>
+            )
+          }
+          <TouchableOpacity activeOpacity={0.5} style={styles.textRight()}>
+            <Text style={styles.lightText()}>Helpful</Text>
+            <IcThumb />
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
   const navigation = useNavigation();
-  const [withPhoto, setWithPhoto] = useState(false);
   return (
     <View style={styles.mainView()}>
+      <StatusBar backgroundColor={color.primary} translucent={true}/>
       <View style={styles.topView()}>
-        <Header 
-          headerStyle={styles.header()}
-          title={false}
+        <Header
+          headerStyle={styles.header(showHeaderTitle)}
+          title={showHeaderTitle}
           headerTitle='Rating and reviews'
           leftIconPress={() => navigation.goBack()}
           headerLeftIcon
           leftIcon={() => {
             return (<IcBackArrow />)
-          }} 
+          }}
         />
-        <Text style={styles.mainTitle()}>Rating&Reviews</Text>
       </View>
-      <Screen withScroll bgColor={color.primary} translucent={true}>
-        <View style={styles.mainRatingView()}>
-          <View style={styles.leftRating()}>
-            <Text style={styles.ratingsPoint()}>4.3</Text>
-            <Text style={styles.ratingsNumber()}>23 ratings</Text>
-          </View>
-          <View style={styles.rightRating()}>
-            <View style={styles.ratingStar()}>
-              <StarRatingsV2 ratings={5}/>
-              <StarRatingsV2 ratings={4}/>
-              <StarRatingsV2 ratings={3}/>
-              <StarRatingsV2 ratings={2}/>
-              <StarRatingsV2 ratings={1}/>
-            </View>
-            <View style={styles.ratingLine()}>
-              <View style={styles.widthLineFull()}></View>
-              <View style={styles.widthLine40()}></View>
-              <View style={styles.widthLine30()}></View>
-              <View style={styles.widthLine15()}></View>
-              <View style={styles.widthLine8()}></View>
-            </View>
-            <View style={styles.ratingNum()}>
-              <Text style={styles.peopleRating()}>12</Text>
-              <Text style={styles.peopleRating()}>5</Text>
-              <Text style={styles.peopleRating()}>4</Text>
-              <Text style={styles.peopleRating()}>2</Text>
-              <Text style={styles.peopleRating()}>0</Text>
-            </View>
-          </View>
-        </View>
+      <View style={styles.middleView()}>
+          {
+            showHeaderTitle ? null 
+            : (
+              <>
+                <Text style={styles.mainTitle()}>{showHeaderTitle ? '' : 'Rating&Reviews'}</Text>
+                <View style={styles.mainRatingView()}>
+                  <View style={styles.leftRating()}>
+                    <Text style={styles.ratingsPoint()}>4.3</Text>
+                    <Text style={styles.ratingsNumber()}>23 ratings</Text>
+                  </View>
+                  <View style={styles.rightRating()}>
+                    <View style={styles.ratingStar()}>
+                      <StarRatingsV2 ratings={5} />
+                      <StarRatingsV2 ratings={4} />
+                      <StarRatingsV2 ratings={3} />
+                      <StarRatingsV2 ratings={2} />
+                      <StarRatingsV2 ratings={1} />
+                    </View>
+                    <View style={styles.ratingLine()}>
+                      <View style={styles.widthLineFull()}></View>
+                      <View style={styles.widthLine40()}></View>
+                      <View style={styles.widthLine30()}></View>
+                      <View style={styles.widthLine15()}></View>
+                      <View style={styles.widthLine8()}></View>
+                    </View>
+                    <View style={styles.ratingNum()}>
+                      <Text style={styles.peopleRating()}>12</Text>
+                      <Text style={styles.peopleRating()}>5</Text>
+                      <Text style={styles.peopleRating()}>4</Text>
+                      <Text style={styles.peopleRating()}>2</Text>
+                      <Text style={styles.peopleRating()}>0</Text>
+                    </View>
+                  </View>
+                </View>
+              </>
+            )
+          }
         <View style={styles.reviewBlock()}>
           <View style={styles.reviewHeading()}>
             <Text style={styles.h2()}>8 reviews</Text>
-            <TouchableOpacity onPress={() => setWithPhoto(!withPhoto)} style={styles.withPhoto()}>
+            <TouchableOpacity activeOpacity={0.5} 
+              onPress={toggleReviewImages} 
+              style={styles.withPhoto()}>
               {
-                withPhoto ? (<IcCheckBoxActive />) : (<IcCheckBoxInactive />)
+                showReviewWithImg ? (<IcCheckBoxActive fill={color.mostlyBlack} />) : (<IcCheckBoxInactive />)
               }
               <Text style={styles.bodyText()}>With photo</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.customerReviewBlock()}>
-            <View style={styles.avatar()}>
-              <Image style={styles.img()} source={images.imgAvatar}/>
-            </View>
-            <View style={styles.customerReview()}>
-              <Text style={styles.customerName()}>Helene Moore</Text>
-              <View style={styles.spaceBetween()}>
-                <StarRatings ratings={4} />
-                <Text style={styles.lightText()}>June 5, 2019</Text>
-              </View>
-              <Text style={styles.reviewDesc()}>The dress is great! Very classy and comfortable. It fit perfectly! I'm 5'7" and 130 pounds. I am a 34B chest. This dress would be too long for those who are shorter but could be hemmed. I wouldn't recommend it for those big chested as I am smaller chested and it fit me perfectly. The underarms were not too wide and the dress was made well.</Text>
-              <Text style={[styles.lightText(), styles.textRight()]}>Helpful <IcThumb /></Text>
-            </View>
+          <View style={styles.customerReviewMainBlock()}>
+            <FlatList
+              data={reviewData}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderReviewsBlock}
+              keyExtractor={(item, index) => item+index}
+              onScroll={(e) => {
+                const scrolling = e.nativeEvent.contentOffset.y;
+                // console.log('scrolling: ', scrolling)
+                if(scrolling > 150){
+                  handleOnScrollUP()
+                }else if(scrolling > 0 && scrolling < 500){
+                  handleOnScrollDOWN()
+                }
+              }}
+              contentContainerStyle={styles.flatListContainer()}
+            />
           </View>
         </View>
-      </Screen>
+      </View>
+      <View style={styles.bottomView()}>
+      <LinearGradient 
+          colors={['rgba(255, 255, 255, .02)','rgba(255, 255, 255, .6)', 'rgba(255, 255, 255, 0.8)', 'rgba(255, 255, 255, 1)']} 
+          locations={[0.1, 0.3, 0.7, 0.8]}
+          start={{x: 0, y: 0}} 
+          end={{x: 0, y: 1}} style={styles.linearGradient()}>
+        <Button 
+          title='Write a review' activeOpacity={0.8}
+          icon
+          renderIcon={() => (<IcPen />)}
+          btnStyle={styles.reviewButton()}
+          btnTextStyle={styles.reviewButtonText()} />
+      </LinearGradient>
+      </View>
     </View>
   )
 }

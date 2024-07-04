@@ -1,19 +1,21 @@
+import { opacity } from "react-native-redash"
 import { color, fontSize, fonts, size } from "../../theme"
 
 export const mainView = () => ({
   backgroundColor: color.primary,
-  flex: 1
+  flex: 1,
 })
 
 export const topView = () => ({
 })
 
-export const header = () => ({
+export const header = (showHeaderTitle) => ({
+  elevation: showHeaderTitle ? size.moderateScale(10) : 0
 })
 
 export const middleView = () => ({
-  
 })
+
 
 export const mainTitle = () => ({
   fontSize: fontSize.middleLarge,
@@ -112,14 +114,16 @@ export const peopleRating = () => ({
 
 export const reviewBlock = () => ({
   marginTop: size.moderateScale(33),
-  paddingLeft: size.moderateScale(16),
-  paddingRight: size.moderateScale(32),
+  paddingLeft: size.moderateScale(10),
+  paddingRight: size.moderateScale(25),
 })
 
 export const reviewHeading = () => ({
   flexDirection: 'row',
   alignItems: 'center',
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
+  paddingLeft: size.moderateScale(6),
+  paddingRight: size.moderateScale(7),
 })
 
 export const h2 = () => ({
@@ -141,11 +145,20 @@ export const bodyText = () => ({
   marginLeft: size.moderateScale(13)
 })
 
-export const customerReviewBlock = () => ({
-  paddingTop: size.moderateScale(10),
-  paddingLeft: size.moderateScale(10),
+export const customerReviewMainBlock = () => ({
   marginTop: size.moderateScale(28),
   marginBottom: size.moderateScale(20),
+  // backgroundColor: color.error
+})
+
+export const customerReviewBlock = () => ({
+  padding: size.moderateScale(10),
+  marginBottom: size.moderateScale(20),
+  marginTop: size.moderateScale(10),
+})
+
+export const flatListContainer = () => ({
+  paddingBottom: size.moderateScale(180),
 })
 
 export const avatar = () => ({
@@ -182,6 +195,21 @@ export const spaceBetween = () => ({
   marginTop: size.moderateScale(10)
 })
 
+export const reviewProductImages = () => ({
+  alignItems: 'center',
+  gap: size.moderateScale(16)
+})
+
+export const toggleImagesView = () => ({
+  opacity: 1
+})
+
+export const reviewProductImgItem = () => ({
+  width: size.moderateScale(104),
+  height: size.moderateScale(104),
+  borderRadius: size.moderateScale(8)
+})
+
 export const lightText = () => ({
   fontSize: fontSize.mediumSmall,
   fontFamily: fonts.metropolisRegular,
@@ -197,6 +225,32 @@ export const reviewDesc = () => ({
 })
 
 export const textRight = () => ({
-  textAlign: 'right',
+  flexDirection: 'row',
+  alignItems: 'flex-end',
+  justifyContent: 'flex-end',
+  gap: size.moderateScale(7),
+  marginTop: size.moderateScale(10)
 })
 
+export const bottomView = () => ({
+  position: 'absolute',
+  bottom: 0,
+  width: '100%',
+  height: 200,
+})
+
+export const linearGradient = () => ({
+  flex: 1,
+  width: '100%'
+});
+
+export const reviewButton = () => ({
+  position: 'absolute',
+  bottom: size.moderateScale(16),
+  right: size.moderateScale(16),
+  width: size.moderateScale(128)
+});
+
+export const reviewButtonText = () => ({
+  fontSize: fontSize.mediumSmall
+});
