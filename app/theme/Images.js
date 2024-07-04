@@ -21,4 +21,5 @@ export const images = {
   imgAccessoriesCategory: require('./image/images/accessoriesCategoryImg.png'),
   imgMainProductImageOne: require('./image/images/MainProductImageOne.png'),
   imgMainProductImageTwo: require('./image/images/MainProductImageTwo.png'),
+  imgAvatar: require('./image/images/Avatar.png'),
 };
