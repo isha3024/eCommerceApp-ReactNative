@@ -1,21 +1,28 @@
 import { color, fontSize, fonts, size } from "../../theme"
 
 
-export const mainProductCard = () => ({
+export const mainProductCard = (isProductSold) => ({
   backgroundColor: color.primary,
   width: size.deviceWidth * 0.4,
   // marginRight: size.moderateScale(10),
   borderRadius: size.moderateScale(8),
+  opacity: isProductSold ? 0.7 : 1
 })
 
+export const mainViewHorizontal = (isProductSold) => ({
+  marginVertical: size.moderateScale(16), 
+  marginHorizontal: size.moderateScale(10),
+  elevation: size.moderateScale(5),
+  opacity: isProductSold ? 0.7 : 1,
+  backgroundColor: color.primary,
+  borderRadius: size.moderateScale(8),
+
+})
 export const mainProductCardHorizontal = () => ({
   backgroundColor: color.white,
   flexDirection: 'row',
   backgroundColor: color.white,
-  elevation: size.moderateScale(5),
   borderRadius: size.moderateScale(8),
-  marginVertical: size.moderateScale(10), 
-  marginHorizontal: size.moderateScale(10) 
 })
 
 export const imageView = () => ({
@@ -72,6 +79,34 @@ export const addToFavoriteBtnHorizontal = () => ({
   elevation: size.moderateScale(4)
 })
 
+export const addToCartBtnHorizontal = () => ({
+  position: 'absolute',
+  width: size.moderateScale(36),
+  height: size.moderateScale(36),
+  backgroundColor: color.secondary,
+  borderRadius: size.moderateScale(40),
+  alignItems: 'center',
+  justifyContent: 'center',
+  bottom: size.moderateScale(-17),
+  right: size.moderateScale(0),
+  zIndex: size.moderateScale(10),
+  elevation: size.moderateScale(4)
+})
+
+export const addToCartBtn = () => ({
+  position: 'absolute',
+  width: size.moderateScale(36),
+  height: size.moderateScale(36),
+  backgroundColor: color.secondary,
+  borderRadius: size.moderateScale(40),
+  alignItems: 'center',
+  justifyContent: 'center',
+  bottom: size.moderateScale(-18),
+  right: size.moderateScale(0),
+  zIndex: size.moderateScale(10),
+  elevation: size.moderateScale(4)
+})
+
 export const badge = (newProduct) => ({
   position: 'absolute',
   width: size.moderateScale(40),
@@ -118,7 +153,8 @@ export const productInfoHorizontal = () => ({
   gap: size.moderateScale(4),
   zIndex: size.moderateScale(5),
   flex: 1,
-  borderTopRightRadius: size.moderateScale(8)
+  borderTopRightRadius: size.moderateScale(8),
+  borderBottomRightRadius: size.moderateScale(8),
 })
 
 export const starRatings = () => ({
@@ -133,6 +169,37 @@ export const ratingsContainer = () => ({
 export const brandName = () => ({
   fontSize: fontSize.mediumSmall,
   color: color.darkGray,
+  fontFamily: fonts.metropolisRegular,
+})
+
+export const colorAndSizeWrapper = () => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: size.moderateScale(15),
+  marginVertical: size.moderateScale(6)
+})
+
+export const colorAndSizeWrapperVertical = () => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: size.moderateScale(15),
+  marginVertical: size.moderateScale(0)
+})
+
+export const colorAndSize = () => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+})
+
+export const lightText = () => ({
+  fontSize: fontSize.mediumSmall,
+  color: color.darkGray,
+  fontFamily: fonts.metropolisRegular,
+})
+
+export const darkText = () => ({
+  fontSize: fontSize.mediumSmall,
+  color: color.mostlyBlack,
   fontFamily: fonts.metropolisRegular,
 })
 
@@ -166,7 +233,7 @@ export const regularPrice = () => ({
   fontFamily: fonts.metropolisMedium
 })
 
-export const closeIcon = (sale, newProduct) => ({
+export const closeIcon = () => ({
   position: 'absolute',
   width: size.moderateScale(25),
   height: size.moderateScale(25),
@@ -175,4 +242,45 @@ export const closeIcon = (sale, newProduct) => ({
   justifyContent: 'center',
   top: size.moderateScale(8),
   right: size.moderateScale(8),
+})
+
+export const closeIconHorizontal = () => ({
+  position: 'absolute',
+  width: size.moderateScale(25),
+  height: size.moderateScale(25),
+  borderTopRightRadius: size.moderateScale(8),
+  alignItems: 'center',
+  justifyContent: 'center',
+  top: size.moderateScale(5),
+  right: size.moderateScale(5),
+})
+
+export const ratingsAndPriceWrapper = () => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  paddingRight: size.moderateScale(50)
+})
+
+export const productSoldText = () => ({
+  marginHorizontal: size.moderateScale(10),
+  marginTop: size.moderateScale(0),
+  fontSize: fontSize.mediumSmall,
+  color: color.mostlyBlack,
+  fontFamily: fonts.metropolisRegular,
+  position: 'absolute',
+  bottom: size.moderateScale(-12)
+})
+
+export const productSoldTextVertical = () => ({
+  paddingHorizontal: size.moderateScale(10),
+  paddingVertical: size.moderateScale(10),
+  backgroundColor: color.customWhite(0.6),
+  borderBottomLeftRadius: size.moderateScale(8),
+  borderBottomRightRadius: size.moderateScale(8),
+  width: '100%',
+  fontSize: fontSize.mediumSmall,
+  color: color.mostlyBlack,
+  fontFamily: fonts.metropolisRegular,
+  position: 'absolute',
+  bottom: size.moderateScale(0)
 })

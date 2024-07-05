@@ -32,6 +32,8 @@ export const BottomSheetContainer = ({isVisible, onClose, children, customHeight
               index={1}
               snapPoints={snapPoints}
               backdropComponent={renderBackdrop}
+              // shouldMeasureContentHeight={true}
+              // enableDynamicSizing={true}
               enablePanDownToClose={true}
               onChange={(index) => {
                 if(index === -1) {

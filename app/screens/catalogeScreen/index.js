@@ -6,7 +6,6 @@ import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, siz
 import * as styles from './styles'
 import * as data from '../../json'
 import { useNavigation } from '@react-navigation/native'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -85,6 +84,7 @@ export const CatalogeScreen = () => {
 
   //sort options bottom sheet useState
   const [isSheetVisible, setSheetVisible] = useState(false);
+  
   //sort option selected useState
   const [isSelected, setIsSelected] = useState(null);
 

@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, ImageBackground, TouchableOpacity, FlatList, StatusBar } from 'react-native'
-import { Button, ProductCardMain, Screen, Text, Title } from '../../components'
-import { color, images, size } from '../../theme'
+import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
+import { color, IcBackArrow, images, size } from '../../theme'
 
 import * as styles from './styles'
 import LinearGradient from 'react-native-linear-gradient'
@@ -67,12 +67,42 @@ const data = [
     isProductNew: false
   }
 ]
-
+const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 export const HomeScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();  
+  const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
+
+   //showing the user selected size option
+   const [userSizeOption, setUserSizeOption] = useState(false);
+
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
+  const handleClosePressSizeSheet = () => {
+    setSizeBottomSheetVisible(false);
+  }
+
+  const selectSizeHandler = (size) => {
+    setUserSizeOption(size);
+    if (selectedProductId) {
+      // navigation.navigate('mainProductScreen', { selectedSize: size, productId: selectedProductId });
+      setUserSizeOption('')
+    }
+  };
+
+  const handleFavoriteBtn = () => {
+    if(userSizeOption.length !== 0){
+      setSizeBottomSheetVisible(true);
+      navigation.navigate('favoriteScreen', {selectedSize: userSizeOption, selectedId: selectedProductId})
+      setUserSizeOption(false)
+      setSizeBottomSheetVisible(false);
+    }
+  }
+
+
   return (
     <Screen withScroll bgColor={color.transparent} translucent={true}>
-      <View style={styles.topView()}>
+    <View>
+    <View style={styles.topView()}>
         <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
         <LinearGradient 
           colors={['rgba(0, 0, 0, .7)', 'rgba(255, 255, 255, 0)']} 
@@ -103,6 +133,10 @@ export const HomeScreen = () => {
           renderItem={(item) => {
             return (
               <ProductCardMain 
+                onProductPress={() => {
+                  setSelectedProductId(item.id);
+                  setSizeBottomSheetVisible(true);
+                }}
                 customProductStyle={styles.productCardHome()}
                 productImage={item.item.images}
                 brandName={item.item.brand}
@@ -118,6 +152,30 @@ export const HomeScreen = () => {
           keyExtractor={(item, index) => item + index}
         />
       </View>
+    </View>   
+    <BottomSheetContainer
+      isVisible={isSizeBottomSheetVisible}
+      onClose={handleClosePressSizeSheet}
+      customHeight={'45%'}>
+      <Text style={styles.titleBottomSheet()}>Select Size</Text>
+      <View style={styles.sizeContainer()}>
+        {
+          sizes.map((size, index) => {
+            const isSelected = size === userSizeOption;
+            return (
+              <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={[styles.sizeItem(), isSelected && styles.sizeItemActive()]} key={index}>
+                <Text style={[styles.sizeText(), isSelected && styles.sizeTextActive()]}>{size}</Text>
+              </TouchableOpacity>
+            )
+          })
+        }
+      </View>
+      <TouchableOpacity style={styles.sizeInfo()}>
+        <Text style={styles.sizeInfoText()}>Size info</Text>
+        <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
+      </TouchableOpacity>
+      <Button title='ADD TO FAVORITE' onPress={handleFavoriteBtn} btnStyle={styles.button()} />
+    </BottomSheetContainer>
     </Screen>
   )
 }

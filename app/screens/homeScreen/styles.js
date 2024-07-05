@@ -60,3 +60,72 @@ export const productCardHome = () => ({
   marginRight: size.moderateScale(16)
 });
 
+export const titleBottomSheet = () => ({
+  fontSize: fontSize.middleMedium,
+  fontFamily: fonts.metropolisSemiBold,
+  color: color.mostlyBlack,
+  textAlign: 'center',
+  marginBottom: size.moderateScale(10),
+})
+
+export const sizeContainer = () => ({
+  marginHorizontal: size.moderateScale(16),
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: size.moderateScale(22),
+  marginTop: size.moderateScale(22)
+})
+
+export const sizeItem = () => ({
+  width: size.moderateScale(100),
+  height: size.moderateScale(40),
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: color.white,
+  borderColor: color.darkGray,
+  borderWidth: size.moderateScale(1),
+  borderRadius: size.moderateScale(8)
+})
+
+export const sizeItemActive = () => ({
+  backgroundColor: color.secondary,
+  borderColor: color.secondary,
+})
+
+export const sizeText = () => ({
+  color: color.mostlyBlack,
+  fontSize: fontSize.small,
+  fontFamily: fonts.metropolisMedium
+})
+
+export const sizeTextActive = () => ({
+  color: color.white,
+})
+
+export const sizeInfo = () => ({
+  marginTop: size.moderateScale(22),
+  borderTopWidth: size.moderateScale(0.5),
+  borderBottomWidth: size.moderateScale(0.5),
+  borderTopColor: color.darkGray,
+  borderBottomColor: color.darkGray,
+  padding: size.moderateScale(16),
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between'
+})
+
+export const sizeInfoText = () => ({
+  fontSize: fontSize.littleMedium,
+  fontFamily: fonts.metropolisRegular,
+  color: color.mostlyBlack
+})
+
+export const forwardArrow = () => ({
+  transform: [{rotate: '180deg'}],
+})
+
+export const button = () => ({
+  marginTop: size.moderateScale(28),
+  marginHorizontal: size.moderateScale(16)
+})

@@ -1,5 +1,4 @@
 import { color, fontSize, fonts, size } from "../../theme";
-import { rightContainer } from "../profileScreen/styles";
 
 export const topContainer = () => ({
   backgroundColor: color.white,  

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 
 import * as styles from './styles'
-import { IcClose, IcFilledHeart, IcHeart, color, size } from '../../theme'
+import { color, IcCart, IcCartActive, IcClose, IcFilledHeart, IcHeart, size } from '../../theme'
 import { Text } from '../text'
 import { StarRatings } from '../starRatings'
 
@@ -20,27 +20,33 @@ export const ProductCardMain = ({
   sellingPrice,
   ratings,
   ratingsCounts,
-  saleProduct,
   newProduct,
   flotingBtnStyle,
   showTopRightIcon,
-  topRightIcon
+  topRightIcon,
+  productSize,
+  productColor,
+  addToFavoriteIcon,
+  addToCartIcon,
+  showRatingHorizontal,
+  isProductSold,
+  removeFromListIconPress
   // onAddToFavorite
 }) => {
-  const [filledHeart, setFilledHeart] = useState(false);
+  const [filledIcon, setFilledIcon] = useState(false);
   const discount = Math.floor((sellingPrice/originalPrice) * 100);
 
   const onAddToFavorite = () => {
-    if (filledHeart) {
-      setFilledHeart(false)
+    if (filledIcon) {
+      setFilledIcon(false)
     } else {
-      setFilledHeart(true)
+      setFilledIcon(true)
     }
   }
 
   if (productHorizontal) {
     return (
-      <View>
+      <View style={styles.mainViewHorizontal(isProductSold)}>
       <TouchableOpacity style={[styles.mainProductCardHorizontal(),customProductStyle]} activeOpacity={activeOpacity ?? 0.7}>
         <View style={styles.imageViewHorizontal()}>
           <Image source={productImage} style={styles.imageHorizontal()} />
@@ -59,7 +65,30 @@ export const ProductCardMain = ({
         <View style={styles.productInfoHorizontal()}>
           <Text style={styles.productTitle()}>{productTitle}</Text>
           <Text style={styles.brandName()}>{brandName}</Text>
-          <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
+          <View style={styles.colorAndSizeWrapper()}>
+            {
+              productColor && (
+                <View style={styles.colorAndSize()}>
+                  <Text style={styles.lightText()}>Color: </Text>
+                  <Text style={styles.darkText()}>{productColor}</Text>
+                </View>
+              )
+            }
+            {
+              productSize && (
+                <View style={styles.colorAndSize()}>
+                  <Text style={styles.lightText()}>Size: </Text>
+                  <Text style={styles.darkText()}>{productSize}</Text>
+                </View>
+              )   
+            }
+          </View>
+          {
+            !showRatingHorizontal && (
+              <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
+            )
+          }
+          <View style={styles.ratingsAndPriceWrapper()}>
           {
             originalPrice && sellingPrice ? (
               <View style={styles.priceContainer()}>
@@ -69,6 +98,12 @@ export const ProductCardMain = ({
             ) : (<Text style={styles.regularPrice()}>{originalPrice}$</Text>)
           }
           {
+            showRatingHorizontal && (
+             <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
+            )
+          }
+          </View>
+          {
             showTopRightIcon ? (
               <TouchableOpacity style={styles.closeIcon()}>
                 <IcClose width={size.moderateScale(12)} height={size.moderateScale(12)} fill={color.darkGray} />
@@ -77,20 +112,43 @@ export const ProductCardMain = ({
           }
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
-      {
-        filledHeart ?
-          (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-          : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-      }
-      </TouchableOpacity>
+        {
+          addToFavoriteIcon && (
+            <TouchableOpacity activeOpacity={0.6} style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
+              {
+                filledIcon ?
+                  (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+                  : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+              }
+            </TouchableOpacity>
+          )
+        }
+        {
+          addToCartIcon && !isProductSold && (
+            <TouchableOpacity activeOpacity={0.8} style={styles.addToCartBtnHorizontal()} onPress={onAddToFavorite}>
+              <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)}/>
+            </TouchableOpacity>
+          )
+        }   
+        {
+          topRightIcon && (
+            <TouchableOpacity onPress={removeFromListIconPress} style={styles.closeIconHorizontal()}>
+              <IcClose width={size.moderateScale(12)} height={size.moderateScale(12)} fill={color.darkGray} />
+            </TouchableOpacity>
+          )
+        }
+        {
+          isProductSold && (
+            <Text style={styles.productSoldText()}>Sorry, this item is currently sold out</Text>
+          )
+        }
       </View>
     );
   }
   else {
     return (
       <View>
-      <TouchableOpacity style={[styles.mainProductCard(),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
+      <TouchableOpacity style={[styles.mainProductCard(isProductSold),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
         <View style={styles.imageView()}>
           <Image source={productImage} style={[styles.image(), customProductImageStyle]} />
           <View style={[styles.badge(newProduct),  sellingPrice && styles.discountBadge()]}>
@@ -110,6 +168,29 @@ export const ProductCardMain = ({
               </TouchableOpacity>
             ) : null
           }
+          {
+            isProductSold && (
+              <Text style={styles.productSoldTextVertical()}>Sorry, this item is currently sold out</Text>
+            )
+          }
+            {
+              addToFavoriteIcon && (
+                <TouchableOpacity activeOpacity={0.6} style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
+                  {
+                    filledIcon ?
+                      (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+                      : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+                  }
+                </TouchableOpacity>
+              )
+            }
+            {
+              addToCartIcon && !isProductSold && (
+                <TouchableOpacity activeOpacity={0.8} style={styles.addToCartBtn()} onPress={onAddToFavorite}>
+                  <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)} />
+                </TouchableOpacity>
+              )
+            }
         </View>
         <View style={styles.productInfo()}>
           <View style={styles.ratingsContainer()}>
@@ -117,6 +198,24 @@ export const ProductCardMain = ({
           </View>
           <Text style={styles.brandName()}>{brandName}</Text>
           <Text style={styles.productTitle()}>{productTitle}</Text>
+          <View style={styles.colorAndSizeWrapperVertical()}>
+            {
+              productColor && (
+                <View style={styles.colorAndSize()}>
+                  <Text style={styles.lightText()}>Color: </Text>
+                  <Text style={styles.darkText()}>{productColor}</Text>
+                </View>
+              )
+            }
+            {
+              productSize && (
+                <View style={styles.colorAndSize()}>
+                  <Text style={styles.lightText()}>Size: </Text>
+                  <Text style={styles.darkText()}>{productSize}</Text>
+                </View>
+              )   
+            }
+          </View>
           {
             originalPrice && sellingPrice ? (
               <View style={styles.priceContainer()}>
@@ -126,13 +225,6 @@ export const ProductCardMain = ({
             ) : (<Text style={styles.regularPrice()}>{originalPrice}$</Text>)
           }
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.addToFavoriteBtn(), flotingBtnStyle]} onPress={onAddToFavorite}>
-        {
-          filledHeart ?
-            (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-            : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-        }
       </TouchableOpacity>
       </View>
     );

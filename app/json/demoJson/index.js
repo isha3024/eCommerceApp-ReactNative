@@ -11,6 +11,8 @@ export const productList = [
     rating_count: 12,
     originalPrice: 17.99,
     isProductNew: true,
+    isProductSold: false,
+    productColor: 'Black',
     mainProductImageOne: images.imgMainProductImageOne,
     mainProductImageTwo: images.imgMainProductImageTwo,
     description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
@@ -26,7 +28,9 @@ export const productList = [
     rating_count: 4,
     originalPrice: 22,
     sellingPrice: 11,
+    isProductSold: true,
     isProductNew: false,
+    productColor: 'Orange',
     mainProductImageOne: images.imgMainProductImageOne,
     mainProductImageTwo: images.imgMainProductImageTwo,
     description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
@@ -41,7 +45,9 @@ export const productList = [
     rating_scale: 10.0,
     rating_count: 22,
     originalPrice: 14,
+    isProductSold: false,
     isProductNew: false,
+    productColor: 'Yellow',
     mainProductImageOne: images.imgMainProductImageOne,
     mainProductImageTwo: images.imgMainProductImageTwo,
     description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
@@ -56,7 +62,9 @@ export const productList = [
     rating_scale: 10.0,
     rating_count: 12,
     originalPrice: 17,
+    isProductSold: false,
     isProductNew: true,
+    productColor: 'Red',
     mainProductImageOne: images.imgMainProductImageOne,
     mainProductImageTwo: images.imgMainProductImageTwo,
     description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
@@ -73,7 +81,9 @@ export const productList = [
     isProductNew: true,
     originalPrice: 30,
     sellingPrice: 20.76,
+    isProductSold: true,
     isProductNew: false,
+    productColor: 'Blue',
     mainProductImageOne: images.imgMainProductImageOne,
     mainProductImageTwo: images.imgMainProductImageTwo,
     description: 'Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.'
