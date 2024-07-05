@@ -116,7 +116,7 @@ export const MainProductScreen = ({ route }) => {
               <Text style={styles.productPrice()}>${selectedProduct.originalPrice}</Text>
             </View>
             <Text style={styles.productTitle()}>{selectedProduct.name}</Text>
-            <TouchableOpacity onPress={handleRatingsReviews}>
+            <TouchableOpacity activeOpacity={0.7} onPress={handleRatingsReviews}>
               <StarRatings ratings={selectedProduct.ratings} ratingsCounts={selectedProduct.rating_count} customStarRatingStyle={styles.starRatings()} />
             </TouchableOpacity>
             <Text style={styles.productDescription()}>{selectedProduct.description}</Text>

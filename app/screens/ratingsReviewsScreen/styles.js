@@ -1,4 +1,3 @@
-import { opacity } from "react-native-redash"
 import { color, fontSize, fonts, size } from "../../theme"
 
 export const mainView = () => ({
@@ -154,11 +153,12 @@ export const customerReviewMainBlock = () => ({
 export const customerReviewBlock = () => ({
   padding: size.moderateScale(10),
   marginBottom: size.moderateScale(20),
-  marginTop: size.moderateScale(10),
+  // marginTop: size.moderateScale(10),
+  position: 'relative'
 })
 
 export const flatListContainer = () => ({
-  paddingBottom: size.moderateScale(180),
+  paddingBottom: size.moderateScale(250),
 })
 
 export const avatar = () => ({
@@ -186,7 +186,6 @@ export const customerName = () => ({
   fontFamily: fonts.metropolisSemiBold,
   color: color.mostlyBlack,
 })
-
 
 export const spaceBetween = () => ({
   flexDirection: 'row',
@@ -222,6 +221,10 @@ export const reviewDesc = () => ({
   color: color.mostlyBlack,
   lineHeight: size.moderateScale(23),
   marginVertical: size.moderateScale(11)
+})
+
+export const customerProductImages = () => ({
+  gap: size.moderateScale(16),
 })
 
 export const textRight = () => ({
@@ -298,11 +301,10 @@ export const reviewText = () => ({
   elevation: size.moderateScale(4)
 });
 
-export const customerProductImages = () => ({
-  alignItem: 'flex-end',
-  gap: size.moderateScale(2),
-  paddingVertical: size.moderateScale(20),
-  paddingHorizontal: size.moderateScale(16)
+export const cameraRollUpdate = () => ({
+  paddingHorizontal: size.moderateScale(16),
+  marginVertical: size.moderateScale(25),
+  flexDirection: 'row',
 });
 
 export const cameraView = () => ({
@@ -316,12 +318,25 @@ export const cameraView = () => ({
   elevation: size.moderateScale(4)
 });
 
+export const productReviewImgWrapper = () => ({
+  width: size.moderateScale(104),
+  height: size.moderateScale(104),
+  borderRadius: size.moderateScale(8),
+  overflow: 'hidden'
+});
+
+export const productReviewImg= () => ({
+  width: '100%',
+  height: '100%',
+});
+
 export const cameraText = () => ({
   fontSize: fontSize.mediumSmall,
   fontFamily: fonts.metropolisRegular,
   color: color.mostlyBlack,
 });
+
 export const buttonSendReview = () => ({
   marginHorizontal: size.moderateScale(16),
-  marginTop: size.moderateScale(35)
+  marginTop: size.moderateScale(25)
 });

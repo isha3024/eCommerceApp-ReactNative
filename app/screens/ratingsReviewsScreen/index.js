@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, Image, ScrollView, LayoutAnimation, Platform, StatusBar, TouchableOpacity, UIManager, View, Animated, TextInput } from 'react-native'
+import { FlatList, Image, LayoutAnimation, Platform, StatusBar, TouchableOpacity, UIManager, View, Animated, TextInput, ScrollView } from 'react-native'
+import * as ImagePicker from 'react-native-image-picker'
 
 import * as styles from './styles'
 import * as data from '../../json'
-import { BottomSheetContainer, Button, CustomCamera, Header, StarRatings, StarRatingsV2, Text } from '../../components'
-import { IcBackArrow, IcCamera, IcCheckBoxActive, IcCheckBoxInactive, IcPen, IcStar, IcThumb, color, size } from '../../theme'
+import { BottomSheetContainer, Button, CustomCamera, Header, ProductRating, Screen, StarRatings, StarRatingsV2, Text } from '../../components'
+import { IcBackArrow, IcCamera, IcCheckBoxActive, IcCheckBoxInactive, IcPen, IcStar, IcThumb, color, images, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
+import { opacity } from 'react-native-redash'
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
@@ -17,9 +20,14 @@ export const RatingsReviewsScreen = ({route}) => {
   const reviewData = data.reviewsList;
   // console.log('reviewData: ', reviewData);
   
+  const navigation = useNavigation();
+  
   const [showHeaderTitle, setShowHeaderTitle] = useState(false);
   const [showReviewWithImg, setShowReviewWithImg] = useState(false);
-  const [showAddReview, setShowAddReview] = useState(false)
+  const [showAddReview, setShowAddReview] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [addReviewImage, setAddReviewImage] = useState([]);
+  
   const showImages = useRef(new Animated.Value(0)).current;
 
   const toggleReviewImages = () => {
@@ -38,17 +46,32 @@ export const RatingsReviewsScreen = ({route}) => {
   const handleCloseReview = () => {
     setShowAddReview(false);
   }
-  const renderCamera = () => {
-    return (<CustomCamera />)
-  }
+  
+
+  const openImagePicker = () => {
+    console.log('open picker')
+    const options = {
+      mediaType: 'photo',
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+    ImagePicker.launchImageLibrary(options, handleResponse);
+  };
+
+  const handleResponse = (response) => {
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('Image picker error: ', response.error);
+    } else {
+      let imageUri = response.uri || response.assets?.[0]?.uri;
+      setSelectedImage(imageUri);
+      setAddReviewImage([...addReviewImage, imageUri]);
+    }
+  };
 
   const handleOnScrollUP = () => {
-    // LayoutAnimation.configureNext({
-    //   duration: 500,
-    //   create: {type: 'linear', property: 'opacity'},
-    //   update: {type: 'linear', property: 'opacity'},
-    //   delete: {type: 'linear', property: 'opacity'}
-    // })
     LayoutAnimation.configureNext({
       duration: 300,
       update: {
@@ -59,7 +82,6 @@ export const RatingsReviewsScreen = ({route}) => {
   }
 
   const handleOnScrollDOWN = () => {
-    // 
     LayoutAnimation.configureNext({
       duration: 200,
       update: {
@@ -83,17 +105,15 @@ export const RatingsReviewsScreen = ({route}) => {
           </View>
           <Text style={styles.reviewDesc()}>{item.reviewDescription}</Text>
           {
-            showReviewWithImg && (
-              <Animated.View style={{opacity: showImages}}>
-                <ScrollView 
-                  horizontal={true} 
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.reviewProductImages()}>
-                  <Image source={item.reviewProductImageOne} style={styles.reviewProductImgItem()}/>
-                  <Image source={item.reviewProductImageTwo} style={styles.reviewProductImgItem()}/>
-                  <Image source={item.reviewProductImageThree} style={styles.reviewProductImgItem()}/>
-                </ScrollView>
-              </Animated.View>
+            showReviewWithImg && ( 
+              <ScrollView 
+                horizontal={true} 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.customerProductImages()}>
+                <Animated.Image source={item.reviewProductImageOne} style={[styles.reviewProductImgItem()]}/>
+                <Image source={item.reviewProductImageTwo} style={styles.reviewProductImgItem()}/>
+                <Image source={item.reviewProductImageThree} style={styles.reviewProductImgItem()}/>
+              </ScrollView>
             )
           }
           <TouchableOpacity activeOpacity={0.5} style={styles.textRight()}>
@@ -105,9 +125,8 @@ export const RatingsReviewsScreen = ({route}) => {
     )
   }
 
-  const navigation = useNavigation();
   return (
-    <View style={styles.mainView()}>
+    <View withScroll style={styles.mainView()}>
       <StatusBar backgroundColor={color.primary} translucent={true}/>
       <View style={styles.topView()}>
         <Header
@@ -207,26 +226,10 @@ export const RatingsReviewsScreen = ({route}) => {
       </View>
       <BottomSheetContainer
         isVisible={showAddReview}
-        onClose={handleCloseReview}
-        customHeight={'73%'}>
+        customHeight={'73%'}
+        onClose={handleCloseReview}>
           <Text style={styles.addReviewTitle()}>What is your rate ?</Text>
-          <View style={styles.rateStars()}>
-            <TouchableOpacity activeOpacity={0.5}>
-              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.5}>
-              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.5}>
-              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.5}>
-              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.5}>
-              <IcStar stroke={color.darkGray} width={size.moderateScale(36)} height={size.moderateScale(34)} />
-            </TouchableOpacity>
-          </View>
+          <ProductRating />
           <Text style={styles.reviewBodyText()}>Please share your opinion about the product</Text>
           <TextInput 
             autoCapitalize={true}
@@ -236,16 +239,35 @@ export const RatingsReviewsScreen = ({route}) => {
             numberOfLines={8}
             style={styles.reviewText()}
           />
-          <ScrollView 
-            horizontal={true} 
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.customerProductImages()}>
-            <TouchableOpacity onPress={renderCamera} activeOpacity={0.8} style={styles.cameraView()}>
-              <IcCamera />
-              <Text style={styles.cameraText()}>Add your photos</Text>
-            </TouchableOpacity>
-          </ScrollView>
+          <View style={styles.cameraRollUpdate()}>
+          {
+            selectedImage && (
+              <BottomSheetScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: size.moderateScale(16) }}>
+                {
+                  addReviewImage.map((productReviewImg, index) => {
+                    console.log('productReviewImg: ', productReviewImg);
+                    return (
+                      <View style={styles.productReviewImgWrapper()} key={index}>
+                        <Image source={{ uri: productReviewImg }} style={styles.productReviewImg()} />
+                      </View>
+                    )
+                  })
+                }
+              </BottomSheetScrollView>
+            )
+          }
+          
+          <TouchableOpacity onPress={openImagePicker} activeOpacity={0.8} style={styles.cameraView()}>
+            <IcCamera />
+            <Text style={styles.cameraText()}>Add your photos</Text>
+          </TouchableOpacity>
+          </View>
+          
           <Button title='SEND REVIEW' btnStyle={styles.buttonSendReview()}/>
+         
       </BottomSheetContainer>
     </View>
   )
