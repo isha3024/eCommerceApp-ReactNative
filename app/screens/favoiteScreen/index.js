@@ -73,8 +73,10 @@ const sortProductType = [
 
 
 export const FavoriteScreen = ({route}) => {
-  const selectedSize = route.params.selectedSize;
-  console.log('selectedSize: ', selectedSize)
+  // if(route){
+  //   let selectedSize = route.params.selectedSize;
+  // }
+  // console.log('selectedSize: ', selectedSize)
   const navigation = useNavigation();
   //product data json
   const products = data.productList;
@@ -180,7 +182,7 @@ export const FavoriteScreen = ({route}) => {
           topRightIcon={true}
           addToCartIcon={true}
           productColor={item?.productColor}
-          productSize={selectedSize}
+          // productSize={route ? selectedSize : null}
           isProductSold={item?.isProductSold}
           flotingBtnStyle={showGrid ? null : styles.flotingButton()}
           customProductStyle={showGrid ? null : styles.productCardGridItem()}

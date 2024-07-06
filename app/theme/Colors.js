@@ -3,6 +3,7 @@ export const color = {
   secondary: 'rgb(219,48,34)',
   white: 'rgb(255, 255, 255)',
   darkGray: 'rgb(155,155,155)',
+  borderColor: 'rgba(155,155,155, 0.2)',
   veryDarkGray: 'rgb(45,45,45)',
   success: 'rgb(42,169,82)',
   error: 'rgb(240,31,14)',

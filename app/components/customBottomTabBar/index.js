@@ -33,7 +33,7 @@ export const CustomBottomTabBar = ({state, descriptors, navigation}) => {
         else if(route.name == 'favoriteScreen'){
           Icon = state.index === index ? IcFavoriteActive : IcFavorite;
         }
-        else if(route.name == 'profileScreen'){
+        else if(route.name == 'profileStackNavigation'){
           Icon = state.index === index ? IcPersonActive : IcPerson;
         }
         

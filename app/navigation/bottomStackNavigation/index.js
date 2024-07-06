@@ -5,6 +5,7 @@ import { CustomBottomTabBar } from '../../components';
 import { ShopStackNavigation } from '../shopStackNavigation';
 import { HomeStackNavigation } from '../homeStacknavigation';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { ProfileStackNavigation } from '../profileStackNavigation';
 
 
 const Tab = createBottomTabNavigator();
@@ -49,7 +50,7 @@ export const BottomStackNavigation = () => {
       <Tab.Screen name='favoriteScreen' component={FavoriteScreen} options={{
         tabBarLabel: 'Favorite'
       }}/>
-      <Tab.Screen name='profileScreen' component={ProfileScreen} options={{
+      <Tab.Screen name='profileStackNavigation' component={ProfileStackNavigation} options={{
         tabBarLabel: 'Profile'
       }}/>
     </Tab.Navigator>

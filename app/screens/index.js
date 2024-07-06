@@ -15,4 +15,5 @@ export * from './filterScreen';
 export * from './brandScreen';
 export * from './mainProductScreen';
 export * from './ratingsReviewsScreen';
+export * from './orderScreen';
 // export * from './referScreen';

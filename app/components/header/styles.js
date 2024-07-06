@@ -8,7 +8,6 @@ export const mainContainer = statusBarheight => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   backgroundColor: color.primary,
-  paddingHorizontal: size.moderateScale(10),
 })
 export const headerTitle = () => ({
   fontSize: fontSize.middleMedium,
@@ -19,14 +18,14 @@ export const headerMain = () => ({
   textAlign: 'center'
 })
 export const leftView = () => ({
-  width: size.deviceWidth * 0.1,
-  height: size.deviceWidth * 0.1,
+  width: size.moderateScale(24),
+  height: size.moderateScale(24),
   justifyContent: 'center',
   alignItems: 'flex-start',
 })
 export const rightView = () => ({
-  width: size.deviceWidth * 0.1,
-  height: size.deviceWidth * 0.1,
+  width: size.moderateScale(24),
+  height: size.moderateScale(24),
   justifyContent: 'center',
   alignItems: 'center',
 })
