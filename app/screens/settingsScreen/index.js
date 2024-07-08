@@ -1,25 +1,27 @@
 import React, { useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { Modal, TouchableOpacity, View } from 'react-native'
 
 import * as styles from './styles'
 import { BottomSheetContainer, Button, Header, InputField, SwitchButton, Text } from '../../components'
-import { IcBackArrow, IcSearch } from '../../theme'
+import { color, IcBackArrow, IcSearch } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
+import { format } from 'date-fns';
 import { Calendar } from 'react-native-calendars'
 
 export const SettingsScreen = () => {
 
-  const INITIAL_DATE = '2024-07-08'
 
   const [changePassword, setChangePassword] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(INITIAL_DATE);
-  const [currentMonth, setCurrentMonth] = useState(INITIAL_DATE);
+  const [selectedDate, setSelectedDate] = useState('');
 
-  const renderCalender = () => {
-    return(
-      <Calendar />
-    )
+  const handleDatePress = (day) => {
+    setSelectedDate(day.dateString);
+    setShowCalendar(false);
+  };
+   
+  const handleInputPress = () => {
+    setShowCalendar(true)
   }
 
   const navigation = useNavigation()
@@ -52,13 +54,34 @@ export const SettingsScreen = () => {
           autoCapitalize={true}
           label='Full name'
         />
-        <InputField 
-          placeholder='Date of Birth'
-          keyboardType='numeric'
-          autoCapitalize={true}
-          label='Date of Birth'
-          onPress={renderCalender()}
-        />
+        <TouchableOpacity activeOpacity={0.8} onPress={handleInputPress}>   
+          <InputField 
+            label='Date of Birth'
+            placeholder='Date of Birth'
+            autoCapitalize={false}
+            value={selectedDate ? format(new Date(selectedDate), 'dd/mm/yyyy') : ''}
+            editable={false}
+          />
+        </TouchableOpacity>
+        <Modal 
+          visible={showCalendar}
+          transparent={true}
+          animationType='slide'
+          onRequestClose={() => setShowCalendar(false)}>
+            <View style={styles.modalContainer()}>
+            <View style={styles.calendarContainer()}>
+            <Calendar
+              onDayPress={handleDatePress}
+              markedDates={{
+                [selectedDate]: { selected: true, marked: true, selectedColor: 'rgb(219,48,34)' },
+              }}
+            />
+            <TouchableOpacity onPress={() => setShowCalendar(false)} style={styles.closeButton()}>
+              <Text style={styles.closeButtonText()}>Close</Text>
+            </TouchableOpacity>
+            </View>
+            </View>
+          </Modal>
       </View>
       <View style={styles.passwordView()}>
         <View style={styles.passwordTitle()}>

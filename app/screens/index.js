@@ -18,4 +18,5 @@ export * from './ratingsReviewsScreen';
 export * from './orderScreen';
 export * from './orderDetailsScreen';
 export * from './settingsScreen';
+export * from './paymentMethodScreen';
 // export * from './referScreen';

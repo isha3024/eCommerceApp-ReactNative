@@ -102,3 +102,26 @@ export const button = () => ({
   gap: size.moderateScale(14),
   marginBottom: size.moderateScale(30)
 })
+export const modalContainer = () => ({
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: color.customTransparent(0.7),
+})
+
+export const calendarContainer = () => ({
+  backgroundColor: color.white,
+  borderRadius: size.moderateScale(10),
+  padding: size.moderateScale(20),
+  alignItems: 'center',
+})
+export const closeButton = () => ({
+  marginTop: size.moderateScale(10),
+  padding: size.moderateScale(10),
+  backgroundColor: color.secondary,
+  borderRadius: size.moderateScale(5),
+})
+export const closeButtonText = () => ({
+  color: color.white,
+  fontWeight: 'bold',
+})
