@@ -7,7 +7,7 @@ export const rootContainer = (error) => ({
   backgroundColor: color.white,
   borderWidth: size.moderateScale(1),
   borderColor: error ? color.error : color.white,
-  elevation: size.moderateScale(6),
+  elevation: size.moderateScale(3),
   paddingLeft: size.moderateScale(10)
 })
 
@@ -17,8 +17,8 @@ export const inputField = (rightIcon, isFocus) => ({
   paddingTop:isFocus ? size.moderateScale(25):size.moderateScale(12),
   paddingLeft: size.moderateScale(10),
   paddingRight: rightIcon ? 0 : size.moderateScale(20),
+  fontFamily: fonts.metropolisRegular,
   fontSize: fontSize.small,
-  fontFamily: fonts.metropolisMedium,
   color: color.mostlyBlack
 })
 
@@ -27,6 +27,8 @@ export const labelText = () => ({
   position: 'absolute',
   left: size.moderateScale(20),
   textAlign: 'left',
+  fontFamily: fonts.metropolisRegular,
+  fontSize: fontSize.mediumSmall,
 })
 
 export const errorText = () => ({

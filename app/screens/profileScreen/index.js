@@ -67,7 +67,7 @@ export const ProfileScreen = () => {
             </View>
             <IcBackArrow fill={color.darkGray} width={size.moderateScale(8)} height={size.moderateScale(12)} style={styles.forwardArrow()} />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={[styles.profileOptionItem(), styles.profileOptionItemLast()]}>
+          <TouchableOpacity onPress={() => navigation.navigate('settingsScreen')} activeOpacity={0.6} style={[styles.profileOptionItem(), styles.profileOptionItemLast()]}>
             <View>
               <Text style={styles.profileOptionTitle()}>Settings</Text>
               <Text style={styles.message()}>Notification, Password</Text>

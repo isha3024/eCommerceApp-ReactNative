@@ -19,6 +19,7 @@ export const InputField = ({
   onChangeText,
   onFocus,
   onBlur,
+  onPress,
   maxLength,
   multiline,
   autoCapitalize,
@@ -70,6 +71,7 @@ export const InputField = ({
         onChangeText={onChangeText}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        onPress={onPress}
         maxLength={maxLength}
         multiline={multiline}
         autoCapitalize= {autoCapitalize ?? 'none'}
