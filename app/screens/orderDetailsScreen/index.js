@@ -1,11 +1,13 @@
 import React from 'react'
-import { StatusBar, View } from 'react-native'
+import { View } from 'react-native'
 
 import * as styles from './styles'
 import { Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import { color, IcBackArrow, IcMasterCard, IcSearch, images } from '../../theme'
+import { useNavigation } from '@react-navigation/native'
 
 export const OrderDetailsScreen = () => {
+  const navigation = useNavigation()
   return (
     <View style={styles.mainView()}>
       <Header 
@@ -15,6 +17,7 @@ export const OrderDetailsScreen = () => {
         leftIcon={() => {
           return (<IcBackArrow />)
         }}
+        leftIconPress={() => navigation.goBack()}
         headerRightIcon
         rightIcon={() => {
           return (<IcSearch />)
@@ -22,14 +25,14 @@ export const OrderDetailsScreen = () => {
         headerStyle={styles.header()}
       />
       <Screen withScroll bgColor={color.white}>
-        <View style={styles.justifySpaceBetween()}>
+        <View style={styles.orderNoAndDate()}>
           <Text style={styles.h2()}>Order No 1947034</Text>
           <Text style={styles.date()}>05-12-2019</Text>
         </View>
         <View style={styles.justifySpaceBetween()}>
           <View style={styles.flexRow()}>
             <Text style={styles.date()}>Tracking number: </Text>
-            <Text style={styles.darkText()}>IW3475453455</Text>
+            <Text style={styles.trackingNumValue()}>IW3475453455</Text>
           </View>
           <Text style={styles.successText()}>Delivered</Text>
         </View>

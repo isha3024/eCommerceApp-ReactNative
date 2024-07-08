@@ -12,6 +12,7 @@ export const ProfileScreen = () => {
   return (
     <Screen translucent={true} bgColor={color.primary} style={styles.mainContainer()}>
       <Header 
+        headerStyle={styles.header()}
         headerRightIcon
         rightIcon={() => {
           return (

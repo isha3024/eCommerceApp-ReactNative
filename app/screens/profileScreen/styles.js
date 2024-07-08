@@ -5,8 +5,13 @@ export const mainContainer = () => ({
   backgroundColor: color.primary,
 });
 
+export const header = () => ({
+  paddingHorizontal: size.moderateScale(14)
+});
+
 export const profileContainer = () => ({
   flex: 1,
+  paddingVertical: size.moderateScale(18)
 });
 
 export const mainTitle = () => ({

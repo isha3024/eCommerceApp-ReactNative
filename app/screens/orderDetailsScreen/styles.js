@@ -13,11 +13,18 @@ export const header = () => ({
   backgroundColor: color.white
 });
 
-export const justifySpaceBetween = () => ({
+export const orderNoAndDate = () => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   marginTop: size.moderateScale(30),
+  paddingHorizontal: size.moderateScale(16)
+});
+export const justifySpaceBetween = () => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: size.moderateScale(15),
   paddingHorizontal: size.moderateScale(16)
 });
 
@@ -27,11 +34,17 @@ export const h2 = () => ({
   fontFamily: fonts.metropolisSemiBold
 });
 
+export const trackingNumValue = () => ({
+  color: color.mostlyBlack,
+  fontSize: fontSize.small,
+  fontFamily: fonts.metropolisMedium,
+});
+
 export const lightText = () => ({
   color: color.darkGray,
   fontFamily: fonts.metropolisRegular,
   fontSize: fontSize.small,
-  flex: 0.7
+  flex: 0.5
 });
 
 export const date = () => ({
@@ -44,7 +57,7 @@ export const paymentText = () => ({
   color: color.darkGray,
   fontFamily: fonts.metropolisRegular,
   fontSize: fontSize.small,
-  flex: 1.3
+  flex: 1
 });
 
 export const paymentRow = () => ({
@@ -70,7 +83,7 @@ export const orderInfoTitle = () => ({
 
 export const successText = () => ({
   color: color.success,
-  fontFamily: fonts.metropolisRegular,
+  fontFamily: fonts.metropolisMedium,
   fontSize: fontSize.small
 });
 
@@ -89,7 +102,7 @@ export const orderedItemsList = () => ({
 });
 
 export const orderInfo = () => ({
-  marginHorizontal: size.moderateScale(15),
+  marginHorizontal: size.moderateScale(16),
   marginTop: size.moderateScale(34),
   marginBottom: size.moderateScale(34),
 });
@@ -103,14 +116,14 @@ export const information = () => ({
 
 export const darkTextAddress = () => ({
   color: color.mostlyBlack,
-  fontFamily: fonts.metropolisRegular,
+  fontFamily: fonts.metropolisMedium,
   fontSize: fontSize.small,
   flex: 1
 })
 
 export const darkTextMedium = () => ({
   color: color.mostlyBlack,
-  fontFamily: fonts.metropolisRegular,
+  fontFamily: fonts.metropolisMedium,
   fontSize: fontSize.small,
   textAlign: 'start',
   flex: 1
@@ -118,7 +131,7 @@ export const darkTextMedium = () => ({
 
 export const cardNum = () => ({
   color: color.mostlyBlack,
-  fontFamily: fonts.metropolisRegular,
+  fontFamily: fonts.metropolisMedium,
   fontSize: fontSize.small,
   textAlign: 'start',
 });
@@ -146,5 +159,5 @@ export const buttonContainer = () => ({
 
 export const button = () => ({
   width: size.moderateScale(160),
-  paddingVertical: size.moderateScale(15)
+  paddingVertical: size.moderateScale(12)
 })

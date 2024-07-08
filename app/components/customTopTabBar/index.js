@@ -2,12 +2,14 @@ import {View, TouchableOpacity } from 'react-native';
 
 import * as styles from './styles'
 import { Text } from '../text';
-
+import { useNavigationState } from '@react-navigation/native';
 
 
 export const CustomTopTabBar = ({ state, descriptors, navigation }) => {
+  
+  const screenName = useNavigationState((state) => state.routes[state.index].name);
   return (
-    <View style={styles.customTopTabBar()}>
+    <View style={styles.customTopTabBar(screenName === 'orderScreen')}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -37,9 +39,26 @@ export const CustomTopTabBar = ({ state, descriptors, navigation }) => {
             target: route.key,
           });
         };
-        
 
-        return (
+        if(screenName === 'orderScreen'){
+          return (
+            <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityState={isFocused ? { selected: true } : {}}
+            accessibilityLabel={options.tabBarAccessibilityLabel}
+            testID={options.tabBarTestID}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={styles.orderScreenLabel(isFocused)}
+            key={label}
+          >
+            <Text style={styles.orderScreenText(isFocused)}>
+              {label}
+            </Text>
+          </TouchableOpacity>
+        );
+        }else {
+          return (
           <TouchableOpacity
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
@@ -51,6 +70,24 @@ export const CustomTopTabBar = ({ state, descriptors, navigation }) => {
             key={label}
           >
             <Text style={styles.label(isFocused)}>
+              {label}
+            </Text>
+          </TouchableOpacity>
+        );
+        }        
+
+        return (
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityState={isFocused ? { selected: true } : {}}
+            accessibilityLabel={options.tabBarAccessibilityLabel}
+            testID={options.tabBarTestID}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={[styles.labelContainer(isFocused), screenName === 'orderScreen' && styles.orderScreenLabel(isFocused)]}
+            key={label}
+          >
+            <Text style={[isFocused && styles.label(isFocused), screenName === 'orderScreen' && styles.orderScreenText(isFocused)]}>
               {label}
             </Text>
           </TouchableOpacity>
