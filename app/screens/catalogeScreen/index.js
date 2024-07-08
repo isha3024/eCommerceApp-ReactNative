@@ -190,19 +190,22 @@ export const CatalogeScreen = () => {
           productHorizontal={showGrid ? true : false}
           productTitle={item?.name}
           brandName={item?.brand}
+          showRatings={true}
           ratings={item?.ratings}
           ratingsCounts={item?.rating_count}
           originalPrice={item?.originalPrice}
+          sellingPrice={item?.sellingPrice}
+          newProduct={item?.isProductNew}
           productImage={item?.images}
           topRightIcon={false}
-          flotingBtnStyle={showGrid ? null : styles.flotingButton()}
-          customProductStyle={showGrid ? null : styles.productCardGridItem()}
+          addToFavoriteIcon={true}
+          flotingBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
+          customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
         />
       )
   }
 
   return (
-
       <Screen bgColor={color.white}>
         <StatusBar translucent={true}/>
         <Header
@@ -251,14 +254,11 @@ export const CatalogeScreen = () => {
             </View>
           </View>
         </View>
-        <View 
-          style={styles.bottomContainer()}>
+        <View style={styles.bottomContainer(showGrid)}>
           {
             showGrid ? (
               <FlatList
-                horizontal={false}
                 contentContainerStyle={{ paddingBottom: 80 }}
-                style={{ height: '95%' }}
                 data={showProductList}
                 renderItem={renderProducts}
                 key={'_'}
@@ -266,10 +266,8 @@ export const CatalogeScreen = () => {
               />
             ) : (
               <FlatList
-                horizontal={false}
                 numColumns={2}
                 contentContainerStyle={{ paddingBottom: 80 }}
-                style={{height: '95%' }}
                 data={showProductList}
                 renderItem={renderProducts}
                 key={'#'}

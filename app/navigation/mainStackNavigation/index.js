@@ -74,9 +74,8 @@ export const MainStackNavigation = () => {
           component={RatingsReviewsScreen}
           options={{
             headerShown: false,
-            // navigationBarColor: color.primary,
           }}
-        />   
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

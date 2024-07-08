@@ -170,26 +170,30 @@ export const FavoriteScreen = ({route}) => {
     return (
         <ProductCardMain 
           onProductPress={() => {setSelectedProductId(item.id)}}
-          removeFromListIconPress={() => handleProductRemove(item.id)}
           productHorizontal={showGrid ? true : false}
           productTitle={item?.name}
           brandName={item?.brand}
-          showRatingHorizontal={showGrid ? true : false}
+          productColor='Orange'
+          productSize='L'
+          showRatings={true}
+          showRatingHorizontal={true}
           ratings={item?.ratings}
           ratingsCounts={item?.rating_count}
           originalPrice={item?.originalPrice}
+          sellingPrice={item?.sellingPrice}
+          newProduct={item?.isProductNew}
+          isProductSold={item?.isProductSold}
           productImage={item?.images}
           topRightIcon={true}
+          addToFavoriteIcon={false}
           addToCartIcon={true}
-          productColor={item?.productColor}
-          // productSize={route ? selectedSize : null}
-          isProductSold={item?.isProductSold}
-          flotingBtnStyle={showGrid ? null : styles.flotingButton()}
-          customProductStyle={showGrid ? null : styles.productCardGridItem()}
+          showTopRightIcon={true}
+          addToCartBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
+          customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
+          closeIconStyle={showGrid ? styles.closeIconList() : ''}
         />
       )
   }
-
   return (
       <Screen bgColor={color.white}>
         <StatusBar translucent={true}/>
@@ -235,13 +239,11 @@ export const FavoriteScreen = ({route}) => {
           </View>
         </View>
         <View 
-          style={styles.bottomContainer()}>
+          style={styles.bottomContainer(showGrid)}>
           {
             showGrid ? (
               <FlatList
-                horizontal={false}
                 contentContainerStyle={{ paddingBottom: 80 }}
-                style={{ height: '95%' }}
                 data={showProductList}
                 renderItem={renderProducts}
                 key={'_'}
@@ -249,10 +251,8 @@ export const FavoriteScreen = ({route}) => {
               />
             ) : (
               <FlatList
-                horizontal={false}
                 numColumns={2}
                 contentContainerStyle={{ paddingBottom: 80 }}
-                style={{height: '95%' }}
                 data={showProductList}
                 renderItem={renderProducts}
                 key={'#'}

@@ -22,15 +22,18 @@ export const ProductCardMain = ({
   ratingsCounts,
   newProduct,
   flotingBtnStyle,
-  showTopRightIcon,
+  closeIconStyle,
   topRightIcon,
   productSize,
   productColor,
   addToFavoriteIcon,
+  addToCartBtnStyle,
   addToCartIcon,
+  showRatings,
   showRatingHorizontal,
   isProductSold,
-  removeFromListIconPress
+  removeFromListIconPress,
+  productUnits
   // onAddToFavorite
 }) => {
   const [filledIcon, setFilledIcon] = useState(false);
@@ -47,10 +50,10 @@ export const ProductCardMain = ({
   if (productHorizontal) {
     return (
       <View style={styles.mainViewHorizontal(isProductSold)}>
-      <TouchableOpacity style={[styles.mainProductCardHorizontal(),customProductStyle]} activeOpacity={activeOpacity ?? 0.7}>
+      <TouchableOpacity style={[styles.mainProductCardHorizontal(),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
         <View style={styles.imageViewHorizontal()}>
           <Image source={productImage} style={styles.imageHorizontal()} />
-          <View style={[styles.badgeHorizontal(newProduct), sellingPrice && styles.discountBadge()]}>
+          <View style={[styles.badge(newProduct), sellingPrice && styles.discountBadge()]}>
             {
               sellingPrice ? 
               (
@@ -65,7 +68,7 @@ export const ProductCardMain = ({
         <View style={styles.productInfoHorizontal()}>
           <Text style={styles.productTitle()}>{productTitle}</Text>
           <Text style={styles.brandName()}>{brandName}</Text>
-          <View style={styles.colorAndSizeWrapper()}>
+          <View style={styles.colorAndSizeWrapper(productColor, productSize)}>
             {
               productColor && (
                 <View style={styles.colorAndSize()}>
@@ -84,11 +87,19 @@ export const ProductCardMain = ({
             }
           </View>
           {
-            !showRatingHorizontal && (
+            showRatings && !showRatingHorizontal && (
               <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
             )
           }
-          <View style={styles.ratingsAndPriceWrapper()}>
+          <View style={styles.ratingsAndPriceWrapper(addToCartIcon,addToFavoriteIcon)}>
+          {
+            productUnits && (
+              <View style={styles.productUnits()}>
+                <Text style={styles.lightText()}>Units: </Text>
+                <Text style={styles.darkText()}>1</Text>
+              </View>
+            )
+          }
           {
             originalPrice && sellingPrice ? (
               <View style={styles.priceContainer()}>
@@ -98,23 +109,16 @@ export const ProductCardMain = ({
             ) : (<Text style={styles.regularPrice()}>{originalPrice}$</Text>)
           }
           {
-            showRatingHorizontal && (
+            showRatings && showRatingHorizontal && (
              <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
             )
           }
           </View>
-          {
-            showTopRightIcon ? (
-              <TouchableOpacity style={styles.closeIcon()}>
-                <IcClose width={size.moderateScale(12)} height={size.moderateScale(12)} fill={color.darkGray} />
-              </TouchableOpacity>
-            ) : null
-          }
         </View>
       </TouchableOpacity>
         {
           addToFavoriteIcon && (
-            <TouchableOpacity activeOpacity={0.6} style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
+            <TouchableOpacity activeOpacity={0.9} style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
               {
                 filledIcon ?
                   (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
@@ -125,15 +129,15 @@ export const ProductCardMain = ({
         }
         {
           addToCartIcon && !isProductSold && (
-            <TouchableOpacity activeOpacity={0.8} style={styles.addToCartBtnHorizontal()} onPress={onAddToFavorite}>
+            <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtnHorizontal(), addToCartBtnStyle]} onPress={onAddToFavorite}>
               <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)}/>
             </TouchableOpacity>
           )
         }   
         {
           topRightIcon && (
-            <TouchableOpacity onPress={removeFromListIconPress} style={styles.closeIconHorizontal()}>
-              <IcClose width={size.moderateScale(12)} height={size.moderateScale(12)} fill={color.darkGray} />
+            <TouchableOpacity onPress={removeFromListIconPress} style={[styles.closeIconHorizontal(), closeIconStyle]}>
+              <IcClose width={size.moderateScale(15)} height={size.moderateScale(15)} fill={color.darkGray} />
             </TouchableOpacity>
           )
         }
@@ -162,11 +166,11 @@ export const ProductCardMain = ({
             }
           </View>
           {
-            topRightIcon ? (
+            topRightIcon && (
               <TouchableOpacity style={styles.closeIcon()}>
-                <IcClose width={size.moderateScale(12)} height={size.moderateScale(12)} fill={color.darkGray} />
+                <IcClose width={size.moderateScale(15)} height={size.moderateScale(15)} fill={color.darkGray} />
               </TouchableOpacity>
-            ) : null
+            )
           }
           {
             isProductSold && (
@@ -186,7 +190,7 @@ export const ProductCardMain = ({
             }
             {
               addToCartIcon && !isProductSold && (
-                <TouchableOpacity activeOpacity={0.8} style={styles.addToCartBtn()} onPress={onAddToFavorite}>
+                <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtn(), addToCartBtnStyle]} onPress={onAddToFavorite}>
                   <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)} />
                 </TouchableOpacity>
               )

@@ -3,6 +3,7 @@ import { color, fontSize, fonts, size } from "../../theme";
 export const header = () => ({
   backgroundColor: color.white,
   elevation: size.moderateScale(10),
+  paddingHorizontal: size.moderateScale(16)
 })
 
 export const categoriesTab = () => ({

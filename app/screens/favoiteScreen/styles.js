@@ -6,7 +6,7 @@ export const topContainer = () => ({
 })
 
 export const header = (title) => ({
-  paddingLeft: size.moderateScale(16),
+  paddingHorizontal: size.moderateScale(16),
   backgroundColor: color.white,
   zIndex: title ? 1 : size.moderateScale(2),
   elevation: title ? size.moderateScale(3) : 0
@@ -76,11 +76,11 @@ export const filterItemText = () => ({
   fonts: fonts.metropolisRegular,
   color: color.mostlyBlack
 })
-export const bottomContainer = () => ({
+
+export const bottomContainer = (showGrid) => ({
   flex: 1,
   paddingTop: size.moderateScale(16),
-  paddingHorizontal: size.moderateScale(8),
-  // backgroundColor: color.darkGray
+  marginHorizontal: showGrid ?  size.moderateScale(0) : size.moderateScale(10)
 })
 
 export const productCardGridItem = () => ({
@@ -88,15 +88,26 @@ export const productCardGridItem = () => ({
   marginHorizontal: size.moderateScale(8),
   marginBottom: size.moderateScale(26)
 })
-export const flotingButton = () => ({
-  right: size.moderateScale(9)
+
+export const productCardListItem = () => ({
+  marginBottom: size.moderateScale(26),
+  marginHorizontal: size.moderateScale(16),
 })
 
-// export const productCardGridItem = () => ({
-//   width: size.moderateScale(164),
-//   marginHorizontal: size.moderateScale(8),
-//   marginBottom: size.moderateScale(26)
-// })
+export const flotingButton = () => ({
+  right: size.moderateScale(-1),
+  bottom: size.moderateScale(-15),
+})
+
+export const flotingButtonList = () => ({
+  right: size.moderateScale(16),
+  bottom: size.moderateScale(16),
+})
+
+export const closeIconList = () => ({
+  top: 0,
+  right: size.moderateScale(18),
+})
 
 export const titleBottomSheet = () => ({
   fontSize: fontSize.middleMedium,
