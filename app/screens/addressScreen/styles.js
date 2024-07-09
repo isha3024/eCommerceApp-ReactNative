@@ -83,7 +83,8 @@ export const bodyText = () => ({
 
 export const addAddress = () => ({
   alignItems: 'flex-end',
-  paddingHorizontal: size.moderateScale(16)
+  paddingHorizontal: size.moderateScale(16),
+  paddingVertical: size.moderateScale(10) 
 })
 
 export const addNewCardBtn = () => ({

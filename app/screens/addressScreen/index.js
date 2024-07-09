@@ -35,7 +35,7 @@ export const AddressScreen = () => {
           <View style={styles.addressCard()}>
             <View style={styles.userNameView()}>
               <Text style={styles.userName()}>Jane Doe</Text>
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate('addNewAddressScreen')}>
                 <Text style={styles.editBtnText()}>Edit</Text>
               </TouchableOpacity>
             </View>
@@ -60,7 +60,7 @@ export const AddressScreen = () => {
           <View style={styles.addressCard()}>
             <View style={styles.userNameView()}>
               <Text style={styles.userName()}>Jane Doe</Text>
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate('addNewAddressScreen')}>
                 <Text style={styles.editBtnText()}>Edit</Text>
               </TouchableOpacity>
             </View>
@@ -85,7 +85,7 @@ export const AddressScreen = () => {
           <View style={styles.addressCard()}>
             <View style={styles.userNameView()}>
               <Text style={styles.userName()}>Jane Doe</Text>
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate('addNewAddressScreen')}>
                 <Text style={styles.editBtnText()}>Edit</Text>
               </TouchableOpacity>
             </View>
@@ -110,6 +110,7 @@ export const AddressScreen = () => {
         </View>
         <View style={styles.addAddress()}>
           <TouchableOpacity
+            onPress={() => navigation.navigate('addNewAddressScreen')}
             activeOpacity={0.5}
             style={styles.addNewCardBtn()}
           >
