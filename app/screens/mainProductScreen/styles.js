@@ -22,7 +22,8 @@ export const bottomView = () => ({
 })
 
 export const header = () => ({
-  backgroundColor: color.white  
+  backgroundColor: color.white,
+  paddingHorizontal: size.moderateScale(16)  
 })
 
 export const mainProduct = () => ({

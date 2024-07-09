@@ -1,17 +1,47 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
-import { Button, Header, InputField, Text } from '../../components'
+import { Button, Header, InputField, Screen, Text } from '../../components'
 
 import * as styles from './styles'
-import { IcBackArrow, IcForwardArrow, size } from '../../theme'
+import { color, IcBackArrow, IcForwardArrow, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-export const AddNewAddressScreen = () => {
+export const AddNewAddressScreen = ({route}) => {
+  console.log('route: ', route)
+  const {address, addAddress, editAddress} = route.params;
+  const navigation = useNavigation();
+  const [name, setName] = useState('');
+  const [addressLineOne, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [province, setProvince] = useState('');
+  const [zipCode, setZipCode] = useState('');
+  const [country, setCountry] = useState('');
 
-  const navigation = useNavigation()
+  useEffect(() => {
+    if(address){
+      setName(address.name);
+      setAddress(address.addressLineOne);
+      setCity(address.city);
+      setProvince(address.province);
+      setZipCode(address.zipCode);
+      setCountry(address.country);
+    }
+  }, [address])
+
+  const addNewAddress = () => {
+    const newAddress = { id: address ? address.id : Date.now(), name, addressLineOne, city, province, zipCode, country, isDefault: address ? address.isDefault : false };
+    if (address) {
+      updateAddress(newAddress);
+    } else {
+      addAddress(newAddress);
+    }
+    navigation.goBack();
+  };
 
   return (
-    <View style={styles.mainView()}>
+    <Screen bgColor={color.primary} translucent={true} style={styles.mainView()}>
+    <KeyboardAwareScrollView keyboardShouldPersistTaps='always'>
       <View style={styles.topView()}>
         <Header 
           headerStyle={styles.header()}
@@ -28,24 +58,32 @@ export const AddNewAddressScreen = () => {
         <InputField 
           placeholder='Full name'
           label='Full name'
+          value={name}
+          onChangeText={text => setName(text)}
           autoCapitalize={true}
           keyboardType='default'
         />
         <InputField 
           placeholder='Address'
           label='Address'
+          value={addressLineOne}
+          onChangeText={(val) => setAddress(val)}
           autoCapitalize={true}
           keyboardType='default'
         />
         <InputField 
           placeholder='City'
           label='City'
+          value={city}
+          onChangeText={(val) => setCity(val)}
           autoCapitalize={true}
           keyboardType='default'
         />
         <InputField 
           placeholder='State/Province/Region'
           label='State/Province/Region'
+          value={province}
+          onChangeText={(val) => setProvince(val)}
           autoCapitalize={true}
           keyboardType='default'
         />
@@ -53,12 +91,16 @@ export const AddNewAddressScreen = () => {
           placeholder='Zip Code (Postal Code)'
           label='Zip Code (Postal Code)'
           maxLength={6}
+          value={zipCode}
+          onChangeText={(val) => setZipCode(val)}
           autoCapitalize={true}
           keyboardType='numeric'
         />
         <InputField 
           placeholder='Country'
           label='Country'
+          value={country}
+          onChangeText={(val) => setCountry(val)}
           autoCapitalize={true}
           keyboardType='default'
           icon
@@ -68,8 +110,10 @@ export const AddNewAddressScreen = () => {
         <Button 
           title='SAVE ADDRESS'
           btnStyle={styles.button()}
+          onPress={addNewAddress}
         />
       </View>
-    </View>
+    </KeyboardAwareScrollView>
+    </Screen>
   )
 }

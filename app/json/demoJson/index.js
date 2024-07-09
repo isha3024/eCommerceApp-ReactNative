@@ -153,3 +153,36 @@ export const reviewsList =[
   },
 
 ]
+
+export const addressList = [
+  {
+    "id": 1,
+    "name": "Jane Doe",
+    "address": "3, Newbridge Court",
+    "city": "Chino Hills",
+    "province": "CA",
+    "country": "United States",
+    "zipCode": "91709",
+    "isDefault": true
+  },
+  {
+    "id": 2,
+    "name": "Jane Doe",
+    "address": "3, Newbridge Court",
+    "city": "Chino Hills",
+    "province": "CA",
+    "country": "United States",
+    "zipCode": "91709",
+    "isDefault": false
+  },
+  {
+    "id": 3,
+    "name": "Jane Doe",
+    "address": "3, Newbridge Court",
+    "city": "Chino Hills",
+    "province": "CA",
+    "country": "United States",
+    "zipCode": "91709",
+    "isDefault": false
+  }
+]

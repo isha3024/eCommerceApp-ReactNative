@@ -89,7 +89,7 @@ export const CatalogeScreen = () => {
   const [isSelected, setIsSelected] = useState(null);
 
   //toggling the product in Grid/List
-  const [showGrid, setShowGrid] = useState(false);
+  const [showGrid, setShowGrid] = useState(true);
 
   //toggling to show the header title and main category title
   const [title, showTitle] = useState(false);

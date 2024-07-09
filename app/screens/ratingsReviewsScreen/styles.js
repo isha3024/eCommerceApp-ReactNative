@@ -9,7 +9,8 @@ export const topView = () => ({
 })
 
 export const header = (showHeaderTitle) => ({
-  elevation: showHeaderTitle ? size.moderateScale(10) : 0
+  elevation: showHeaderTitle ? size.moderateScale(10) : 0,
+  paddingHorizontal: size.moderateScale(14)
 })
 
 export const middleView = () => ({
