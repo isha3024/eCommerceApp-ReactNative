@@ -27,10 +27,10 @@ export const CustomBottomTabBar = ({state, descriptors, navigation}) => {
         else if(route.name == 'shopStackNavigation'){
           Icon = state.index === index ? IcShopActive : IcShop;
         }
-        else if(route.name == 'bagScreen'){
+        else if(route.name == 'cartStackNavigation'){
           Icon = state.index === index ? IcCartActive : IcCart;
         }
-        else if(route.name == 'favoriteScreen'){
+        else if(route.name == 'favoriteStackNavigation'){
           Icon = state.index === index ? IcFavoriteActive : IcFavorite;
         }
         else if(route.name == 'profileStackNavigation'){

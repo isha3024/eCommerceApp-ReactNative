@@ -3,9 +3,11 @@ import { CartScreen, FavoriteScreen, HomeScreen, OnBoardingScreen, ProfileScreen
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CustomBottomTabBar } from '../../components';
 import { ShopStackNavigation } from '../shopStackNavigation';
-import { HomeStackNavigation } from '../homeStacknavigation';
+import { HomeStackNavigation } from '../homeStackNavigation';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { ProfileStackNavigation } from '../profileStackNavigation';
+import { FavoriteStackNavigation } from '../favoriteStackNavigation';
+import { CartStackNavigation } from '../cartStackNavigation';
 
 
 const Tab = createBottomTabNavigator();
@@ -44,10 +46,10 @@ export const BottomStackNavigation = () => {
           tabBarStyle: {display: getRouteName(route)},
         })} 
       />
-      <Tab.Screen name='bagScreen' component={CartScreen} options={{
+      <Tab.Screen name='cartStackNavigation' component={CartStackNavigation} options={{
         tabBarLabel: 'Bag'
       }}/>
-      <Tab.Screen name='favoriteScreen' component={FavoriteScreen} options={{
+      <Tab.Screen name='favoriteStackNavigation' component={FavoriteStackNavigation} options={{
         tabBarLabel: 'Favorite'
       }}/>
       <Tab.Screen name='profileStackNavigation' component={ProfileStackNavigation} options={{
