@@ -19,4 +19,5 @@ export * from './orderScreen';
 export * from './orderDetailsScreen';
 export * from './settingsScreen';
 export * from './paymentMethodScreen';
+export * from './addressScreen';
 // export * from './referScreen';

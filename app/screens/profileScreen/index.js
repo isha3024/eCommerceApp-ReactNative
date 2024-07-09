@@ -39,7 +39,7 @@ export const ProfileScreen = () => {
             </View>
             <IcBackArrow fill={color.darkGray} width={size.moderateScale(8)} height={size.moderateScale(12)} style={styles.forwardArrow()} />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} style={styles.profileOptionItem()}>
+          <TouchableOpacity onPress={() => navigation.navigate('addressScreen')} activeOpacity={0.6} style={styles.profileOptionItem()}>
             <View>
               <Text style={styles.profileOptionTitle()}>Shipping Address</Text>
               <Text style={styles.message()}>3 addresses</Text>
