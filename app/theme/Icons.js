@@ -40,6 +40,8 @@ import { CheckBoxActive } from './image/svgIcons/IcCheckboxActive';
 import { Thumb } from './image/svgIcons/IcThumb';
 import { Camera } from './image/svgIcons/IcCamera';
 import { MasterCard } from './image/svgIcons/IcMasterCard';
+import { Plus } from './image/svgIcons/IcPlus';
+import { Help } from './image/svgIcons/IcHelp';
 
 export const IcHome = props => <Home {...props} />;
 export const IcPhone = props => <Phone {...props} />;
@@ -80,3 +82,5 @@ export const IcCheckBoxActive = props => <CheckBoxActive {...props} />;
 export const IcThumb = props => <Thumb {...props} />;
 export const IcCamera = props => <Camera {...props} />;
 export const IcMasterCard = props => <MasterCard {...props} />;
+export const IcPlus = props => <Plus {...props} />;
+export const IcHelp = props => <Help {...props} />;

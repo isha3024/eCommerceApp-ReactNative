@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { View, TextInput, Animated, Easing } from 'react-native'
 import { color, fontSize, fonts } from '../../theme'
-import * as styles from './styles'
 
-export const InputField = ({
+import * as styles from './styles'
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet'
+
+export const InputFieldBottomSheet = ({
   error,
   placeholder,
   value,
@@ -30,6 +32,7 @@ export const InputField = ({
   onSubmitEditing,
   ...props
 }) => {
+
   const [isFocused, setIsFocused] = useState(false);
 
   const focusAnim = useRef(new Animated.Value(0)).current;
@@ -42,6 +45,7 @@ export const InputField = ({
 
     }).start()
   }, [focusAnim, isFocused])
+
   return (
     <Animated.View 
       style={[
@@ -61,7 +65,7 @@ export const InputField = ({
           fontSize: isFocused ? fontSize.mediumSmall : fontSize.small,
         },
         ]}>{isFocused && label }</Animated.Text>}
-      <TextInput 
+      <BottomSheetTextInput 
         placeholder={isFocused ? '' : placeholder}
         placeholderTextColor={isFocused ? color.white : color.darkGray}
         style={[

@@ -1,7 +1,6 @@
 // INFO: all images will be exported from here
 export const images = {
   imgAvatarLogo: require('./image/images/ImgAvatar.png'),
-  // imgAppLogo: require('./image/images/ImgAppLogo.png'),
   imgMobileLogo: require('./image/images/ImgMobile.png'),
   imgDeleteLogo: require('./image/images/ImgDeleteLogo.png'),
   imgLogoutLogo: require('./image/images/ImgLogout.png'),
@@ -25,4 +24,6 @@ export const images = {
   imgReviewProductImgOne: require('./image/images/ReviewProductImgOne.png'),
   imgReviewProductImgTwo: require('./image/images/ReviewProductImgTwo.png'),
   imgReviewProductImgThree: require('./image/images/ReviewProductImgThree.png'),
+  imgPaymentCardBG: require('./image/images/PaymentCardBG.png'),
+  imgPaymentChip: require('./image/images/PaymentChip.png'),
 };
