@@ -14,6 +14,8 @@ export const MainContextProvider = props => {
   const [isRegistered, setIsRegistered] = useState(true);
   const [id, setId] = useState([]);
 
+  const [selectedAddress, setSelectedAddress] = useState({});
+
   const value = useMemo(() => {
     return {
       screenState: screenState,
@@ -34,7 +36,10 @@ export const MainContextProvider = props => {
       setId: setId,
       isRegistered: isRegistered,
       setIsRegistered: setIsRegistered,
-    };
+
+      selectedAddress: selectedAddress,
+      setSelectedAddress: setSelectedAddress,
+    }
   }, [
     screenState,
     validateNumber,
@@ -54,6 +59,9 @@ export const MainContextProvider = props => {
     playerId,
     id,
     setId,
+
+    selectedAddress,
+    setSelectedAddress,
   ]);
 
   return <context.Provider value={value}>{props.children}</context.Provider>;

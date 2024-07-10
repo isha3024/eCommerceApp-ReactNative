@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StatusBar, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -7,6 +7,7 @@ import { color, IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcPlus } from
 import { Header, Screen } from '../../components';
 
 import * as data from '../../json'
+import { useMainContext } from '../../contexts/MainContext';
 
 const customerAddress = data.addressList;
 
@@ -14,28 +15,38 @@ export const AddressScreen = () => {
   const navigation = useNavigation();
   
   const [addresses, setAddresses] = useState(customerAddress);
+  const [checkboxFilled, setCheckboxFilled] = useState({[addresses[0].id]: true});
+  // const [selectedAddress, setSelectedAddress] = useState(addresses[0])
+
+  const selectedAddress = useMainContext()?.selectedAddress;
+  const setSelectedAddress = useMainContext()?.setSelectedAddress;
+  
 
   const toggleCheckbox = (id) => {
-    setAddresses((prevAddresses) =>
-      prevAddresses.map((address) =>
-        address.id === id
-          ? { ...address, isDefault: true }
-          : { ...address, isDefault: false }
-      )
-    );
-  };
+    setCheckboxFilled(prev => {
+      const newCheckBoxState = {};
+      let isOnlySelected = true;
+      addresses.forEach(address => {
+        if(address.id !== id && prev[address.id]){ 
+          isOnlySelected = false
+        }
+        newCheckBoxState[address.id] = address.id === id ? !prev[id] : false;
+      });
 
-  const addAddress = (newAddress) => {
-    setAddresses((prevAddresses) => [...prevAddresses, newAddress]);
-  };
+      if(isOnlySelected && prev[id]){
+        newCheckBoxState[id] = true
+      }
 
-  const editAddress = (edit) => {
-    setAddresses((prevAddresses) => {
-      prevAddresses.map((address) => {
-        return address.id === edit.id ? edit : address
-      })
+      const selected = addresses.find(address => address.id === id && newCheckBoxState[id]);
+      setSelectedAddress(selected || addresses[0]);
+      return newCheckBoxState
     })
   }
+
+  useEffect(() => {
+    setSelectedAddress(selectedAddress);
+    console.log('selectedAddress: ', selectedAddress)
+  }, [selectedAddress])
 
   return (
     <View style={styles.mainView()}>
@@ -60,7 +71,7 @@ export const AddressScreen = () => {
                 <View key={address.id} style={styles.addressCard()}>
                   <View style={styles.userNameView()}>
                     <Text style={styles.userName()}>{address.name}</Text>
-                    <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate('addNewAddressScreen', { addAddress, address, editAddress })}>
+                    <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate('addNewAddressScreen')}>
                       <Text style={styles.editBtnText()}>Edit</Text>
                     </TouchableOpacity>
                   </View>
@@ -74,7 +85,7 @@ export const AddressScreen = () => {
                       activeOpacity={0.7}
                       style={styles.checkboxButton()}
                     >
-                      {address.isDefault ? (
+                      { checkboxFilled[address.id] ? (
                         <IcCheckBoxActive fill={color.mostlyBlack} />
                       ) : (
                         <IcCheckBoxInactive />
@@ -88,7 +99,7 @@ export const AddressScreen = () => {
         </View>
         <View style={styles.addAddress()}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('addNewAddressScreen', { addAddress })}
+            onPress={() => navigation.navigate('addNewAddressScreen')}
             activeOpacity={0.5}
             style={styles.addNewCardBtn()}
           >

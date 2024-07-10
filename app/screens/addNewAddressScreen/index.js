@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { View } from 'react-native'
 import { Button, Header, InputField, Screen, Text } from '../../components'
 
 import * as styles from './styles'
-import { color, IcBackArrow, IcForwardArrow, size } from '../../theme'
+import { color, IcBackArrow, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export const AddNewAddressScreen = ({route}) => {
   console.log('route: ', route)
-  const {address, addAddress, editAddress} = route.params;
   const navigation = useNavigation();
   const [name, setName] = useState('');
   const [addressLineOne, setAddress] = useState('');
@@ -18,24 +17,8 @@ export const AddNewAddressScreen = ({route}) => {
   const [zipCode, setZipCode] = useState('');
   const [country, setCountry] = useState('');
 
-  useEffect(() => {
-    if(address){
-      setName(address.name);
-      setAddress(address.addressLineOne);
-      setCity(address.city);
-      setProvince(address.province);
-      setZipCode(address.zipCode);
-      setCountry(address.country);
-    }
-  }, [address])
 
   const addNewAddress = () => {
-    const newAddress = { id: address ? address.id : Date.now(), name, addressLineOne, city, province, zipCode, country, isDefault: address ? address.isDefault : false };
-    if (address) {
-      updateAddress(newAddress);
-    } else {
-      addAddress(newAddress);
-    }
     navigation.goBack();
   };
 
