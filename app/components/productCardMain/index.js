@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 
 import * as styles from './styles'
-import { color, IcCart, IcCartActive, IcClose, IcFilledHeart, IcHeart, IcMinus, IcPlus, size } from '../../theme'
+import { color, IcCart, IcCartActive, IcClose, IcFilledHeart, IcHeart, IcMinus, IcPlus, IcShowMore, size } from '../../theme'
 import { Text } from '../text'
 import { StarRatings } from '../starRatings'
 
@@ -36,7 +36,9 @@ export const ProductCardMain = ({
   productUnits,
   selectQuantity,
   increaseQuantity,
-  deccreaseQuantity
+  deccreaseQuantity,
+  cartOptions,
+  cartOptionPress,
   // onAddToFavorite
 }) => {
   const [filledIcon, setFilledIcon] = useState(false);
@@ -164,6 +166,13 @@ export const ProductCardMain = ({
         {
           isProductSold && (
             <Text style={styles.productSoldText()}>Sorry, this item is currently sold out</Text>
+          )
+        }
+        {
+          cartOptions && (
+            <TouchableOpacity onPress={cartOptionPress} style={styles.cartOptions()}>
+              <IcShowMore />
+            </TouchableOpacity>
           )
         }
       </View>

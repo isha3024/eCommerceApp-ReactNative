@@ -297,3 +297,14 @@ export const quantityText = () => ({
   color: color.mostlyBlack
 })
 
+
+export const cartOptions = () => ({
+  width: size.moderateScale(36),
+  height: size.moderateScale(36),
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'absolute',
+  top: 0,
+  right: 0
+})
+

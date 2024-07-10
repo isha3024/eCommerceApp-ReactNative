@@ -26,4 +26,7 @@ export const images = {
   imgReviewProductImgThree: require('./image/images/ReviewProductImgThree.png'),
   imgPaymentCardBG: require('./image/images/PaymentCardBG.png'),
   imgPaymentChip: require('./image/images/PaymentChip.png'),
+  imgDiscount1: require('./image/images/DiscountImg1.png'),
+  imgDiscount2: require('./image/images/DiscountImg2.png'),
+  imgDiscount3: require('./image/images/DiscountImg3.png'),
 };

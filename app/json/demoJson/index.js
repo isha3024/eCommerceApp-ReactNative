@@ -216,3 +216,27 @@ export const orderedProducts = [
     productQuantity: 1
   }
 ]
+
+export const promoCards = [
+  {
+    id: 1,
+    title: 'Personal Offer',
+    code: 'mypromocode2020',
+    offerValidity: '6 days remaining',
+    promoCodeImage: images.imgDiscount1 
+  },
+  {
+    id: 2,
+    title: 'Personal Offer',
+    code: 'mypromocode2020',
+    offerValidity: '6 days remaining',
+    promoCodeImage: images.imgDiscount2
+  },
+  {
+    id: 3,
+    title: 'Personal Offer',
+    code: 'mypromocode2020',
+    offerValidity: '6 days remaining',
+    promoCodeImage: images.imgDiscount3
+  },
+]

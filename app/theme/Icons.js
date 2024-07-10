@@ -44,6 +44,7 @@ import { Plus } from './image/svgIcons/IcPlus';
 import { Help } from './image/svgIcons/IcHelp';
 import { Minus } from './image/svgIcons/IcMinus';
 import { ChevronRight } from './image/svgIcons/IcChevronRight';
+import { ShowMore } from './image/svgIcons/IcShowMore';
 
 export const IcHome = props => <Home {...props} />;
 export const IcPhone = props => <Phone {...props} />;
@@ -88,3 +89,4 @@ export const IcPlus = props => <Plus {...props} />;
 export const IcHelp = props => <Help {...props} />;
 export const IcMinus = props => <Minus {...props} />;
 export const IcChevronRight = props => <ChevronRight {...props} />;
+export const IcShowMore = props => <ShowMore {...props} />;
