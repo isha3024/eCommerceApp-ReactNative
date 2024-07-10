@@ -21,4 +21,5 @@ export * from './settingsScreen';
 export * from './paymentMethodScreen';
 export * from './addressScreen';
 export * from './addNewAddressScreen';
+export * from './checkoutScreen';
 // export * from './referScreen';

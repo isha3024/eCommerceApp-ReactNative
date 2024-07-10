@@ -7,9 +7,11 @@ import { color, IcChevronRight, IcSearch, images, size } from '../../theme'
 import * as data from '../../json'
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { opacity } from 'react-native-redash'
+import { useNavigation } from '@react-navigation/native'
 
 export const CartScreen = () => {
 
+  const navigation = useNavigation()
   const [orderedProducts, setOrderedProducts] = useState(data.orderedProducts);
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
   const [promoCodes, setPromoCodes] = useState(data.promoCards);
@@ -164,6 +166,7 @@ export const CartScreen = () => {
                       <Button
                         btnStyle={styles.applyBtn()}
                         title='Apply'
+                        onPress={() => navigation.navigate('checkoutScreen')}
                       />
                     </View>
                   </View>
