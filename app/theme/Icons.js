@@ -42,6 +42,8 @@ import { Camera } from './image/svgIcons/IcCamera';
 import { MasterCard } from './image/svgIcons/IcMasterCard';
 import { Plus } from './image/svgIcons/IcPlus';
 import { Help } from './image/svgIcons/IcHelp';
+import { Minus } from './image/svgIcons/IcMinus';
+import { ChevronRight } from './image/svgIcons/IcChevronRight';
 
 export const IcHome = props => <Home {...props} />;
 export const IcPhone = props => <Phone {...props} />;
@@ -84,3 +86,5 @@ export const IcCamera = props => <Camera {...props} />;
 export const IcMasterCard = props => <MasterCard {...props} />;
 export const IcPlus = props => <Plus {...props} />;
 export const IcHelp = props => <Help {...props} />;
+export const IcMinus = props => <Minus {...props} />;
+export const IcChevronRight = props => <ChevronRight {...props} />;

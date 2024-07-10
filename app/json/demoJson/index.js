@@ -186,3 +186,33 @@ export const addressList = [
     "isDefault": false
   }
 ]
+
+export const orderedProducts = [
+  {
+    id: 1,
+    productName: 'Pullover',
+    productColorSelected: 'Black',
+    productSizeSelected: 'L',
+    productPrice: 51,
+    productImage: images.ImgCard,
+    productQuantity: 2
+  },
+  {
+    id: 2,
+    productName: 'T-Shirt',
+    productColorSelected: 'Gray',
+    productSizeSelected: 'L',
+    productPrice: 22,
+    productImage: images.ImgCard,
+    productQuantity: 3
+  },
+  {
+    id: 3,
+    productName: 'Sport Dress',
+    productColorSelected: 'Black',
+    productSizeSelected: 'M',
+    productPrice: 30,
+    productImage: images.ImgCard,
+    productQuantity: 1
+  }
+]

@@ -240,6 +240,7 @@ export const closeIconHorizontal = () => ({
 export const ratingsAndPriceWrapper = (addToCartIcon,addToFavoriteIcon) => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
+  alignItems: 'center',
   paddingRight: addToCartIcon ? size.moderateScale(50) : addToFavoriteIcon ? size.moderateScale(50) : size.moderateScale(15)
 })
 
@@ -271,5 +272,28 @@ export const productSoldTextVertical = () => ({
 export const productUnits = () => ({
   flexDirection: 'row',
   alignItems: 'center'
+})
+
+export const selectQuantity = () => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: size.moderateScale(16)
+})
+
+export const circle = () => ({
+  width: size.moderateScale(36),
+  height: size.moderateScale(36),
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: color.white,
+  elevation: size.moderateScale(3),
+  borderRadius: size.moderateScale(20)
+})
+
+export const quantityText = () => ({
+  fontFamily: fonts.metropolisMedium,
+  fontSize: fontSize.small,
+  color: color.mostlyBlack
 })
 

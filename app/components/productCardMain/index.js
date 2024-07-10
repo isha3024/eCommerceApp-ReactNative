@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 
 import * as styles from './styles'
-import { color, IcCart, IcCartActive, IcClose, IcFilledHeart, IcHeart, size } from '../../theme'
+import { color, IcCart, IcCartActive, IcClose, IcFilledHeart, IcHeart, IcMinus, IcPlus, size } from '../../theme'
 import { Text } from '../text'
 import { StarRatings } from '../starRatings'
 
@@ -33,7 +33,10 @@ export const ProductCardMain = ({
   showRatingHorizontal,
   isProductSold,
   removeFromListIconPress,
-  productUnits
+  productUnits,
+  selectQuantity,
+  increaseQuantity,
+  deccreaseQuantity
   // onAddToFavorite
 }) => {
   const [filledIcon, setFilledIcon] = useState(false);
@@ -65,56 +68,73 @@ export const ProductCardMain = ({
             }
           </View>
         </View>
-        <View style={styles.productInfoHorizontal()}>
-          <Text style={styles.productTitle()}>{productTitle}</Text>
-          <Text style={styles.brandName()}>{brandName}</Text>
-          <View style={styles.colorAndSizeWrapper(productColor, productSize)}>
+          <View style={styles.productInfoHorizontal()}>
             {
-              productColor && (
-                <View style={styles.colorAndSize()}>
-                  <Text style={styles.lightText()}>Color: </Text>
-                  <Text style={styles.darkText()}>{productColor}</Text>
-                </View>
+              productTitle && (<Text style={styles.productTitle()}>{productTitle}</Text>)
+            }
+            {
+              brandName && (<Text style={styles.brandName()}>{brandName}</Text>)
+            }
+            <View style={styles.colorAndSizeWrapper(productColor, productSize)}>
+              {
+                productColor && (
+                  <View style={styles.colorAndSize()}>
+                    <Text style={styles.lightText()}>Color: </Text>
+                    <Text style={styles.darkText()}>{productColor}</Text>
+                  </View>
+                )
+              }
+              {
+                productSize && (
+                  <View style={styles.colorAndSize()}>
+                    <Text style={styles.lightText()}>Size: </Text>
+                    <Text style={styles.darkText()}>{productSize}</Text>
+                  </View>
+                )
+              }
+            </View>
+            {
+              showRatings && !showRatingHorizontal && (
+                <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
               )
             }
-            {
-              productSize && (
-                <View style={styles.colorAndSize()}>
-                  <Text style={styles.lightText()}>Size: </Text>
-                  <Text style={styles.darkText()}>{productSize}</Text>
-                </View>
-              )   
-            }
+            <View style={styles.ratingsAndPriceWrapper(addToCartIcon, addToFavoriteIcon)}>
+              {
+                productUnits && (
+                  <View style={styles.productUnits()}>
+                    <Text style={styles.lightText()}>Units: </Text>
+                    <Text style={styles.darkText()}>1</Text>
+                  </View>
+                )
+              }
+              {
+                selectQuantity && (
+                  <View style={styles.selectQuantity()}>
+                    <TouchableOpacity onPress={deccreaseQuantity} activeOpacity={0.8} style={styles.circle()}>
+                      <IcMinus />
+                    </TouchableOpacity>
+                    <Text style={styles.quantityText()}>{selectQuantity}</Text>
+                    <TouchableOpacity onPress={increaseQuantity} activeOpacity={0.8} style={styles.circle()}>
+                      <IcPlus fill={color.darkGray}/>
+                    </TouchableOpacity>
+                  </View>
+                )
+              }
+              {
+                originalPrice && sellingPrice ? (
+                  <View style={styles.priceContainer()}>
+                    <Text style={styles.oldPrice()}>${originalPrice}</Text>
+                    <Text style={styles.newPrice()}>${sellingPrice}</Text>
+                  </View>
+                ) : (<Text style={styles.regularPrice()}>{originalPrice}$</Text>)
+              }
+              {
+                showRatings && showRatingHorizontal && (
+                  <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
+                )
+              }
+            </View>
           </View>
-          {
-            showRatings && !showRatingHorizontal && (
-              <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
-            )
-          }
-          <View style={styles.ratingsAndPriceWrapper(addToCartIcon,addToFavoriteIcon)}>
-          {
-            productUnits && (
-              <View style={styles.productUnits()}>
-                <Text style={styles.lightText()}>Units: </Text>
-                <Text style={styles.darkText()}>1</Text>
-              </View>
-            )
-          }
-          {
-            originalPrice && sellingPrice ? (
-              <View style={styles.priceContainer()}>
-                <Text style={styles.oldPrice()}>${originalPrice}</Text>
-                <Text style={styles.newPrice()}>${sellingPrice}</Text>
-              </View>
-            ) : (<Text style={styles.regularPrice()}>{originalPrice}$</Text>)
-          }
-          {
-            showRatings && showRatingHorizontal && (
-             <StarRatings customStarRatings={styles.starRatings()} ratings={ratings} ratingsCounts={ratingsCounts} />
-            )
-          }
-          </View>
-        </View>
       </TouchableOpacity>
         {
           addToFavoriteIcon && (
