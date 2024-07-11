@@ -58,7 +58,7 @@ export const cardDetails = () => ({
 
 export const cardNumber = () => ({
   fontFamily: fonts.metropolisMedium,
-  fontSize: fontSize.medium,
+  fontSize: fontSize.middleSmallMedium,
   color: color.white
 })
 

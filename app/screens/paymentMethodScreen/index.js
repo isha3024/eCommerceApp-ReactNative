@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Image, ImageBackground, Modal, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
+import { Image, ImageBackground, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import * as styles from './styles';
@@ -7,15 +7,12 @@ import { BottomSheetContainer, Button, Header, InputFieldBottomSheet, Text } fro
 import { color, IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcHelp, IcMasterCard, IcPlus, IcSearch, images } from '../../theme';
 
 
-const hideCardNumber = (cardNum) => {
-  const cardNumInString = cardNum.toString();
-  const lastFourNum = cardNumInString.substring(12);
-  const remaingNum = cardNumInString.substring(0, 12);
-  const hiddenNum = '* '.repeat(remaingNum.length / 2) + lastFourNum;
-  return hiddenNum;
-};
-
-const secureCardNum = hideCardNumber(1675234732693947);
+const validateCreditCardNum = (val) => {
+  const cardNum = /^(\d{4})(\d{4})(\d{4})(\d{4})$/;
+  const maskCardNum = val.toString().replace(cardNum, '* * * *  * * * *  * * * *  $4')
+  return maskCardNum;
+}
+const secureCardNum = validateCreditCardNum(1234123412343947);
 
 export const PaymentMethodScreen = () => {
   const navigation = useNavigation();
