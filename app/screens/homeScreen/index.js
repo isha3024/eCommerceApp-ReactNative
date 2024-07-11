@@ -83,19 +83,14 @@ export const HomeScreen = () => {
 
   const selectSizeHandler = (size) => {
     setUserSizeOption(size);
-    if (selectedProductId) {
-      // navigation.navigate('mainProductScreen', { selectedSize: size, productId: selectedProductId });
-      setUserSizeOption('')
-    }
   };
 
   const handleFavoriteBtn = () => {
-    if(userSizeOption.length !== 0){
-      setSizeBottomSheetVisible(true);
-      navigation.navigate('favoriteScreen', {selectedSize: userSizeOption, selectedId: selectedProductId})
+    if(userSizeOption){
+      navigation.navigate('favoriteStackNavigation', {selectedSize: userSizeOption, selectedId: selectedProductId})
       setUserSizeOption(false)
-      setSizeBottomSheetVisible(false);
     }
+    setSizeBottomSheetVisible(false);
   }
 
   useFocusEffect(
@@ -119,7 +114,12 @@ export const HomeScreen = () => {
           end={{x: 0, y: 0}} style={styles.linearGradient()}>
           <View style={styles.imageOverlayText()}>
             <Title title='Fashion sale' style={styles.title()} />
-            <Button title='Check' btnStyle={styles.buttonTop()} />
+            <Button 
+              activeOpacity={0.9}
+              title='Check' 
+              btnStyle={styles.buttonTop()} 
+              onPress={() => navigation.navigate('shopStackNavigation')}
+            />
           </View>
         </LinearGradient>    
         </ImageBackground>
@@ -130,7 +130,7 @@ export const HomeScreen = () => {
           <Title title='New' />
           <Text style={styles.textLight()}>You've never seen it before!</Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('shopStackNavigation')}>
             <Text style={styles.link()}>View all</Text>
         </TouchableOpacity>
         </View>
@@ -164,7 +164,7 @@ export const HomeScreen = () => {
     <BottomSheetContainer
       isVisible={isSizeBottomSheetVisible}
       onClose={handleClosePressSizeSheet}
-      customHeight={'45%'}>
+      customHeight={'43%'}>
       <Text style={styles.titleBottomSheet()}>Select Size</Text>
       <View style={styles.sizeContainer()}>
         {

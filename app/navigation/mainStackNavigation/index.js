@@ -32,7 +32,7 @@ export const MainStackNavigation = () => {
             }}
           />
         ) : null}
-        {/* {
+        {
           <Stack.Screen
             name="authStackNavigation"
             component={AuthStackNavigation}
@@ -40,7 +40,7 @@ export const MainStackNavigation = () => {
               headerShown: false,
             }}
           />
-        } */}
+        }
         <Stack.Screen
           name="bottomStackNavigation"
           component={BottomStackNavigation}

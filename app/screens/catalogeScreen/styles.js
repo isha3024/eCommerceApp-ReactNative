@@ -54,7 +54,7 @@ export const filterContainer = () => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   backgroundColor: color.primary,
-  marginTop: size.moderateScale(18),
+  marginTop: size.moderateScale(14),
   marginHorizontal: size.moderateScale(16),
   marginBottom: size.moderateScale(10),
 })
@@ -95,8 +95,9 @@ export const productCardListItem = () => ({
 })
 
 export const flotingButton = () => ({
-  right: size.moderateScale(-1),
-  bottom: size.moderateScale(-15)
+  right: size.moderateScale(8),
+  top: 180
+  // bottom: size.moderateScale(-15)
 })
 
 export const flotingButtonList = () => ({

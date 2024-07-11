@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Animated, Easing, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
+import { Animated, Platform, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
 import { IcBackArrow, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Screen, Text, Title } from '../../components'
-import { opacity } from '../loginScreen/styles'
+
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -80,11 +80,9 @@ export const RegisterScreen = () => {
   }
 
   return (
-    <Screen withScroll bgColor={color.primary} style={styles.mainView()}>
-    <StatusBar
-      translucent={true}
-    />
+    <Screen withScroll translucent={true} bgColor={color.primary} style={styles.mainView()}>
       <Header
+        headerStyle={styles.header()}
         headerLeftIcon
         leftIcon={() => {
           return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
@@ -100,6 +98,7 @@ export const RegisterScreen = () => {
             value={inputField?.name}
             placeholder={'Name'}
             label={'Name'}
+            autoCapitalize={true}
             onChangeText={(val) => handleChange(val, 'name')}
             keyboardType='default'
             icon

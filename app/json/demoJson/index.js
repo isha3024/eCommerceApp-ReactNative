@@ -6,8 +6,7 @@ export const productList = [
     name: "Evening Dress",
     brand: "H&M",
     images: images.ImgCard,
-    ratings: 3,
-    rating_scale: 10.0,
+    ratings: 2,
     rating_count: 12,
     originalPrice: 17.99,
     isProductNew: true,
@@ -23,9 +22,8 @@ export const productList = [
     merchant: "Sports Dress",
     brand: "Shoemaster",
     images: images.ImgCard,
-    ratings: 4,
-    rating_scale: 10.0,
-    rating_count: 4,
+    ratings: 1,
+    rating_count: 12,
     originalPrice: 22,
     sellingPrice: 11,
     isProductSold: true,
@@ -42,7 +40,6 @@ export const productList = [
     brand: "Sitlly",
     images: images.ImgCard,
     ratings: 1,
-    rating_scale: 10.0,
     rating_count: 22,
     originalPrice: 14,
     isProductSold: false,
@@ -59,7 +56,6 @@ export const productList = [
     brand: "Puma",
     images: images.ImgCard,
     ratings: 2,
-    rating_scale: 10.0,
     rating_count: 12,
     originalPrice: 17,
     isProductSold: false,
@@ -76,7 +72,6 @@ export const productList = [
     brand: "H&M",
     images: images.ImgCard,
     ratings: 4,
-    rating_scale: 10.0,
     rating_count: 12,
     isProductNew: true,
     originalPrice: 30,
@@ -223,21 +218,24 @@ export const promoCards = [
     title: 'Personal Offer',
     code: 'mypromocode2020',
     offerValidity: '6 days remaining',
-    promoCodeImage: images.imgDiscount1 
+    promoCodeImage: images.imgDiscount1,
+    discount: 10
   },
   {
     id: 2,
-    title: 'Personal Offer',
-    code: 'mypromocode2020',
-    offerValidity: '6 days remaining',
-    promoCodeImage: images.imgDiscount2
+    title: 'Summer Sale',
+    code: 'summer2020',
+    offerValidity: '23 days remaining',
+    promoCodeImage: images.imgDiscount2,
+    discount: 15
   },
   {
     id: 3,
     title: 'Personal Offer',
-    code: 'mypromocode2020',
+    code: 'mypromocode2021',
     offerValidity: '6 days remaining',
-    promoCodeImage: images.imgDiscount3
+    promoCodeImage: images.imgDiscount3,
+    discount: 22
   },
 ]
 

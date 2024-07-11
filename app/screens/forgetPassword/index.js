@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Animated, StatusBar, View } from 'react-native'
+import { Animated, View } from 'react-native'
 import * as styles from './styles'
 import { IcBackArrow, IcClose, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
@@ -59,11 +59,9 @@ export const ForgetPassword = () => {
     return Object.keys(newErrors).length === 0
   }
   return (
-    <Screen withScroll bgColor={color.primary} style={styles.mainView()}>
-      <StatusBar
-        translucent={true}
-      />
+    <Screen withScroll translucent={true} bgColor={color.primary} style={styles.mainView()}>
       <Header
+      headerStyle={styles.header()}
         leftIconPress={() => navigation.goBack()}
         headerLeftIcon
         leftIcon={() => {

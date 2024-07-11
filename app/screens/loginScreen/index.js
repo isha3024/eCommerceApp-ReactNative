@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Animated, LayoutAnimation, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
+import { Animated, Platform, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
@@ -36,7 +36,7 @@ export const LoginScreen = () => {
   }
   
   const handleChange = (field, value) => {
-    setFormData({
+    setInputField({
       ...inputField,
       [field]: value
     });
@@ -48,35 +48,34 @@ export const LoginScreen = () => {
         email: '',
         password: ''
       })
-      navigation.navigate('homeStackNavigation')
+      navigation.navigate('bottomStackNavigation')
     }
   }
 
   const handleValidations = () => {
     let newErrors = {};
 
-    if(!newErrors.email) {
+    if(!inputField.email){
       newErrors.email = 'Email is required'
-    }else if (!EmailValidation(newErrors.email)){
+    }else if(EmailValidation(inputField)){
       newErrors.email = 'Not a valid email address. Should be your@email.com'
     }
 
-    if(!newErrors.password) {
+    if(!inputField.password){
       newErrors.password = 'Password is required'
-    }else if(newErrors.password.length < 8){
+    }else if(inputField.password.length < 8){
       newErrors.password = 'Password length must be greater than 8'
-    }    
+    }
+
     setErrors(newErrors)
     animate()
     return Object.keys(newErrors).length === 0
   }
 
   return (
-    <Screen withScroll bgColor={color.primary} style={styles.mainView()}>
-      <StatusBar
-        translucent={true}
-      />
+    <Screen withScroll bgColor={color.primary} translucent={true} style={styles.mainView()}>
       <Header
+        headerStyle={styles.header()}
         leftIconPress={() => navigation.goBack()}
         headerLeftIcon
         leftIcon={() => {
@@ -116,6 +115,7 @@ export const LoginScreen = () => {
           label={'Password'}
           onChangeText={(val) => handleChange('password', val)}
           keyboardType='default'
+          secureTextEntry={true}
           icon
           iconPlace='right'
           renderRightIcon={() => (

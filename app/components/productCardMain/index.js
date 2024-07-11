@@ -181,84 +181,84 @@ export const ProductCardMain = ({
   else {
     return (
       <View>
-      <TouchableOpacity style={[styles.mainProductCard(isProductSold),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
-        <View style={styles.imageView()}>
-          <Image source={productImage} style={[styles.image(), customProductImageStyle]} />
-          <View style={[styles.badge(newProduct),  sellingPrice && styles.discountBadge()]}>
+        <TouchableOpacity style={[styles.mainProductCard(isProductSold),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
+          <View style={styles.imageView()}>
+            <Image source={productImage} style={[styles.image(), customProductImageStyle]} />
+            <View style={[styles.badge(newProduct),  sellingPrice && styles.discountBadge()]}>
+              {
+                sellingPrice ? (
+                  <Text style={styles.badgeText()}>-{discount}%</Text>
+                )
+                  : newProduct ? (
+                    <Text style={styles.badgeText()}>NEW</Text>
+                  ) : null
+              }
+            </View>
             {
-              sellingPrice ? (
-                <Text style={styles.badgeText()}>-{discount}%</Text>
+              isProductSold && (
+                <Text style={styles.productSoldTextVertical()}>Sorry, this item is currently sold out</Text>
               )
-                : newProduct ? (
-                  <Text style={styles.badgeText()}>NEW</Text>
-                ) : null
             }
           </View>
-          {
-            topRightIcon && (
-              <TouchableOpacity style={styles.closeIcon()}>
-                <IcClose width={size.moderateScale(15)} height={size.moderateScale(15)} fill={color.darkGray} />
-              </TouchableOpacity>
-            )
-          }
-          {
-            isProductSold && (
-              <Text style={styles.productSoldTextVertical()}>Sorry, this item is currently sold out</Text>
-            )
-          }
+          <View style={styles.productInfo()}>
+            <View style={styles.ratingsContainer()}>
+              <StarRatings ratings={ratings} ratingsCounts={ratingsCounts} />
+            </View>
+            <Text style={styles.brandName()}>{brandName}</Text>
+            <Text style={styles.productTitle()}>{productTitle}</Text>
+            <View style={styles.colorAndSizeWrapperVertical()}>
+              {
+                productColor && (
+                  <View style={styles.colorAndSize()}>
+                    <Text style={styles.lightText()}>Color: </Text>
+                    <Text style={styles.darkText()}>{productColor}</Text>
+                  </View>
+                )
+              }
+              {
+                productSize && (
+                  <View style={styles.colorAndSize()}>
+                    <Text style={styles.lightText()}>Size: </Text>
+                    <Text style={styles.darkText()}>{productSize}</Text>
+                  </View>
+                )   
+              }
+            </View>
             {
-              addToFavoriteIcon && (
-                <TouchableOpacity activeOpacity={0.6} style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
-                  {
-                    filledIcon ?
-                      (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-                      : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-                  }
-                </TouchableOpacity>
-              )
-            }
-            {
-              addToCartIcon && !isProductSold && (
-                <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtn(), addToCartBtnStyle]} onPress={onAddToFavorite}>
-                  <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)} />
-                </TouchableOpacity>
-              )
-            }
-        </View>
-        <View style={styles.productInfo()}>
-          <View style={styles.ratingsContainer()}>
-            <StarRatings ratings={ratings} ratingsCounts={ratingsCounts} />
-          </View>
-          <Text style={styles.brandName()}>{brandName}</Text>
-          <Text style={styles.productTitle()}>{productTitle}</Text>
-          <View style={styles.colorAndSizeWrapperVertical()}>
-            {
-              productColor && (
-                <View style={styles.colorAndSize()}>
-                  <Text style={styles.lightText()}>Color: </Text>
-                  <Text style={styles.darkText()}>{productColor}</Text>
+              originalPrice && sellingPrice ? (
+                <View style={styles.priceContainer()}>
+                  <Text style={styles.oldPrice()}>${originalPrice}</Text>
+                  <Text style={styles.newPrice()}>${sellingPrice}</Text>
                 </View>
-              )
-            }
-            {
-              productSize && (
-                <View style={styles.colorAndSize()}>
-                  <Text style={styles.lightText()}>Size: </Text>
-                  <Text style={styles.darkText()}>{productSize}</Text>
-                </View>
-              )   
+              ) : (<Text style={styles.regularPrice()}>{originalPrice}$</Text>)
             }
           </View>
-          {
-            originalPrice && sellingPrice ? (
-              <View style={styles.priceContainer()}>
-                <Text style={styles.oldPrice()}>${originalPrice}</Text>
-                <Text style={styles.newPrice()}>${sellingPrice}</Text>
-              </View>
-            ) : (<Text style={styles.regularPrice()}>{originalPrice}$</Text>)
-          }
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+        {
+          topRightIcon && (
+            <TouchableOpacity style={styles.closeIcon()}>
+              <IcClose width={size.moderateScale(15)} height={size.moderateScale(15)} fill={color.darkGray} />
+            </TouchableOpacity>
+          )
+        }
+        {
+          addToFavoriteIcon && (
+            <TouchableOpacity activeOpacity={0.6} style={[styles.addToFavoriteBtn(), flotingBtnStyle]} onPress={onAddToFavorite}>
+              {
+                filledIcon ?
+                  (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+                  : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+              }
+            </TouchableOpacity>
+          )
+        }
+        {
+          addToCartIcon && !isProductSold && (
+            <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtn(), addToCartBtnStyle]} onPress={onAddToFavorite}>
+              <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)} />
+            </TouchableOpacity>
+          )
+        }
       </View>
     );
   }

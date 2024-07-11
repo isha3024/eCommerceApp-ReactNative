@@ -15,11 +15,23 @@ export const CartScreen = () => {
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
   const [promoCodes, setPromoCodes] = useState(data.promoCards);
   const [showCartOptions, setShowCartOptions] = useState({});
-  console.log(orderedProducts)
+  const [selectedPromoCode, setSelectedPromoCode] = useState({});
+  const [appliedDiscount, setAppliedDiscount] = useState(false);
+  // console.log('selectedPromoCode: ',selectedPromoCode);
   
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
   }, [])
+
+  const applyPromoCode = (code) => {
+    const promoCode = promoCodes.find((promo) => promo.code === code);
+    const discountCode = promoCodes.find((promo) => promo.code === code).discount;
+    setSelectedPromoCode(promoCode.code);
+    setAppliedDiscount(discountCode);
+    setTimeout(() => {
+      setShowPromoCodeSheet(false)
+    }, 300)
+  }
 
   const increaseQuantity = (id) => {
     const updateCart = orderedProducts.map(cart => {
@@ -62,7 +74,12 @@ export const CartScreen = () => {
   const orderTotalAmount = () => {
     let total = 0;
     orderedProducts.forEach(product => {
-      total += product.productPrice;
+      if(appliedDiscount){
+        total += Number(product.productPrice) - (Number(product.productPrice) * appliedDiscount / 100);
+      }
+      else {
+        total += Number(product.productPrice);
+      }
     })
     return total;
   }
@@ -130,12 +147,13 @@ export const CartScreen = () => {
           <TouchableOpacity onPress={() => setShowPromoCodeSheet(true)} activeOpacity={0.6}>
           <TextInput 
             style={styles.promoCodeInput()}
+            value={selectedPromoCode ? selectedPromoCode :  ''}
             placeholder='Enter your promo code' 
             placeholderTextColor={color.darkGray}
             editable={false}
             />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.7} style={styles.forwardButton()}>
+          <TouchableOpacity onPress={() => setShowPromoCodeSheet(true)} activeOpacity={0.7} style={styles.forwardButton()}>
             <IcChevronRight />
           </TouchableOpacity>
         </View>
@@ -188,6 +206,7 @@ export const CartScreen = () => {
                       <Button
                         btnStyle={styles.applyBtn()}
                         title='Apply'
+                        onPress={() => applyPromoCode(promoCode.code)}
                       />
                     </View>
                   </View>

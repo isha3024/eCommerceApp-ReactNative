@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react' 
-import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation } from 'react-native'
+import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ScrollView } from 'react-native'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, SortBy, Text } from '../../components'
 import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 
@@ -37,15 +37,6 @@ const womenTopCategory = [
     name: 'Oversized',
   },
 ]
-
-// render function for rendering women categories at top
-const renderWomenTop = ({item}) => {
-  return(
-    <View style={styles.listItem()}>
-      <Text style={styles.listText()}>{item.name}</Text>
-    </View>
-  )
-}
 
 //sort product array to sort the product using populariy, reviews, etc..
 const sortProductType = [
@@ -127,6 +118,8 @@ export const CatalogeScreen = () => {
     let sortedList = [...products];
     // console.log('list: ', sortedList);
     switch (sortOption.id) {
+      case 3: 
+        sortedList.sort((a, b) => a.ratings - b.ratings);
       case 4:
         sortedList.sort((a, b) => a.originalPrice - b.originalPrice);
         break;
@@ -147,24 +140,29 @@ export const CatalogeScreen = () => {
   }
 
   //rendering the sort options using the renderItem function in FlatLists
-  const renderSortProductTypes = ({ item, isSelected }) => (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={() => handleSortOptionChange(item)}
-      style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
-      <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>
-    </TouchableOpacity>
-  );
+  const renderSortProductTypes = ({ item }) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => handleSortOptionChange(item)}
+        style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
+        <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>
+      </TouchableOpacity>
+    )
+  }
 
   //selecting the user selected size option and when the user selected the size then only navigate to mainProductScreen
   const selectSizeHandler = (size) => {
     setUserSizeOption(size);
-    setSizeSheetVisible(false);
-    if (selectedProductId) {
-      navigation.navigate('mainProductScreen', { selectedSize: size, productId: selectedProductId });
+  };
+
+  const handleNavigation = () => {
+    if(userSizeOption){
+      navigation.navigate('mainProductScreen', { selectedSize: userSizeOption, productId: selectedProductId })
       setUserSizeOption(false)
     }
-  };
+    setSizeSheetVisible(false);
+  }
 
   //handling the sort option bottom sheet visibility
   const handleOpenPress = () => {
@@ -206,8 +204,7 @@ export const CatalogeScreen = () => {
   }
 
   return (
-      <Screen bgColor={color.white}>
-        <StatusBar translucent={true}/>
+      <Screen bgColor={color.white} translucent={true}>
         <Header
           title={title ? true : false}
           headerTitle={"Women's top"}
@@ -228,14 +225,20 @@ export const CatalogeScreen = () => {
           </View>
           <View style={styles.horizontalScroll(title)}>
             <View style={styles.flatList()}>
-            <FlatList
-              horizontal
-              contentContainerStyle={{paddingRight:10}}
-              showsHorizontalScrollIndicator={false}
-              data={womenTopCategory}
-              renderItem={renderWomenTop}
-              keyExtractor={item => item.id}
-            />
+            <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={true}
+            contentContainerStyle={{paddingBottom: size.moderateScale(4)}}>
+              {
+                womenTopCategory.map((item, index) => {
+                  return (
+                    <View style={styles.listItem()} key={index}>
+                      <Text style={styles.listText()}>{item.name}</Text>
+                    </View>
+                  )
+                })
+              }
+            </ScrollView>
             </View>
             <View style={styles.filterContainer()}>
               <TouchableOpacity onPress={() => navigation.navigate('filterScreen')} style={styles.filterItem()}>
@@ -282,11 +285,19 @@ export const CatalogeScreen = () => {
           customHeight={'45%'}
           onPress={handleClosePress}>
           <Text style={styles.titleBottomSheet()}>Sort by</Text>
-          <FlatList
-            data={sortProductType}
-            renderItem={renderSortProductTypes}
-            keyExtractor={(item) => item.id}
-          />
+          {
+            sortProductType.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  activeOpacity={0.7}
+                  onPress={() => handleSortOptionChange(item)}
+                  style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
+                  <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>
+                </TouchableOpacity>
+              )
+            })
+          }
         </BottomSheetContainer>
         <BottomSheetContainer
           isVisible={isSizeSheetVisible}
@@ -309,7 +320,7 @@ export const CatalogeScreen = () => {
             <Text style={styles.sizeInfoText()}>Size info</Text>
             <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
           </TouchableOpacity>
-          <Button title='ADD TO CART' btnStyle={styles.button()} />
+          <Button title='ADD TO CART' btnStyle={styles.button()} onPress={handleNavigation}/>
         </BottomSheetContainer>
       </Screen>
   )

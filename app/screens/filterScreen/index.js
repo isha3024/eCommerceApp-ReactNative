@@ -63,6 +63,9 @@ export const FilterScreen = () => {
     setSelectCategory(['']);
     setMinValue(MIN_DEFAULT);
     setMaxValue(MAX_DEFAULT);
+    setTimeout(() => {
+      navigation.goBack()
+    },300)
   }
 
   const MIN_DEFAULT = 10;

@@ -47,14 +47,14 @@ export const imageHorizontal = () => ({
 
 export const addToFavoriteBtn = () => ({
   position: 'absolute',
+  right: size.moderateScale(-1),
+  top: size.moderateScale(16),
   width: size.moderateScale(36),
   height: size.moderateScale(36),
   backgroundColor: color.white,
   borderRadius: size.moderateScale(40),
   alignItems: 'center',
   justifyContent: 'center',
-  right: size.moderateScale(16),
-  top: size.moderateScale(163),
   zIndex: size.moderateScale(10),
   elevation: size.moderateScale(4)
 })

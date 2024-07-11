@@ -106,6 +106,10 @@ export const FavoriteScreen = ({route}) => {
     sortProducts(preSelectedSortItem);
   }, []);
 
+  useEffect(() => {
+    setShowProductList(products)
+  },[])
+
   //toggling the layout -- grid / list and headerTitle / mainTitle 
   const toggleLayout = () => {
     LayoutAnimation.configureNext({
@@ -191,6 +195,7 @@ export const FavoriteScreen = ({route}) => {
           addToCartBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
           customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
           closeIconStyle={showGrid ? styles.closeIconList() : ''}
+          removeFromListIconPress={() => handleProductRemove(item.id)}
         />
       )
   }

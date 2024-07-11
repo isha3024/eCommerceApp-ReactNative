@@ -147,6 +147,7 @@ export const MainProductScreen = ({ route }) => {
               renderItem={(item) => {
                 return (
                   <ProductCardMain
+                    onProductPress={() => navigation.navigate('mainProductScreen', { productId: item.item.id })}
                     customProductStyle={styles.productCardHome()}
                     productImage={item.item.images}
                     brandName={item.item.brand}

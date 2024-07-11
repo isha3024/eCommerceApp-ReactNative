@@ -245,7 +245,7 @@ export const RatingsReviewsScreen = ({route}) => {
               <BottomSheetScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: size.moderateScale(16) }}>
+                contentContainerStyle={{ gap: size.moderateScale(16), paddingRight: size.moderateScale(16) }}>
                 {
                   addReviewImage.map((productReviewImg, index) => {
                     console.log('productReviewImg: ', productReviewImg);
@@ -266,7 +266,7 @@ export const RatingsReviewsScreen = ({route}) => {
           </TouchableOpacity>
           </View>
           
-          <Button title='SEND REVIEW' btnStyle={styles.buttonSendReview()}/>
+          <Button onPress={handleCloseReview} title='SEND REVIEW' btnStyle={styles.buttonSendReview()}/>
          
       </BottomSheetContainer>
     </View>

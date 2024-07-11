@@ -5,11 +5,14 @@ export const mainView = () => ({
   backgroundColor: color.primary,
 })
 
+export const header = () => ({
+  paddingHorizontal: size.moderateScale(16),
+})
+
 export const topContainer = () => ({
   paddingLeft: size.moderateScale(15),
   paddingTop: size.moderateScale(18)
 })
-
 export const middleContainer = () => ({
   padding: size.moderateScale(15),
   marginTop: size.moderateScale(60),
