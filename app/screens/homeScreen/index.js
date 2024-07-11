@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { View, ImageBackground, TouchableOpacity, FlatList, StatusBar } from 'react-native'
 import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
 import { color, IcBackArrow, images, size } from '../../theme'
 
 import * as styles from './styles'
 import LinearGradient from 'react-native-linear-gradient'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 
 const data = [
   {
@@ -98,9 +98,17 @@ export const HomeScreen = () => {
     }
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBackgroundColor(color.transparent);
+      StatusBar.setTranslucent(true);
+    }, [])
+  );
+
 
   return (
-    <Screen withScroll bgColor={color.transparent} translucent={true}>
+    <Screen withScroll>
+      <StatusBar backgroundColor={color.transparent} translucent={true}/>
     <View>
     <View style={styles.topView()}>
         <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>

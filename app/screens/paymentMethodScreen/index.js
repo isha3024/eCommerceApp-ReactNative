@@ -3,26 +3,53 @@ import { Image, ImageBackground, ScrollView, StatusBar, TouchableOpacity, View }
 import { useNavigation } from '@react-navigation/native';
 
 import * as styles from './styles';
+import * as data from '../../json';
 import { BottomSheetContainer, Button, Header, InputFieldBottomSheet, Text } from '../../components';
 import { color, IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcHelp, IcMasterCard, IcPlus, IcSearch, images } from '../../theme';
+import { useMainContext } from '../../contexts/MainContext';
 
 
 const validateCreditCardNum = (val) => {
+  if (typeof val !== 'string') {
+    val = val.toString();
+  }
+
   const cardNum = /^(\d{4})(\d{4})(\d{4})(\d{4})$/;
-  const maskCardNum = val.toString().replace(cardNum, '* * * *  * * * *  * * * *  $4')
-  return maskCardNum;
+  return val.replace(cardNum, '* * * *  * * * *  * * * *  $4');
 }
-const secureCardNum = validateCreditCardNum(1234123412343947);
+
+const paymentCardDetails = data.paymentCardDetails.map(card => ({
+  ...card,
+  maskedCardNumber: validateCreditCardNum(card.cardNumber),
+}));
+
 
 export const PaymentMethodScreen = () => {
   const navigation = useNavigation();
 
-  const [defaultPaymentCard, setDefaultPaymentCard] = useState(true);
+  const setPaymentCardSelected = useMainContext()?.setPaymentCardSelected;
+
+  const [defaultPaymentCard, setDefaultPaymentCard] = useState({[paymentCardDetails[0].id]: true});
   const [defaultPaymentCardTwo, setDefaultPaymentCardTwo] = useState(false);
   const [showBottomSheetForNewCard, setShowBottomSheetForNewCard] = useState(false);
 
-  const toggleCheckbox = () => {
-    setDefaultPaymentCard(!defaultPaymentCard);
+  const toggleCheckbox = (id) => {
+    setDefaultPaymentCard(prevState => {
+      let newPaymenSelected ={};
+      let isPaymentSelected = true;
+      paymentCardDetails.forEach(card => {
+        if(card.id !== id && prevState[card.id]){
+          isPaymentSelected = false;
+        }
+        newPaymenSelected[card.id] = card.id === id ? !prevState[id]: false;
+      });
+      if(isPaymentSelected && prevState[id]){
+        newPaymenSelected[id] = true
+      }
+      const selectedPayment = paymentCardDetails.find((card) => card.id === id && newPaymenSelected[id]);
+      setPaymentCardSelected(selectedPayment);
+      return newPaymenSelected;
+    })
   };
 
   const toggleCheckboxTwo = () => {
@@ -47,87 +74,55 @@ export const PaymentMethodScreen = () => {
       <View style={styles.middleView()}>
         <Text style={styles.sectionTitle()}>Your payment cards</Text>
         <ScrollView
+
           style={styles.paymentCardsList()}
           contentContainerStyle={styles.contentContainerStyle()}
         >
-          <View style={styles.paymentCardWrapper()}>
-            <ImageBackground
-              source={images.imgPaymentCardBG}
-              resizeMode="cover"
-              style={styles.image(!defaultPaymentCard)}
-            >
-              <View style={styles.cardDetails()}>
-                <Image source={images.imgPaymentChip} />
-                <Text style={styles.cardNumber()}>{secureCardNum}</Text>
-                <View style={styles.cardBottom()}>
-                  <View style={styles.keyValue()}>
-                    <Text style={styles.textKeySmall()}>Card Holder Name</Text>
-                    <Text style={styles.textKeyLarge()}>Jennyfer Doe</Text>
+          {
+            paymentCardDetails.map((card) => {
+              return (
+                <View style={styles.paymentCardWrapper()} key={card.id}>
+                  <ImageBackground
+                    source={images.imgPaymentCardBG}
+                    resizeMode="cover"
+                    style={styles.image(!defaultPaymentCard)}
+                  >
+                    <View style={styles.cardDetails()}>
+                      <Image source={images.imgPaymentChip} />
+                      <Text style={styles.cardNumber()}>{card.maskedCardNumber}</Text>
+                      <View style={styles.cardBottom()}>
+                        <View style={styles.keyValue()}>
+                          <Text style={styles.textKeySmall()}>Card Holder Name</Text>
+                          <Text style={styles.textKeyLarge()}>{card.cardHolderName}</Text>
+                        </View>
+                        <View style={styles.keyValue()}>
+                          <Text style={styles.textKeySmall()}>Expiry Date</Text>
+                          <Text style={styles.textKeyLarge()}>{card.cardExpiryDate}</Text>
+                        </View>
+                        <IcMasterCard textColor={color.white} />
+                      </View>
+                    </View>
+                  </ImageBackground>
+                  <View style={styles.checkboxView()}>
+                    <TouchableOpacity
+                      onPress={() => toggleCheckbox(card.id)}
+                      activeOpacity={0.7}
+                      style={styles.checkboxButton()}
+                    >
+                      {defaultPaymentCard[card.id] ? (
+                        <IcCheckBoxActive fill={color.mostlyBlack} />
+                      ) : (
+                        <IcCheckBoxInactive />
+                      )}
+                      <Text style={styles.bodyText()}>
+                        Use as default payment method
+                      </Text>
+                    </TouchableOpacity>
                   </View>
-                  <View style={styles.keyValue()}>
-                    <Text style={styles.textKeySmall()}>Expiry Date</Text>
-                    <Text style={styles.textKeyLarge()}>05/23</Text>
-                  </View>
-                  <IcMasterCard textColor={color.white} />
                 </View>
-              </View>
-            </ImageBackground>
-            <View style={styles.checkboxView()}>
-              <TouchableOpacity
-                onPress={toggleCheckbox}
-                activeOpacity={0.7}
-                style={styles.checkboxButton()}
-              >
-                {defaultPaymentCard ? (
-                  <IcCheckBoxActive fill={color.mostlyBlack} />
-                ) : (
-                  <IcCheckBoxInactive />
-                )}
-                <Text style={styles.bodyText()}>
-                  Use as default payment method
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.paymentCardWrapper()}>
-            <ImageBackground
-              source={images.imgPaymentCardBG}
-              resizeMode="cover"
-              style={styles.image(!defaultPaymentCardTwo)}
-            >
-              <View style={styles.cardDetails()}>
-                <Image source={images.imgPaymentChip} />
-                <Text style={styles.cardNumber()}>{secureCardNum}</Text>
-                <View style={styles.cardBottom()}>
-                  <View style={styles.keyValue()}>
-                    <Text style={styles.textKeySmall()}>Card Holder Name</Text>
-                    <Text style={styles.textKeyLarge()}>Jennyfer Doe</Text>
-                  </View>
-                  <View style={styles.keyValue()}>
-                    <Text style={styles.textKeySmall()}>Expiry Date</Text>
-                    <Text style={styles.textKeyLarge()}>05/23</Text>
-                  </View>
-                  <IcMasterCard textColor={color.white} />
-                </View>
-              </View>
-            </ImageBackground>
-            <View style={styles.checkboxView()}>
-              <TouchableOpacity
-                onPress={toggleCheckboxTwo}
-                activeOpacity={0.7}
-                style={styles.checkboxButton()}
-              >
-                {defaultPaymentCardTwo ? (
-                  <IcCheckBoxActive fill={color.mostlyBlack} />
-                ) : (
-                  <IcCheckBoxInactive />
-                )}
-                <Text style={styles.bodyText()}>
-                  Use as default payment method
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+              )
+            })
+          }
         </ScrollView>
       </View>
       <View style={styles.bottomView()}>
@@ -160,12 +155,12 @@ export const PaymentMethodScreen = () => {
             iconPlace="right"
             renderRightIcon={() => <IcMasterCard />}
           />
-            <InputFieldBottomSheet
-              placeholder="Expire Date"
-              label="Expire Date"
-              maxLength={5}
-              keyboardType='phone-pad'
-            />
+          <InputFieldBottomSheet
+            placeholder="Expire Date"
+            label="Expire Date"
+            maxLength={5}
+            keyboardType='phone-pad'
+          />
           <InputFieldBottomSheet
             placeholder="CVV"
             label="CVV"

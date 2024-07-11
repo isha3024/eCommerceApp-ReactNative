@@ -15,7 +15,8 @@ export const MainContextProvider = props => {
   const [id, setId] = useState([]);
 
   const [selectedAddress, setSelectedAddress] = useState({});
-
+  const [paymentCardSelected, setPaymentCardSelected] = useState({});
+  // console.log('paymentCardSelected:', paymentCardSelected);
   const value = useMemo(() => {
     return {
       screenState: screenState,
@@ -39,6 +40,8 @@ export const MainContextProvider = props => {
 
       selectedAddress: selectedAddress,
       setSelectedAddress: setSelectedAddress,
+      paymentCardSelected: paymentCardSelected,
+      setPaymentCardSelected: setPaymentCardSelected
     }
   }, [
     screenState,
@@ -62,6 +65,8 @@ export const MainContextProvider = props => {
 
     selectedAddress,
     setSelectedAddress,
+    paymentCardSelected,
+    setPaymentCardSelected
   ]);
 
   return <context.Provider value={value}>{props.children}</context.Provider>;

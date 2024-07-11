@@ -32,7 +32,7 @@ export const paymentCardsList = () => ({
 
 export const contentContainerStyle = () => ({
   gap: size.moderateScale(40),
-  alignItems: 'center'
+  alignItems: 'center',
 })
 
 export const paymentCardWrapper = () => ({

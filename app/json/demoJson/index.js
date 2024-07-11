@@ -195,7 +195,7 @@ export const orderedProducts = [
     productSizeSelected: 'L',
     productPrice: 51,
     productImage: images.ImgCard,
-    productQuantity: 2
+    productQuantity: 1
   },
   {
     id: 2,
@@ -204,7 +204,7 @@ export const orderedProducts = [
     productSizeSelected: 'L',
     productPrice: 22,
     productImage: images.ImgCard,
-    productQuantity: 3
+    productQuantity: 1
   },
   {
     id: 3,
@@ -239,4 +239,21 @@ export const promoCards = [
     offerValidity: '6 days remaining',
     promoCodeImage: images.imgDiscount3
   },
+]
+
+export const paymentCardDetails = [
+  {
+    id: 1,
+    cardNumber: '1234123412343947',
+    cardHolderName: 'John Doe',
+    cardExpiryDate: '12/2020',
+    cardCvv: '123'
+  },
+  {
+    id: 2,
+    cardNumber: '1234123412341234',
+    cardHolderName: 'John Doe',
+    cardExpiryDate: '12/2020',
+    cardCvv: '123'
+  }
 ]

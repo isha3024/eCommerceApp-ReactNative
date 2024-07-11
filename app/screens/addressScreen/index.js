@@ -20,7 +20,7 @@ export const AddressScreen = () => {
 
   const selectedAddress = useMainContext()?.selectedAddress;
   const setSelectedAddress = useMainContext()?.setSelectedAddress;
-  
+  console.log('selectedAddress in Address:', selectedAddress);
 
   const toggleCheckbox = (id) => {
     setCheckboxFilled(prev => {

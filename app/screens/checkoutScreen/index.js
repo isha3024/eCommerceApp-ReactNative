@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native'
 
 import * as styles from './styles'
@@ -10,13 +10,13 @@ import { useNavigation } from '@react-navigation/native'
 export const CheckoutScreen = () => {
   const navigation = useNavigation()
   const checkoutAddress = useMainContext()?.selectedAddress;
-  console.log('checkoutAddress: ', checkoutAddress)
+  const paymentCardSelected = useMainContext()?.paymentCardSelected;
 
   return (
     <View style={styles.mainView()}>
       <View style={styles.topView()}>
-        <StatusBar translucent backgroundColor={color.primary}/>
-        <Header 
+        <StatusBar translucent backgroundColor={color.primary} />
+        <Header
           headerStyle={styles.header()}
           title
           headerTitle='Checkout'
@@ -24,26 +24,27 @@ export const CheckoutScreen = () => {
           leftIcon={() => {
             return (<IcBackArrow />)
           }}
+          leftIconPress={() => navigation.goBack()}
         />
       </View>
       <View style={styles.middleView()}>
         <Text style={styles.sectionTitle()}>Shipping address</Text>
         <View style={styles.addressContainer()}>
           <View style={styles.changeAddress()}>
-            <Text style={styles.username()}>Jane Doe</Text>
-            <TouchableOpacity activeOpacity={0.5}>
+            <Text style={styles.username()}>{checkoutAddress.name}</Text>
+            <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate('addressScreen')}>
               <Text style={styles.redText()}>Change</Text>
             </TouchableOpacity>
           </View>
           <View>
-            <Text style={styles.bodyText()}>3 Newbridge Court</Text>
-            <Text style={styles.bodyText()}>Chino Hills, CA 91709, United States</Text>
+            <Text style={styles.bodyText()}>{checkoutAddress.address}</Text>
+            <Text style={styles.bodyText()}>{checkoutAddress.city}, {checkoutAddress.province} {checkoutAddress.zipCode}, {checkoutAddress.country}</Text>
           </View>
         </View>
         <View style={styles.paymentContainer()}>
           <View style={styles.pamentSectionTitle()}>
             <Text style={styles.sectionTitle()}>Payment</Text>
-            <TouchableOpacity activeOpacity={0.5}>
+            <TouchableOpacity onPress={() => navigation.navigate('paymentMethodScreen')} activeOpacity={0.5}>
               <Text style={styles.redText()}>Change</Text>
             </TouchableOpacity>
           </View>
@@ -51,7 +52,7 @@ export const CheckoutScreen = () => {
             <View style={styles.paymnetCard()}>
               <IcMasterCard width={size.moderateScale(32)} height={size.moderateScale(25)} />
             </View>
-            <Text style={styles.bodyText()}>* * * *   * * * *   * * * *   3947</Text>
+            <Text style={styles.bodyText()}>{paymentCardSelected.length !== 0 ? paymentCardSelected.maskedCardNumber : 'No Payment Card Selected'}</Text>
           </View>
         </View>
         <Text style={styles.sectionTitle()}>Delivery method</Text>
@@ -83,7 +84,7 @@ export const CheckoutScreen = () => {
             <Text style={styles.bodyTextBlackBold()}>127$</Text>
           </View>
         </View>
-        <Button 
+        <Button
           title="SUBMIT ORDER"
           onPress={() => navigation.navigate('successScreen')}
         />

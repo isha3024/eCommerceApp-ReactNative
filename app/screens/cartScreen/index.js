@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Animated, FlatList, Image, KeyboardAvoidingView, LogBox, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Animated, FlatList, Image, LogBox, TextInput, TouchableOpacity, View } from 'react-native'
 
 import * as styles from './styles'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import { color, IcChevronRight, IcSearch, images, size } from '../../theme'
 import * as data from '../../json'
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
-import { opacity } from 'react-native-redash'
 import { useNavigation } from '@react-navigation/native'
 
 export const CartScreen = () => {
@@ -16,6 +15,7 @@ export const CartScreen = () => {
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
   const [promoCodes, setPromoCodes] = useState(data.promoCards);
   const [showCartOptions, setShowCartOptions] = useState({});
+  console.log(orderedProducts)
   
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
@@ -24,7 +24,13 @@ export const CartScreen = () => {
   const increaseQuantity = (id) => {
     const updateCart = orderedProducts.map(cart => {
       if(cart.id === id) {
-        return {...cart, productQuantity: cart.productQuantity + 1}
+        const newProductQuantity = cart.productQuantity + 1;
+        const newProductPrice = cart.productPrice * (newProductQuantity / cart.productQuantity)
+        return {
+          ...cart, 
+          productQuantity: newProductQuantity,
+          productPrice: newProductPrice
+        }
       }
       return cart;
     })
@@ -34,7 +40,13 @@ export const CartScreen = () => {
   const decreaseQuantity = (id) => {
     const updateCart = orderedProducts.map(cart => {
       if (cart.id === id && cart.productQuantity > 1) {
-        return { ...cart, productQuantity: cart.productQuantity - 1 };
+        const newProductQuantity = cart.productQuantity - 1;
+        const newProductPrice = cart.productPrice / (cart.productQuantity / newProductQuantity)
+        return { 
+          ...cart, 
+          productQuantity:newProductQuantity,
+          productPrice: newProductPrice
+        };
       }
       return cart;
     });
@@ -47,11 +59,20 @@ export const CartScreen = () => {
     });
   }
 
+  const orderTotalAmount = () => {
+    let total = 0;
+    orderedProducts.forEach(product => {
+      total += product.productPrice;
+    })
+    return total;
+  }
+
   const renderProducts = ({item}) => {
     
     return (
       <>
       <ProductCardMain
+        // activeOpacity={1}
         productHorizontal
         productTitle={item.productName}
         productImage={item.productImage}
@@ -83,7 +104,7 @@ export const CartScreen = () => {
   }
 
   return (   
-    <View style={styles.mainView()}>
+    <Screen bgColor={color.primary} style={styles.mainView()}>
       <View style={styles.topView()}>
         <Header 
           headerStyle={styles.header()}
@@ -120,7 +141,7 @@ export const CartScreen = () => {
         </View>
         <View style={styles.totalAmountView()}>
           <Text style={styles.totalAmountText()}>Total amount: </Text>
-          <Text style={styles.totalAmount()}>$51</Text>
+          <Text style={styles.totalAmount()}>{orderTotalAmount()}$</Text>
         </View>
         <Button 
           title='CHECK OUT'
@@ -175,6 +196,6 @@ export const CartScreen = () => {
           })}
           </BottomSheetScrollView>
       </BottomSheetContainer>
-    </View>
+    </Screen>
   )
 }

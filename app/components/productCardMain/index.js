@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { Image, Pressable, TouchableOpacity, View } from 'react-native'
 
 import * as styles from './styles'
 import { color, IcCart, IcCartActive, IcClose, IcFilledHeart, IcHeart, IcMinus, IcPlus, IcShowMore, size } from '../../theme'
@@ -55,7 +55,7 @@ export const ProductCardMain = ({
   if (productHorizontal) {
     return (
       <View style={styles.mainViewHorizontal(isProductSold)}>
-      <TouchableOpacity style={[styles.mainProductCardHorizontal(),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
+      <Pressable style={[styles.mainProductCardHorizontal(),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
         <View style={styles.imageViewHorizontal()}>
           <Image source={productImage} style={styles.imageHorizontal()} />
           <View style={[styles.badge(newProduct), sellingPrice && styles.discountBadge()]}>
@@ -137,7 +137,7 @@ export const ProductCardMain = ({
               }
             </View>
           </View>
-      </TouchableOpacity>
+      </Pressable>
         {
           addToFavoriteIcon && (
             <TouchableOpacity activeOpacity={0.9} style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>

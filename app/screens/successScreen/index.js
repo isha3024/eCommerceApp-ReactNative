@@ -4,8 +4,10 @@ import { ImageBackground, View } from 'react-native'
 import * as styles from './styles'
 import { color, images } from '../../theme'
 import { Button, Screen, Text } from '../../components'
+import { useNavigation } from '@react-navigation/native'
 
 export const SuccessScreen = () => {
+  const navigation = useNavigation()
   return (
     <Screen style={styles.mainView()} bgColor={color.transparent} translucent={true}>
       <ImageBackground source={images.ImgOrderComplete} style={styles.imgBG()}>
@@ -15,6 +17,7 @@ export const SuccessScreen = () => {
           <Button 
             title='Continue Shopping'
             btnStyle={styles.button()}
+            onPress={() => navigation.navigate('homeStackNavigation')}
           />
         </View>
       </ImageBackground>

@@ -288,7 +288,7 @@ export const circle = () => ({
   justifyContent: 'center',
   backgroundColor: color.white,
   elevation: size.moderateScale(3),
-  borderRadius: size.moderateScale(20)
+  borderRadius: size.moderateScale(20),
 })
 
 export const quantityText = () => ({
