@@ -125,6 +125,7 @@ export const CartScreen = () => {
         <Button 
           title='CHECK OUT'
           btnStyle={styles.button()}
+          onPress={() => navigation.navigate('checkoutScreen')}
         />
       </View>
       <BottomSheetContainer
@@ -166,7 +167,6 @@ export const CartScreen = () => {
                       <Button
                         btnStyle={styles.applyBtn()}
                         title='Apply'
-                        onPress={() => navigation.navigate('checkoutScreen')}
                       />
                     </View>
                   </View>
@@ -178,23 +178,3 @@ export const CartScreen = () => {
     </View>
   )
 }
-
-
-{/* <View style={styles.promoCard()} key={promoCode.id}>
-                  <View style={styles.promoCardImgView()}>
-                    <Image source={promoCode.promoCodeImage} resizeMode='cover' style={styles.promoCardImg()} />
-                  </View>
-                  <View style={styles.promoCardContent()}>
-                    <View style={styles.promoCardContentLeft()}>
-                      <Text style={styles.promoCardTitle()}>{promoCode.title}</Text>
-                      <Text style={styles.promoCardCode()}>{promoCode.code}</Text>
-                    </View>
-                    <View style={styles.promoCardContentRight()}>
-                      <Text style={styles.promoCodeDays()}>{promoCode.offerValidity}</Text>
-                      <Button
-                        btnStyle={styles.applyBtn()}
-                        title='Apply'
-                      />
-                    </View>
-                  </View>
-                </View> */}
