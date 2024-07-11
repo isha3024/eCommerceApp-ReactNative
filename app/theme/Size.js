@@ -54,7 +54,6 @@ const isIpad = () => {
 const notchPresent = () => {
   return hasNotch();
 };
-
 const deviceWidth = width;
 
 const deviceHeight = height;

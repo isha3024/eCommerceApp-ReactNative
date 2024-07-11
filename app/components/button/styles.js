@@ -7,6 +7,7 @@ export const btnContainer = (isDisabled, btnBorder) => ({
   paddingVertical: size.moderateScale(12),
   backgroundColor: isDisabled ? color.darkGray : btnBorder ? 'transparent' : color.secondary,
   elevation: size.moderateScale(2),
+  shadowColor: isDisabled ? color.darkGray : btnBorder ? 'transparent' : color.secondary,
   paddingVertical: size.moderateScale(15),
   borderRadius: size.moderateScale(25),
   gap: size.moderateScale(8),

@@ -2,12 +2,13 @@ import React from 'react'
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native'
 
 import * as styles from './styles'
-import { Header } from '../../components'
-import { color, IcBackArrow, IcMasterCard, size } from '../../theme'
+import { Button, Header } from '../../components'
+import { color, IcBackArrow, IcDHL, IcFedEx, IcMasterCard, IcUSPS, size } from '../../theme'
 import { useMainContext } from '../../contexts/MainContext'
+import { useNavigation } from '@react-navigation/native'
 
 export const CheckoutScreen = () => {
-
+  const navigation = useNavigation()
   const checkoutAddress = useMainContext()?.selectedAddress;
   console.log('checkoutAddress: ', checkoutAddress)
 
@@ -54,7 +55,38 @@ export const CheckoutScreen = () => {
           </View>
         </View>
         <Text style={styles.sectionTitle()}>Delivery method</Text>
-        <View></View>
+        <View style={styles.deliveryMethodsList()}>
+          <TouchableOpacity activeOpacity={0.6} style={styles.deliveryMethodItem()}>
+            <IcFedEx />
+            <Text style={styles.lightText()}>2-3 days</Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} style={styles.deliveryMethodItem()}>
+            <IcUSPS />
+            <Text style={styles.lightText()}>2-3 days</Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} style={styles.deliveryMethodItem()}>
+            <IcDHL />
+            <Text style={styles.lightText()}>2-3 days</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.orderCharges()}>
+          <View style={styles.spaceBetween()}>
+            <Text style={styles.bodyTextLight()}>Order:</Text>
+            <Text style={styles.bodyTextBlack()}>112$</Text>
+          </View>
+          <View style={styles.spaceBetween()}>
+            <Text style={styles.bodyTextLight()}>Delivery:</Text>
+            <Text style={styles.bodyTextBlack()}>15$</Text>
+          </View>
+          <View style={styles.spaceBetween()}>
+            <Text style={styles.bodyTextBold()}>Summary:</Text>
+            <Text style={styles.bodyTextBlackBold()}>127$</Text>
+          </View>
+        </View>
+        <Button 
+          title="SUBMIT ORDER"
+          onPress={() => navigation.navigate('successScreen')}
+        />
       </View>
     </View>
   )

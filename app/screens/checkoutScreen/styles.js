@@ -92,3 +92,62 @@ export const paymnetCard = () => ({
   alignItems: 'center',
   elevation: size.moderateScale(4)
 })
+
+export const deliveryMethodsList = () => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  // gap: size.moderateScale(22)
+})
+
+export const deliveryMethodItem = () => ({
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: size.moderateScale(7),
+  width: size.moderateScale(100),
+  height: size.moderateScale(72),
+  backgroundColor: color.white,
+  elevation: size.moderateScale(6),
+  borderRadius: size.moderateScale(18),
+  shadowColor: color.customBlack(0.6)
+})
+
+export const lightText = () => ({
+  fontFamily: fonts.metropolisRegular,
+  fontSize: fontSize.mediumSmall,
+  color: color.darkGray
+})
+
+export const orderCharges = () => ({
+  marginTop: size.moderateScale(50),
+  marginBottom: size.moderateScale(23),
+  gap: size.moderateScale(14)
+})
+
+export const spaceBetween = () => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+})
+
+export const bodyTextLight = () => ({
+  fontFamily: fonts.metropolisMedium,
+  fontSize: fontSize.small,
+  color: color.darkGray
+})
+
+export const bodyTextBold = () => ({
+  fontFamily: fonts.metropolisSemiBold,
+  fontSize: fontSize.littleMedium,
+  color: color.darkGray
+})
+export const bodyTextBlack = () => ({
+  fontFamily: fonts.metropolisSemiBold,
+  fontSize: fontSize.littleMedium,
+  color: color.mostlyBlack
+})
+export const bodyTextBlackBold = () => ({
+  fontFamily: fonts.metropolisSemiBold,
+  fontSize: fontSize.littleMedium,
+  color: color.mostlyBlack
+})
