@@ -3,9 +3,9 @@ import { Animated, FlatList, Image, LogBox, TextInput, TouchableOpacity, View } 
 
 import * as styles from './styles'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
-import { color, IcChevronRight, IcSearch, images, size } from '../../theme'
+import { color, IcChevronRight, IcClose, IcSearch, size } from '../../theme'
 import * as data from '../../json'
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import { BottomSheetFlatList, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { useNavigation } from '@react-navigation/native'
 
 export const CartScreen = () => {
@@ -13,24 +13,34 @@ export const CartScreen = () => {
   const navigation = useNavigation()
   const [orderedProducts, setOrderedProducts] = useState(data.orderedProducts);
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
-  const [promoCodes, setPromoCodes] = useState(data.promoCards);
+  // const [promoCodes, setPromoCodes] = useState(data.promoCards);
   const [showCartOptions, setShowCartOptions] = useState({});
   const [selectedPromoCode, setSelectedPromoCode] = useState({});
   const [appliedDiscount, setAppliedDiscount] = useState(false);
-  // console.log('selectedPromoCode: ',selectedPromoCode);
+  const [promoCodeValue, setPromoCodeValue] = useState('');
+  const [originalPromoCodes, setOriginalPromoCodes] = useState(data.promoCards);
+  // console.log('originalPromoCodes:', originalPromoCodes);
+  const [filteredPromoCodes, setFilteredPromoCodes] = useState(data.promoCards);
+  console.log('filteredPromoCodes: ',filteredPromoCodes);
   
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
   }, [])
 
   const applyPromoCode = (code) => {
-    const promoCode = promoCodes.find((promo) => promo.code === code);
-    const discountCode = promoCodes.find((promo) => promo.code === code).discount;
+    const promoCode = filteredPromoCodes.find((promo) => promo.code === code);
+    const discountCode = filteredPromoCodes.find((promo) => promo.code === code).discount;
     setSelectedPromoCode(promoCode.code);
     setAppliedDiscount(discountCode);
+    // setTimeout(() => {
+    //   setShowPromoCodeSheet(false)
+    // }, 300)
+  }
+
+  const closePromoCodeSheet = () => {
     setTimeout(() => {
-      setShowPromoCodeSheet(false)
-    }, 300)
+        setShowPromoCodeSheet(false)
+      }, 300)
   }
 
   const increaseQuantity = (id) => {
@@ -74,14 +84,49 @@ export const CartScreen = () => {
   const orderTotalAmount = () => {
     let total = 0;
     orderedProducts.forEach(product => {
-      if(appliedDiscount){
-        total += Number(product.productPrice) - (Number(product.productPrice) * appliedDiscount / 100);
+      if(appliedDiscount && selectedPromoCode.length > 0){
+        total += (product.productPrice) - (product.productPrice * (appliedDiscount / 100));
       }
       else {
-        total += Number(product.productPrice);
+        total += (product.productPrice);
       }
     })
     return total;
+  }
+
+  const removeFromCart = (id) => {
+    const updateCart = orderedProducts.filter(cart => cart.id !== id);
+    setOrderedProducts(updateCart);
+  }
+
+  const addToFavorite = (id) => {
+    const updateCart = orderedProducts.map(cart => {
+      if (cart.id === id) {
+        return {
+          ...cart, 
+          isFavorite: !cart.isFavorite
+        }
+      }
+      return cart;
+    })
+    setOrderedProducts(updateCart);
+    showCartOptions()
+  }
+
+  // const handleSearchCode = (value) => {
+  //   setPromoCodeValue(value);
+  //   const filteredCodes = originalPromoCodes.filter((code)=>{
+  //     return code.code.toLowerCase().includes(value.toLowerCase())
+  //   })
+  //   console.log('handleSearchCode called with value:', filteredCodes.find(discount => discount.id).code);
+  //   setFilteredPromoCodes(filteredCodes.find(discount => discount.id));
+  // }
+  const handleSearchCode = (value) => {
+    setPromoCodeValue(value);
+    const filteredCodes = originalPromoCodes.filter((code) => {
+      return code.code.toLowerCase().includes(value.toLowerCase());
+    });
+    setFilteredPromoCodes(filteredCodes);
   }
 
   const renderProducts = ({item}) => {
@@ -107,10 +152,10 @@ export const CartScreen = () => {
       {
         showCartOptions[item.id] && (
             <Animated.View style={styles.cartOptions()}>
-              <TouchableOpacity activeOpacity={0.6} style={[styles.cartOptionItem(), styles.cartOptionItemBorder()]}>
+              <TouchableOpacity onPress={() => addToFavorite(item.id)} activeOpacity={0.6} style={[styles.cartOptionItem(), styles.cartOptionItemBorder()]}>
                 <Text style={styles.cartOptionText()}>Add to favorites</Text>
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.6} style={styles.cartOptionItem()}>
+              <TouchableOpacity onPress={() => removeFromCart(item.id)} activeOpacity={0.6} style={styles.cartOptionItem()}>
                 <Text style={styles.cartOptionText()}>Delete from list</Text>
               </TouchableOpacity>
             </Animated.View>
@@ -143,77 +188,112 @@ export const CartScreen = () => {
             contentContainerStyle={styles.contentContainerStyle()}
           />
         </View>
-        <View style={styles.promoCardWrapper()}>  
-          <TouchableOpacity onPress={() => setShowPromoCodeSheet(true)} activeOpacity={0.6}>
-          <TextInput 
-            style={styles.promoCodeInput()}
-            value={selectedPromoCode ? selectedPromoCode :  ''}
-            placeholder='Enter your promo code' 
-            placeholderTextColor={color.darkGray}
-            editable={false}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowPromoCodeSheet(true)} activeOpacity={0.7} style={styles.forwardButton()}>
-            <IcChevronRight />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.totalAmountView()}>
-          <Text style={styles.totalAmountText()}>Total amount: </Text>
-          <Text style={styles.totalAmount()}>{orderTotalAmount()}$</Text>
-        </View>
-        <Button 
-          title='CHECK OUT'
-          btnStyle={styles.button()}
-          onPress={() => navigation.navigate('checkoutScreen')}
-        />
+        {
+          orderedProducts.length > 0 ? (
+            <>
+              <View style={styles.promoCardWrapper()}>
+                <TextInput
+                  style={styles.promoCodeInput()}
+                  value={selectedPromoCode ? selectedPromoCode : ''}
+                  placeholder='Enter your promo code'
+                  placeholderTextColor={color.darkGray}
+                  editable={false}
+                />
+                {
+                  selectedPromoCode.length > 0 ? (
+                    <TouchableOpacity onPress={() => setSelectedPromoCode('')} activeOpacity={0.7} style={styles.forwardButton()}>
+                      <IcClose width={size.moderateScale(20)} height={size.moderateScale(20)} fill={color.white}/>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity onPress={() => setShowPromoCodeSheet(true)} activeOpacity={0.7} style={styles.forwardButton()}>
+                      <IcChevronRight />
+                    </TouchableOpacity>
+                  )
+                }
+                {/* <TouchableOpacity onPress={() => setShowPromoCodeSheet(true)} activeOpacity={0.7} style={styles.forwardButton()}>
+                  <IcChevronRight />
+                </TouchableOpacity> */}
+              </View>
+              <View style={styles.totalAmountView()}>
+                <Text style={styles.totalAmountText()}>Total amount: </Text>
+                <Text style={styles.totalAmount()}>{orderTotalAmount()}$</Text>
+              </View>
+              <Button
+                title='CHECK OUT'
+                btnStyle={styles.button()}
+                onPress={() => navigation.navigate('checkoutScreen')}
+              />
+            </>
+          ) : 
+          (
+            <View style={styles.orderListEmpty()}>
+              <Text style={styles.orderListEmptyText()}>No orders placed</Text>
+              <Text style={styles.orderListAddProductText()}>You have products from your wishlist waiting to be yours</Text>
+              <View style={styles.buttonWrapper()}>
+                <Button 
+                  title='Continue Shopping'
+                  border
+                  btnStyle={styles.buttonEmpty()}
+                  onPress={() => navigation.navigate('homeStackNavigation')}
+                />
+                <Button 
+                  title='Add from Wishlist'
+                  btnStyle={styles.buttonEmpty()}
+                  onPress={() => navigation.navigate('favoriteStackNavigation')}
+                />
+              </View>
+            </View>
+          ) 
+        }
       </View>
       <BottomSheetContainer
       isVisible={showPromoCodeSheet}
       customHeight={'60%'}
       onClose={() => setShowPromoCodeSheet(false)}
       >
-        <View style={styles.promoCardWrapper()}>  
-          <TouchableOpacity activeOpacity={0.6}>
-          <TextInput 
+        <View style={styles.promoCardWrapper()}>
+          <TextInput
             style={styles.promoCodeInput()}
-            placeholder='Enter your promo code' 
+            placeholder='Enter your promo code'
             placeholderTextColor={color.darkGray}
-            editable={false}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.7} style={styles.forwardButton()}>
+            editable={true}
+            keyboardType='default'
+            autoCapitalize='none'
+            value={promoCodeValue ? promoCodeValue : selectedPromoCode}
+            onChangeText={handleSearchCode}
+          />
+          <TouchableOpacity onPress={closePromoCodeSheet} activeOpacity={0.7} style={styles.forwardButton()}>
             <IcChevronRight />
           </TouchableOpacity>
         </View>
         <Text style={styles.bottomSheetTitle()}>Your promo codes</Text>
-        <BottomSheetScrollView
-          style={styles.bottomSheetScroll()}
-          contentContainerStyle={{ gap: size.moderateScale(16) }}>
-          { 
-            promoCodes.map((promoCode, id) => {
-              return (
-                <View key={id} style={styles.promoCard()}>
-                  <View style={styles.promoCardImgView()}>
-                    <Image source={promoCode.promoCodeImage} resizeMode='cover' style={styles.promoCardImg()} />
+        <View style={styles.promoCodesWrapper()}>
+        {
+          filteredPromoCodes.map((promoCode, id) => {
+            return(
+              <View key={id} style={styles.promoCard()}>
+                <View style={styles.promoCardImgView()}>
+                  <Image source={promoCode.promoCodeImage} resizeMode='cover' style={styles.promoCardImg()} />
+                </View>
+                <View style={styles.promoCardContent()}>
+                  <View style={styles.promoCardContentLeft()}>
+                    <Text style={styles.promoCardTitle()}>{promoCode.title}</Text>
+                    <Text style={styles.promoCardCode()}>{promoCode.code}</Text>
                   </View>
-                  <View style={styles.promoCardContent()}>
-                    <View style={styles.promoCardContentLeft()}>
-                      <Text style={styles.promoCardTitle()}>{promoCode.title}</Text>
-                      <Text style={styles.promoCardCode()}>{promoCode.code}</Text>
-                    </View>
-                    <View style={styles.promoCardContentRight()}>
-                      <Text style={styles.promoCodeDays()}>{promoCode.offerValidity}</Text>
-                      <Button
-                        btnStyle={styles.applyBtn()}
-                        title='Apply'
-                        onPress={() => applyPromoCode(promoCode.code)}
-                      />
-                    </View>
+                  <View style={styles.promoCardContentRight()}>
+                    <Text style={styles.promoCodeDays()}>{promoCode.offerValidity}</Text>
+                    <Button
+                      btnStyle={styles.applyBtn()}
+                      title='Apply'
+                      onPress={() => applyPromoCode(promoCode.code)}
+                    />
                   </View>
                 </View>
-              )
-          })}
-          </BottomSheetScrollView>
+              </View>
+            )
+          })
+        }
+        </View>
       </BottomSheetContainer>
     </Screen>
   )

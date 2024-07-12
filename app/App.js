@@ -1,5 +1,5 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import React, { useEffect } from 'react';
+import {LogBox, SafeAreaView, StyleSheet} from 'react-native';
 
 import {LocalizationProvider} from './contexts';
 import {MainContextProvider} from './contexts/MainContext';
@@ -9,6 +9,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const App = () => {
   
+  // useEffect(() => {
+  //   LogBox.ignoreLogs(["[Reanimated] Tried to modify key `reduceMotion` of an object which has been already passed to a worklet."])
+  // }, [])
 
   return (
     <GestureHandlerRootView>

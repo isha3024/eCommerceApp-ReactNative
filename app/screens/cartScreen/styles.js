@@ -85,12 +85,56 @@ export const button = () => ({
   marginHorizontal: size.moderateScale(16)
 })
 
+export const orderListEmpty = () => ({
+  justifyContent: 'center',
+  marginTop: size.moderateScale(200),
+  width: size.deviceWidth - 75,
+  marginHorizontal: 'auto'
+})
+
+export const orderListEmptyText = () => ({
+  fontSize: fontSize.smallMedium,
+  color: color.mostlyBlack,
+  fontFamily: fonts.metropolisBold,
+  textAlign: 'center',
+})
+
+export const orderListAddProductText = () => ({
+  fontSize: fontSize.small,
+  color: color.mostlyBlack,
+  fontFamily: fonts.metropolisRegular,
+  textAlign: 'center',
+  marginTop: size.moderateScale(20)
+})
+
+export const buttonWrapper = () => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginTop: size.moderateScale(20)
+})
+
+export const buttonEmpty = () => ({
+  width: size.moderateScale(150),
+  paddingVertical: size.moderateScale(12)
+})
+
+export const buttonTextEmpty = () => ({
+  fontSize: fontSize.verySmall,
+  fontFamily: fonts.metropolisRegular,
+})
+
 export const bottomSheetTitle = () => ({
   fontSize: fontSize.middleMedium,
   fontFamily: fonts.metropolisSemiBold,
   color: color.mostlyBlack,
   marginHorizontal: size.moderateScale(16),
   marginTop: size.moderateScale(32) 
+})
+
+export const promoCodesWrapper = () => ({
+  paddingTop: size.moderateScale(18),
+  gap: size.moderateScale(20)
 })
 
 export const promoCard = () => ({
@@ -151,11 +195,12 @@ export const promoCodeDays = () => ({
 })
 
 export const applyBtn = () => ({
-  width: size.moderateScale(93)
+  width: size.moderateScale(93),
+  paddingVertical: size.moderateScale(12)
 })
 
 export const bottomSheetScroll = () => ({
-  marginVertical: size.moderateScale(18)
+  flexGrow: 1
 })
 
 export const cartOptions = () => ({
