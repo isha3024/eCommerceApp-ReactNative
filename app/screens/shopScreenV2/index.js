@@ -14,21 +14,21 @@ export const ShopScreenV2 = () => {
   return (
     <View style={styles.mainView()}>
       <View style={styles.topView()}>
-        <StatusBar translucent={true} backgroundColor={color.white}/>
-      <Header 
-        headerStyle={styles.header()}
-        leftIconPress={() => navigation.goBack()}
-        headerLeftIcon
-        leftIcon={() => {
-          return (<IcBackArrow fill={color.mostlyBlack} width={size.moderateScale(10)} height={size.moderateScale(16)} />)
-        }}
-        title
-        headerTitle='Categories'
-        headerRightIcon
-        rightIcon={() => {
-          return (<IcSearch />)
-        }}
-      />
+        <StatusBar translucent={true} backgroundColor={color.white} barStyle={'dark-content'} />
+        <Header
+          headerStyle={styles.header()}
+          leftIconPress={() => navigation.goBack()}
+          headerLeftIcon
+          leftIcon={() => {
+            return (<IcBackArrow fill={color.mostlyBlack} width={size.moderateScale(10)} height={size.moderateScale(16)} />)
+          }}
+          title
+          headerTitle='Categories'
+          headerRightIcon
+          rightIcon={() => {
+            return (<IcSearch />)
+          }}
+        />
       </View>
      <Tab.Navigator tabBar={props => <CustomTopTabBar {...props} />} screenOptions={{
       tabBarLabelStyle: {

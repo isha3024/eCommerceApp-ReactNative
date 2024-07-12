@@ -7,8 +7,12 @@ import { color, IcBackArrow, IcDHL, IcFedEx, IcMasterCard, IcUSPS, size } from '
 import { useMainContext } from '../../contexts/MainContext'
 import { useNavigation } from '@react-navigation/native'
 
-export const CheckoutScreen = () => {
-  const navigation = useNavigation()
+export const CheckoutScreen = ({route}) => {
+  const navigation = useNavigation();
+  const orderTotal = route.params.orderTotal;
+  const deliveryAmount = 15;
+
+  const orderAmountSummary = orderTotal + deliveryAmount;
   const checkoutAddress = useMainContext()?.selectedAddress;
   const paymentCardSelected = useMainContext()?.paymentCardSelected;
 
@@ -73,7 +77,7 @@ export const CheckoutScreen = () => {
         <View style={styles.orderCharges()}>
           <View style={styles.spaceBetween()}>
             <Text style={styles.bodyTextLight()}>Order:</Text>
-            <Text style={styles.bodyTextBlack()}>112$</Text>
+            <Text style={styles.bodyTextBlack()}>{orderTotal}$</Text>
           </View>
           <View style={styles.spaceBetween()}>
             <Text style={styles.bodyTextLight()}>Delivery:</Text>
@@ -81,7 +85,7 @@ export const CheckoutScreen = () => {
           </View>
           <View style={styles.spaceBetween()}>
             <Text style={styles.bodyTextBold()}>Summary:</Text>
-            <Text style={styles.bodyTextBlackBold()}>127$</Text>
+            <Text style={styles.bodyTextBlackBold()}>{orderAmountSummary}$</Text>
           </View>
         </View>
         <Button

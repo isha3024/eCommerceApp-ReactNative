@@ -6,12 +6,12 @@ export const mainView = () => ({
 })
 
 export const topView = () => ({
-  backgroundColor: color.white
+  backgroundColor: color.white,
+  elevation: size.moderateScale(10),
+  marginBottom: size.moderateScale(10),
 })
 
 export const header = () => ({
   backgroundColor: color.white,
-  elevation: size.moderateScale(10),
-  marginBottom: size.moderateScale(10),
   paddingHorizontal: size.moderateScale(16)
 })

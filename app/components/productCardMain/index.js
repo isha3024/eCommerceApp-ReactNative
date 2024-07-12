@@ -42,7 +42,7 @@ export const ProductCardMain = ({
   // onAddToFavorite
 }) => {
   const [filledIcon, setFilledIcon] = useState(false);
-  const discount = Math.floor((sellingPrice/originalPrice) * 100);
+  const discount = Math.floor(((originalPrice - sellingPrice)/originalPrice) * 100)
 
   const onAddToFavorite = () => {
     if (filledIcon) {

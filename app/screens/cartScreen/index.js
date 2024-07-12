@@ -32,15 +32,9 @@ export const CartScreen = () => {
     const discountCode = filteredPromoCodes.find((promo) => promo.code === code).discount;
     setSelectedPromoCode(promoCode.code);
     setAppliedDiscount(discountCode);
-    // setTimeout(() => {
-    //   setShowPromoCodeSheet(false)
-    // }, 300)
-  }
-
-  const closePromoCodeSheet = () => {
     setTimeout(() => {
-        setShowPromoCodeSheet(false)
-      }, 300)
+      setShowPromoCodeSheet(false)
+    }, 300)
   }
 
   const increaseQuantity = (id) => {
@@ -210,9 +204,6 @@ export const CartScreen = () => {
                     </TouchableOpacity>
                   )
                 }
-                {/* <TouchableOpacity onPress={() => setShowPromoCodeSheet(true)} activeOpacity={0.7} style={styles.forwardButton()}>
-                  <IcChevronRight />
-                </TouchableOpacity> */}
               </View>
               <View style={styles.totalAmountView()}>
                 <Text style={styles.totalAmountText()}>Total amount: </Text>
@@ -259,15 +250,25 @@ export const CartScreen = () => {
             editable={true}
             keyboardType='default'
             autoCapitalize='none'
-            value={promoCodeValue ? promoCodeValue : selectedPromoCode}
+            value={promoCodeValue}
             onChangeText={handleSearchCode}
           />
-          <TouchableOpacity onPress={closePromoCodeSheet} activeOpacity={0.7} style={styles.forwardButton()}>
-            <IcChevronRight />
-          </TouchableOpacity>
+          {
+            promoCodeValue.length > 0 ? (
+              <TouchableOpacity onPress={() => setPromoCodeValue('')} activeOpacity={0.7} style={styles.forwardButton()}>
+                <IcClose width={size.moderateScale(20)} height={size.moderateScale(20)} fill={color.white} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity activeOpacity={0.7} style={styles.forwardButton()}>
+                <IcChevronRight />
+              </TouchableOpacity>
+            )
+          }
         </View>
         <Text style={styles.bottomSheetTitle()}>Your promo codes</Text>
-        <View style={styles.promoCodesWrapper()}>
+        <View>
+          
+        </View>
         {
           filteredPromoCodes.map((promoCode, id) => {
             return(
@@ -293,7 +294,6 @@ export const CartScreen = () => {
             )
           })
         }
-        </View>
       </BottomSheetContainer>
     </Screen>
   )

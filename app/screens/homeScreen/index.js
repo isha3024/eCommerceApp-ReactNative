@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react'
-import { View, ImageBackground, TouchableOpacity, FlatList, StatusBar } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { View, ImageBackground, TouchableOpacity, FlatList, StatusBar, ToastAndroid, BackHandler } from 'react-native'
 import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
 import { color, IcBackArrow, images, size } from '../../theme'
 
@@ -63,7 +63,7 @@ const data = [
     rating_scale: 10.0,
     rating_count: 12,
     originalPrice: 30,
-    sellingPrice: 20.76,
+    sellingPrice: 20,
     isProductNew: false
   }
 ]
@@ -97,6 +97,7 @@ export const HomeScreen = () => {
     useCallback(() => {
       StatusBar.setBackgroundColor(color.transparent);
       StatusBar.setTranslucent(true);
+      StatusBar.setBarStyle('dark-content')
     }, [])
   );
 

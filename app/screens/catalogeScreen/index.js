@@ -77,7 +77,7 @@ export const CatalogeScreen = () => {
   const [isSheetVisible, setSheetVisible] = useState(false);
   
   //sort option selected useState
-  const [isSelected, setIsSelected] = useState(null);
+  const [isSelected, setIsSelected] = useState(sortProductType[4]);
 
   //toggling the product in Grid/List
   const [showGrid, setShowGrid] = useState(true);
@@ -137,18 +137,6 @@ export const CatalogeScreen = () => {
     setIsSelected(sortOption);
     setSheetVisible(false);
     sortProducts(sortOption);
-  }
-
-  //rendering the sort options using the renderItem function in FlatLists
-  const renderSortProductTypes = ({ item }) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() => handleSortOptionChange(item)}
-        style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
-        <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>
-      </TouchableOpacity>
-    )
   }
 
   //selecting the user selected size option and when the user selected the size then only navigate to mainProductScreen
