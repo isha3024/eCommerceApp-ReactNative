@@ -81,6 +81,7 @@ export const RegisterScreen = () => {
 
   return (
     <Screen withScroll translucent={true} bgColor={color.primary} style={styles.mainView()}>
+      <View style={styles.topContainer()}>
       <Header
         headerStyle={styles.header()}
         headerLeftIcon
@@ -88,8 +89,7 @@ export const RegisterScreen = () => {
           return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
         }}
       />
-      <View style={styles.topContainer()}>
-        <Title title={'Sign up'} />
+        <Text style={styles.mainTitleText()}>Sign Up</Text>
       </View>
       <View style={styles.middleContainer()}>
         <View style={styles.inputView()}>

@@ -5,13 +5,18 @@ export const mainView = () => ({
   backgroundColor: color.primary,
 })
 
+export const topContainer = () => ({
+  gap: size.moderateScale(18)
+})
 export const header = () => ({
   paddingHorizontal: size.moderateScale(16),
 })
 
-export const topContainer = () => ({
-  paddingLeft: size.moderateScale(15),
-  paddingTop: size.moderateScale(18)
+export const mainTitleText = () => ({
+  paddingHorizontal: size.moderateScale(16),
+  fontSize: fontSize.middleLarge,
+  fontFamily: fonts.metropolisBold,
+  color: color.mostlyBlack
 })
 
 export const middleContainer = () => ({

@@ -74,16 +74,15 @@ export const LoginScreen = () => {
 
   return (
     <Screen withScroll bgColor={color.primary} translucent={true} style={styles.mainView()}>
+      <View style={styles.topContainer()}>
       <Header
         headerStyle={styles.header()}
-        leftIconPress={() => navigation.goBack()}
         headerLeftIcon
         leftIcon={() => {
           return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
         }}
       />
-      <View style={styles.topContainer()}>
-        <Title title={'Login'} />
+        <Text style={styles.mainTitleText()}>Login</Text>
       </View>
       <View style={styles.middleContainer()}>
         <View style={styles.inputView()}>

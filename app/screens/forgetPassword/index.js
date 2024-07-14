@@ -60,16 +60,15 @@ export const ForgetPassword = () => {
   }
   return (
     <Screen withScroll translucent={true} bgColor={color.primary} style={styles.mainView()}>
+      <View style={styles.topContainer()}>
       <Header
-      headerStyle={styles.header()}
-        leftIconPress={() => navigation.goBack()}
+        headerStyle={styles.header()}
         headerLeftIcon
         leftIcon={() => {
           return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
         }}
       />
-      <View style={styles.topContainer()}>
-        <Title title='Forget Password' />
+        <Text style={styles.mainTitleText()}>Forget Password</Text>
       </View>
       <View style={styles.middleContainer()}>
         <Text style={styles.text()}>
