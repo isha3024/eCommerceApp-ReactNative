@@ -60,7 +60,7 @@ export const RegisterScreen = () => {
 
     if(!inputField.email){
       newError.email = 'Email is required'
-    }else if(EmailValidation(inputField)){
+    }else if(EmailValidation(inputField.email)){
       newError.email = 'Not a valid email address. Should be your@email.com'
     }
 
@@ -110,7 +110,7 @@ export const RegisterScreen = () => {
         <Text style={styles.mainTitleText()}>Sign Up</Text>
       </View>
       <View style={styles.middleContainer()}>
-        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View style={[styles.inputView(), errors.name && { transform: [{ translateX: shakeAnim }] }]}>
           <InputField 
             error={errors.name}
             value={inputField?.name}
@@ -132,7 +132,7 @@ export const RegisterScreen = () => {
             : (<Text style={styles.noError()}></Text>)
           }
         </Animated.View>
-        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View style={[styles.inputView(), errors.email &&  { transform: [{ translateX: shakeAnim }] }]}>
         <InputField 
           error={errors.email}
           value={inputField?.email}
@@ -153,7 +153,7 @@ export const RegisterScreen = () => {
         : (<Text style={styles.noError()}></Text>)
         }
         </Animated.View>
-        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View style={[styles.inputView(), errors.password && { transform: [{ translateX: shakeAnim }] }]}>
         <InputField
           error={errors.password}
           value={inputField?.password}

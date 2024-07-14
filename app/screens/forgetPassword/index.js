@@ -41,10 +41,10 @@ export const ForgetPassword = () => {
 
   const handleValidations = () => {
     let newErrors = {};
-
-    if(!newErrors.email) {
+    if(!inputField.email){
       newErrors.email = 'Email is required'
-    }else if (!EmailValidation(newErrors.email)){
+    }
+    else if(EmailValidation(inputField.email)){
       newErrors.email = 'Not a valid email address. Should be your@email.com'
     }
 
@@ -80,7 +80,7 @@ export const ForgetPassword = () => {
         <Text style={styles.text()}>
         Please, enter your email address. You will receive a link to create a new password via email.
         </Text>
-        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View style={[styles.inputView(), errors.email && { transform: [{ translateX: shakeAnim }] }]}>
         <InputField 
           error={errors.email}
           value={inputField.email}

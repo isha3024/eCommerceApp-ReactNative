@@ -48,11 +48,11 @@ export const LoginScreen = () => {
 
   const handleValidations = () => {
     let newErrors = {};
-
     if(!inputField.email){
       newErrors.email = 'Email is required'
-    }else if(EmailValidation(inputField)){
+    } else if(EmailValidation(inputField.email)){
       newErrors.email = 'Not a valid email address. Should be your@email.com'
+      console.warn(inputField.email)
     }
 
     if(!inputField.password){
@@ -90,7 +90,7 @@ export const LoginScreen = () => {
         <Text style={styles.mainTitleText()}>Login</Text>
       </View>
       <View style={styles.middleContainer()}>
-        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View style={[styles.inputView(), errors.email && { transform: [{ translateX: shakeAnim }] }]}>
         <InputField 
           error={errors.email}
           value={inputField.email}
@@ -111,7 +111,7 @@ export const LoginScreen = () => {
           : (<Text style={styles.noError()}></Text>)
         }
         </Animated.View>
-        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View style={[styles.inputView(), errors.password && { transform: [{ translateX: shakeAnim }] }]}>
         <InputField
           error={errors.password}
           value={inputField.password}
@@ -133,7 +133,7 @@ export const LoginScreen = () => {
           : (<Text style={styles.noError()}></Text>)
         }
         </Animated.View>
-        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={handleNavigation}>
+        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={() => navigation.navigate('ForgetPassword')}>
           <Text style={styles.text()}>Forget your password?</Text>
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>
