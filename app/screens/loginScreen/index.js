@@ -19,20 +19,14 @@ export const LoginScreen = () => {
     password: ''
   })
 
-  const opacityAnim = useRef(new Animated.Value(0)).current;
-  const opacityStyle = {opacity: opacityAnim}
-  const animate = () => {
-    Animated.timing(opacityAnim, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: true
-    }).start(() => {
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }).start()
-    })
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+  const shake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true }),
+    ]).start();
   }
   
   const handleChange = (field, value) => {
@@ -68,8 +62,18 @@ export const LoginScreen = () => {
     }
 
     setErrors(newErrors)
-    animate()
+    shake()
     return Object.keys(newErrors).length === 0
+  }
+
+  const handleNavigation = () => {
+    setErrors({
+      email: '',
+      password: ''
+    })
+    setTimeout(() => {
+      navigation.navigate('Register')
+    }, 300)
   }
 
   return (
@@ -81,11 +85,12 @@ export const LoginScreen = () => {
         leftIcon={() => {
           return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
         }}
+        leftIconPress={handleNavigation}
       />
         <Text style={styles.mainTitleText()}>Login</Text>
       </View>
       <View style={styles.middleContainer()}>
-        <View style={styles.inputView()}>
+        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
         <InputField 
           error={errors.email}
           value={inputField.email}
@@ -102,11 +107,11 @@ export const LoginScreen = () => {
           )}
         />
         {errors.email ? 
-          (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.email}</Animated.Text>) 
+          (<Text style={styles.errorText()}>{errors.email}</Text>) 
           : (<Text style={styles.noError()}></Text>)
         }
-        </View>
-        <View style={styles.inputView()}>
+        </Animated.View>
+        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
         <InputField
           error={errors.password}
           value={inputField.password}
@@ -124,15 +129,15 @@ export const LoginScreen = () => {
           )}
         />
         {errors.password ? 
-          (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.password}</Animated.Text>) 
+          (<Text style={styles.errorText()}>{errors.password}</Text>) 
           : (<Text style={styles.noError()}></Text>)
         }
-        </View>
-        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={() => navigation.navigate('ForgetPassword')}>
+        </Animated.View>
+        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={handleNavigation}>
           <Text style={styles.text()}>Forget your password?</Text>
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        <Button btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={handleSubmit} />
+        <Button activeOpacity={0.8} btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={handleSubmit} />
       </View>
       <View style={styles.bottomContainer()}>
         <Text style={styles.text()}>Or sign up with social account</Text>

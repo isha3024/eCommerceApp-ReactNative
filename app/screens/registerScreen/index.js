@@ -14,6 +14,19 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 
 export const RegisterScreen = () => {
 
+  const [userData, setUserData] = useState(undefined);
+
+  const getUserData = async () => {
+    const URL = 'https://jsonplaceholder.typicode.com/posts/1'
+    let userDataResult = await fetch(URL);
+    userDataResult = await userDataResult.json();
+    setUserData(userDataResult)
+  }
+
+  useEffect(() => {
+    getUserData();
+  },[])
+
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
   const [inputField, setInputField] = useState({
@@ -22,20 +35,14 @@ export const RegisterScreen = () => {
     password: ''
   })
 
-  const opacityAnim = useRef(new Animated.Value(0)).current;
-  const opacityStyle = {opacity: opacityAnim}
-  const animate = () => {
-    Animated.timing(opacityAnim, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: true
-    }).start(() => {
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }).start()
-    })
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+  const shake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true }),
+    ]).start();
   }
 
   const handleChange = (value, field) => {
@@ -64,7 +71,7 @@ export const RegisterScreen = () => {
     }
 
     setErrors(newError)
-    animate()
+    shake();
     return Object.keys(newError).length === 0
   }
 
@@ -77,6 +84,17 @@ export const RegisterScreen = () => {
       })
       navigation.navigate('Login')
     }
+  }
+
+  const handleNavigation = () => {
+    setErrors({
+      name: '',
+      email: '',
+      password: ''
+    })
+    setTimeout(() => {
+      navigation.navigate('Login')
+    }, 300)
   }
 
   return (
@@ -92,7 +110,7 @@ export const RegisterScreen = () => {
         <Text style={styles.mainTitleText()}>Sign Up</Text>
       </View>
       <View style={styles.middleContainer()}>
-        <View style={styles.inputView()}>
+        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
           <InputField 
             error={errors.name}
             value={inputField?.name}
@@ -110,11 +128,11 @@ export const RegisterScreen = () => {
             )}
           />
           {errors.name ? 
-            (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.name}</Animated.Text>) 
+            (<Text style={styles.errorText()}>{errors.name}</Text>) 
             : (<Text style={styles.noError()}></Text>)
           }
-        </View>
-        <View style={styles.inputView()}>
+        </Animated.View>
+        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
         <InputField 
           error={errors.email}
           value={inputField?.email}
@@ -131,11 +149,11 @@ export const RegisterScreen = () => {
           )}
         />
         {errors.email ? 
-        (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.email}</Animated.Text>) 
+        (<Text style={styles.errorText()}>{errors.email}</Text>) 
         : (<Text style={styles.noError()}></Text>)
         }
-        </View>
-        <View style={styles.inputView()}>
+        </Animated.View>
+        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
         <InputField
           error={errors.password}
           value={inputField?.password}
@@ -153,16 +171,16 @@ export const RegisterScreen = () => {
           )}
         />
         {errors.password ? 
-          (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.password}</Animated.Text>) 
+          (<Text style={styles.errorText()}>{errors.password}</Text>) 
           : (<Text style={styles.noError()}></Text>)
         }
-        </View>
-        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={() => navigation.navigate('Login')}>
+        </Animated.View>
+        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={handleNavigation}>
           <Text style={styles.text()}>Already have an account?</Text>
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>
         {/* <Button btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={() => navigation.navigate('Login')} /> */}
-        <Button btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={handleSubmit} />
+        <Button activeOpacity={0.8} btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={handleSubmit} />
       </View>
       <View style={styles.bottomContainer()}>
         <Text style={styles.text()}>Or sign up with social account</Text>

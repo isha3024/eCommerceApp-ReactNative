@@ -78,6 +78,7 @@ export const CatalogeScreen = () => {
   
   //sort option selected useState
   const [isSelected, setIsSelected] = useState(sortProductType[4]);
+  const [isSortOptionSelected, setIsSortOptionSelected] = useState(false)
 
   //toggling the product in Grid/List
   const [showGrid, setShowGrid] = useState(true);
@@ -93,13 +94,6 @@ export const CatalogeScreen = () => {
 
   //selected product Id
   const [selectedProductId, setSelectedProductId] = useState(null);
-
-  //on screen load sort product based on price low to high ---- not working
-  useEffect(() => {
-    const preSelectedSortItem = sortProductType.find(item => item.name === 'Price: lowest to high');
-    setIsSelected(preSelectedSortItem);
-    sortProducts(preSelectedSortItem);
-  }, []);
 
   //toggling the layout -- grid / list and headerTitle / mainTitle 
   const toggleLayout = () => {
@@ -135,8 +129,11 @@ export const CatalogeScreen = () => {
   //handling the sort option selected but not working as expected
   const handleSortOptionChange = (sortOption) => {
     setIsSelected(sortOption);
-    setSheetVisible(false);
+    setIsSortOptionSelected(sortOption);
     sortProducts(sortOption);
+    setTimeout(() => {
+      setSheetVisible(false);
+    }, 3000)
   }
 
   //selecting the user selected size option and when the user selected the size then only navigate to mainProductScreen
@@ -270,18 +267,20 @@ export const CatalogeScreen = () => {
         <BottomSheetContainer
           isVisible={isSheetVisible}
           onClose={handleClosePress}
-          customHeight={'45%'}
-          onPress={handleClosePress}>
+          customHeight={'45%'}>
           <Text style={styles.titleBottomSheet()}>Sort by</Text>
           {
             sortProductType.map((item, index) => {
+              console.log('item::', item)
+              const isSelected = item === isSortOptionSelected;
+              console.log('isSelected: ', isSelected)
               return (
                 <TouchableOpacity
                   key={index}
                   activeOpacity={0.7}
                   onPress={() => handleSortOptionChange(item)}
-                  style={[styles.sortListItem(), item.id === isSelected?.id && styles.selectedItem()]}>
-                  <Text style={[styles.sortItemText(), item.id === isSelected?.id && styles.selectedItemText()]}>{item.name}</Text>
+                  style={styles.sortListItem(isSelected)}>
+                  <Text style={styles.sortItemText(isSelected)}>{item.name}</Text>
                 </TouchableOpacity>
               )
             })

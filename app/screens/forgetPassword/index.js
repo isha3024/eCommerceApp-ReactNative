@@ -13,20 +13,14 @@ export const ForgetPassword = () => {
     email: '',
   })
 
-  const opacityAnim = useRef(new Animated.Value(0)).current;
-  const opacityStyle = {opacity: opacityAnim}
-  const animate = () => {
-    Animated.timing(opacityAnim, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: true
-    }).start(() => {
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }).start()
-    })
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+  const shake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true }),
+    ]).start();
   }
 
   const handleChange = (field, value) => {
@@ -55,9 +49,20 @@ export const ForgetPassword = () => {
     }
 
     setErrors(newErrors)
-    animate()
+    shake()
     return Object.keys(newErrors).length === 0
   }
+
+  const handleNavigation = () => {
+    setErrors({
+      email: '',
+    })
+    setTimeout(() => {
+      navigation.goBack()
+    }, 300)
+  }
+
+
   return (
     <Screen withScroll translucent={true} bgColor={color.primary} style={styles.mainView()}>
       <View style={styles.topContainer()}>
@@ -67,6 +72,7 @@ export const ForgetPassword = () => {
         leftIcon={() => {
           return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
         }}
+        leftIconPress={handleNavigation}
       />
         <Text style={styles.mainTitleText()}>Forget Password</Text>
       </View>
@@ -74,7 +80,7 @@ export const ForgetPassword = () => {
         <Text style={styles.text()}>
         Please, enter your email address. You will receive a link to create a new password via email.
         </Text>
-        <View style={styles.inputView()}>
+        <Animated.View style={[styles.inputView(), { transform: [{ translateX: shakeAnim }] }]}>
         <InputField 
           error={errors.email}
           value={inputField.email}
@@ -91,11 +97,11 @@ export const ForgetPassword = () => {
           )}
         />
         {errors.email ? 
-          (<Animated.Text style={[styles.errorText(), opacityStyle]}>{errors.email}</Animated.Text>) 
+          (<Text style={styles.errorText()}>{errors.email}</Text>) 
           : (<Text style={styles.noError()}></Text>)
         }
-        </View>
-        <Button btnStyle={styles.buttonWithText()} title='SEND' disabled={false} onPress={handleSubmit} />
+        </Animated.View>
+        <Button activeOpacity={0.8} btnStyle={styles.buttonWithText()} title='SEND' disabled={false} onPress={handleSubmit} />
       </View>
       </Screen>
   )

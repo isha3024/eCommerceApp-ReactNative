@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { StatusBar, View, FlatList, TouchableOpacity } from 'react-native'
-import { Button, Header, PriceRange, Screen, Text } from '../../components'
+import React, { useCallback, useState } from 'react'
+import { StatusBar, View, TouchableOpacity } from 'react-native'
+import { Button, Header, Screen, Text } from '../../components'
 import { IcBackArrow, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
+import PriceRange from '../../components/priceRange'
 
 const colorsList = ['#020202', '#F6F6F6', '#B82222', '#BEA9A9', '#E2BB8D', '#151867'];
 
@@ -14,53 +15,51 @@ const sizeList = ['XS', 'S', 'M', "L", 'XL']
 const category = ['All', 'Women', 'Men', 'Boys', 'Girls']
 
 export const FilterScreen = () => {
-
-  const [selectColors, setSelectColors] = useState([]);
-  const [selectSize, setSelectSize] = useState([]);
-  const [selectCategory, setSelectCategory] = useState([]);
+  
+  const navigation = useNavigation();
+  const [selectColors, setSelectColors] = useState([colorsList[0], colorsList[4]]);
+  console.log('selectColors', selectColors);
+  const [selectSize, setSelectSize] = useState([sizeList[1], sizeList[2]]);
+  const [selectCategory, setSelectCategory] = useState([category[0]]);
+  const MIN_DEFAULT = 10;
+  const MAX_DEFAULT = 500;
+  const [minValue, setMinValue] = useState(MIN_DEFAULT);
+  const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
 
   const toggleColors = (color) => {
-    if(selectColors.includes(color)){
-      setSelectColors(selectColors.filter(col => col !== color));
-    }else {
-      setSelectColors([...selectColors, color]);
-    }
-  }
-  const toggleSizes = (size) => {
-    if(selectSize.includes(size)){
-      setSelectSize(selectSize.filter(s => s !== size));
-    }else {
-      setSelectSize([...selectSize, size]);
-    }
-  } 
-  const toggleCategory = (cat) => {
-    if(selectCategory.includes(cat)){
-      setSelectCategory(selectCategory.filter(c => c !== cat));
-    }else {
-      setSelectCategory([...selectCategory, cat]);
-    }
+    setSelectColors((prevColors) =>
+      prevColors.includes(color)
+        ? prevColors.filter(col => col !== color)
+        : [...prevColors, color]
+    );
   }
 
-  useEffect(() => {
-    if(selectColors.length === 0){
-      setSelectColors([colorsList[0], colorsList[4]])
-    }
-    if(selectSize.length === 0){
-      setSelectSize([sizeList[1], sizeList[2]])
-    }
-    if(selectCategory.length === 0){
-      setSelectCategory([category[0]])
-    }
-  })
+  const toggleSizes = (size) => {
+    setSelectSize((prevSizes) =>
+      prevSizes.includes(size)
+        ? prevSizes.filter(s => s !== size)
+        : [...prevSizes, size]
+    );
+  } 
+
+  const toggleCategory = (cat) => {
+    setSelectCategory((prevCategories) =>
+      prevCategories.includes(cat)
+        ? prevCategories.filter(c => c !== cat)
+        : [...prevCategories, cat]
+    );
+  } 
 
   const applyFilters = () => {
-    navigation.navigate('catalogeScreen');
+    setTimeout(() => {
+      navigation.navigate('catalogeScreen');
+    },300)
   }
  
   const discardFilters = () => {
-    setSelectColors(['']);
-    setSelectSize(['']);
-    setSelectCategory(['']);
+    setSelectColors([colorsList[0], colorsList[4]]);
+    setSelectSize([sizeList[1], sizeList[2]]);
+    setSelectCategory([category[0]]);
     setMinValue(MIN_DEFAULT);
     setMaxValue(MAX_DEFAULT);
     setTimeout(() => {
@@ -68,11 +67,12 @@ export const FilterScreen = () => {
     },300)
   }
 
-  const MIN_DEFAULT = 10;
-  const MAX_DEFAULT = 500;
-  const [minValue, setMinValue] = useState(MIN_DEFAULT);
-  const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
-  const navigation = useNavigation();
+  const handlePriceChange = useCallback((range) => {
+    setMinValue(range.min);
+    setMaxValue(range.max);
+  },[minValue, maxValue])
+  
+  
   return (
     <>
       <Screen bgColor={color.white} withScroll>
@@ -97,10 +97,7 @@ export const FilterScreen = () => {
                 max={MAX_DEFAULT}
                 steps={1}
                 sliderWidth={353}
-                onValueChange={(range) => {
-                  setMinValue(range.min);
-                  setMaxValue(range.max);
-                }}
+                onValueChange={handlePriceChange}
               />
             </View>
             </View>

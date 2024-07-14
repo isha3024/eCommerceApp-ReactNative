@@ -5,7 +5,6 @@ import * as styles from './styles'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import { color, IcChevronRight, IcClose, IcSearch, size } from '../../theme'
 import * as data from '../../json'
-import { BottomSheetFlatList, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { useNavigation } from '@react-navigation/native'
 
 export const CartScreen = () => {
@@ -13,13 +12,11 @@ export const CartScreen = () => {
   const navigation = useNavigation()
   const [orderedProducts, setOrderedProducts] = useState(data.orderedProducts);
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
-  // const [promoCodes, setPromoCodes] = useState(data.promoCards);
   const [showCartOptions, setShowCartOptions] = useState({});
   const [selectedPromoCode, setSelectedPromoCode] = useState({});
   const [appliedDiscount, setAppliedDiscount] = useState(false);
   const [promoCodeValue, setPromoCodeValue] = useState('');
   const [originalPromoCodes, setOriginalPromoCodes] = useState(data.promoCards);
-  // console.log('originalPromoCodes:', originalPromoCodes);
   const [filteredPromoCodes, setFilteredPromoCodes] = useState(data.promoCards);
   console.log('filteredPromoCodes: ',filteredPromoCodes);
   
@@ -45,7 +42,7 @@ export const CartScreen = () => {
         return {
           ...cart, 
           productQuantity: newProductQuantity,
-          productPrice: newProductPrice
+          productPrice: Math.floor(newProductPrice)
         }
       }
       return cart;
@@ -61,7 +58,7 @@ export const CartScreen = () => {
         return { 
           ...cart, 
           productQuantity:newProductQuantity,
-          productPrice: newProductPrice
+          productPrice:  Math.floor(newProductPrice)
         };
       }
       return cart;
@@ -85,7 +82,7 @@ export const CartScreen = () => {
         total += (product.productPrice);
       }
     })
-    return total;
+    return Math.floor(total);
   }
 
   const removeFromCart = (id) => {
