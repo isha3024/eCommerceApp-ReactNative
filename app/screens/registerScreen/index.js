@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Animated, Platform, TouchableOpacity, UIManager, View } from 'react-native'
+import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
-import { IcBackArrow, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
+import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
-import { Button, Header, InputField, Screen, Text, Title } from '../../components'
+import { Button, Header, InputField, Text } from '../../components'
 
 
 
@@ -14,19 +14,6 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 
 export const RegisterScreen = () => {
 
-  const [userData, setUserData] = useState(undefined);
-
-  const getUserData = async () => {
-    const URL = 'https://jsonplaceholder.typicode.com/posts/1'
-    let userDataResult = await fetch(URL);
-    userDataResult = await userDataResult.json();
-    setUserData(userDataResult)
-  }
-
-  useEffect(() => {
-    getUserData();
-  },[])
-
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
   const [inputField, setInputField] = useState({
@@ -34,6 +21,10 @@ export const RegisterScreen = () => {
     email: '',
     password: ''
   })
+  const [isNameValid, setIsNameValid] = useState(false)
+  const [isEmailValid, setIsEmailValid] = useState(false)
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
+  console.log('isNameValid: ', isNameValid)
 
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const shake = () => {
@@ -53,26 +44,40 @@ export const RegisterScreen = () => {
   };
 
   const validateForm = () => {
-    let newError = {};
+    let newErrors = {};
     if(!inputField.name){
-      newError.name = 'Name is required'
+      newErrors.name = 'Name is required'
+      setIsNameValid(false);
+    }else if(inputField.name.length < 2){
+      newErrors.name = 'Name length must be greater than 2 letter'
+      setIsNameValid(false);
+    }else {
+      setIsNameValid(true)
     }
 
     if(!inputField.email){
-      newError.email = 'Email is required'
-    }else if(EmailValidation(inputField.email)){
-      newError.email = 'Not a valid email address. Should be your@email.com'
+      newErrors.email = 'Email is required'
+      setIsEmailValid(false)
+    } else if(EmailValidation(inputField.email)){
+      newErrors.email = 'Not a valid email address. Should be your@email.com'
+      setIsEmailValid(false)
+    } else {
+      setIsEmailValid(true)
     }
 
     if(!inputField.password){
-      newError.password = 'Password is required'
+      newErrors.password = 'Password is required'
+      setIsPasswordValid(false)
     }else if(inputField.password.length < 8){
-      newError.password = 'Password length must be greater than 8'
+      newErrors.password = 'Password length must be greater than 8'
+      setIsPasswordValid(false)
+    }else {
+      setIsPasswordValid(true)
     }
 
-    setErrors(newError)
+    setErrors(newErrors)
     shake();
-    return Object.keys(newError).length === 0
+    return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = () => {
@@ -98,15 +103,16 @@ export const RegisterScreen = () => {
   }
 
   return (
-    <Screen withScroll translucent={true} bgColor={color.primary} style={styles.mainView()}>
+    <View style={styles.mainView()}>
       <View style={styles.topContainer()}>
-      <Header
-        headerStyle={styles.header()}
-        headerLeftIcon
-        leftIcon={() => {
-          return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
-        }}
-      />
+        <StatusBar translucent backgroundColor={color.primary} barStyle='dark-content'/>
+        <Header
+          headerStyle={styles.header()}
+          headerLeftIcon
+          leftIcon={() => {
+            return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
+          }}
+        />
         <Text style={styles.mainTitleText()}>Sign Up</Text>
       </View>
       <View style={styles.middleContainer()}>
@@ -122,9 +128,9 @@ export const RegisterScreen = () => {
             icon
             iconPlace='right'
             renderRightIcon={() => (
-              errors.name && (
-                <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-              )
+            errors.name 
+            ? (<IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />)
+            : isNameValid && (<IcCheck width={size.moderateScale(24)} height={size.moderateScale(24)} />) 
             )}
           />
           {errors.name ? 
@@ -143,9 +149,9 @@ export const RegisterScreen = () => {
           icon
           iconPlace='right'
           renderRightIcon={() => (
-            errors.email && (
-              <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            )
+            errors.email ? 
+            (<IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />) 
+            : isEmailValid && (<IcCheck width={size.moderateScale(24)} height={size.moderateScale(24)} />) 
           )}
         />
         {errors.email ? 
@@ -165,9 +171,9 @@ export const RegisterScreen = () => {
           icon
           iconPlace='right'
           renderRightIcon={() => (
-            errors.password && (
-              <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            )
+            errors.password 
+            ? (<IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />) 
+            : isPasswordValid && (<IcCheck width={size.moderateScale(24)} height={size.moderateScale(24)} />) 
           )}
         />
         {errors.password ? 
@@ -193,6 +199,6 @@ export const RegisterScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </Screen>
+    </View>
   )
 }

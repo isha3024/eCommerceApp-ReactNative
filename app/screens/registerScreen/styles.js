@@ -2,11 +2,13 @@ import { color, fontSize, fonts, size } from "../../theme";
 
 export const mainView = () => ({
   flex: 1,
-  backgroundColor: color.primary,
+  justifyContent: 'space-between',
+  backgroundColor: color.primary
 })
 
 export const topContainer = () => ({
-  gap: size.moderateScale(18)
+  gap: size.moderateScale(18),
+  backgroundColor: color.primary
 })
 
 export const header = () => ({
@@ -22,8 +24,7 @@ export const mainTitleText = () => ({
 
 export const middleContainer = () => ({
   padding: size.moderateScale(15),
-  marginTop: size.moderateScale(60),
-  gap: size.moderateScale(22)
+  gap: size.moderateScale(22),
 })
 
 export const inputView = () => ({
@@ -31,8 +32,8 @@ export const inputView = () => ({
 })
 
 export const bottomContainer = () => ({
-  marginTop: size.moderateScale(100),
   paddingHorizontal: size.moderateScale(10),
+  paddingVertical: size.moderateScale(23),
   alignItems: 'center',
   justifyContent: 'center',
 })

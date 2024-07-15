@@ -48,6 +48,7 @@ import { ShowMore } from './image/svgIcons/IcShowMore';
 import { FedEx } from './image/svgIcons/IcFedEx';
 import { USPS } from './image/svgIcons/IcUSPS';
 import { DHL } from './image/svgIcons/IcDHL';
+import { EyeOpen } from './image/svgIcons/IcEyeOpen';
 
 export const IcHome = props => <Home {...props} />;
 export const IcPhone = props => <Phone {...props} />;
@@ -96,3 +97,4 @@ export const IcShowMore = props => <ShowMore {...props} />;
 export const IcFedEx = props => <FedEx {...props} />;
 export const IcUSPS = props => <USPS {...props} />;
 export const IcDHL = props => <DHL {...props} />;
+export const IcEyeOpen = props => <EyeOpen {...props} />;

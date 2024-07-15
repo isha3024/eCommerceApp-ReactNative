@@ -69,11 +69,11 @@ const data = [
 ]
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 export const HomeScreen = () => {
-  const navigation = useNavigation();  
+  const navigation = useNavigation();
   const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
 
-   //showing the user selected size option
-   const [userSizeOption, setUserSizeOption] = useState(false);
+  //showing the user selected size option
+  const [userSizeOption, setUserSizeOption] = useState(false);
 
   const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -86,8 +86,8 @@ export const HomeScreen = () => {
   };
 
   const handleFavoriteBtn = () => {
-    if(userSizeOption){
-      navigation.navigate('favoriteStackNavigation', {selectedSize: userSizeOption, selectedId: selectedProductId})
+    if (userSizeOption) {
+      navigation.navigate('favoriteStackNavigation', { selectedSize: userSizeOption, selectedId: selectedProductId })
       setUserSizeOption(false)
     }
     setSizeBottomSheetVisible(false);
@@ -104,87 +104,87 @@ export const HomeScreen = () => {
 
   return (
     <Screen withScroll>
-      <StatusBar backgroundColor={color.transparent} translucent={true}/>
-    <View>
-    <View style={styles.topView()}>
-        <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
-        <LinearGradient 
-          colors={['rgba(0, 0, 0, .7)', 'rgba(255, 255, 255, 0)']} 
-          start={{x: 0, y: 1}} 
-          locations={[0.2, 0.5]}
-          end={{x: 0, y: 0}} style={styles.linearGradient()}>
-          <View style={styles.imageOverlayText()}>
-            <Title title='Fashion sale' style={styles.title()} />
-            <Button 
-              activeOpacity={0.9}
-              title='Check' 
-              btnStyle={styles.buttonTop()} 
-              onPress={() => navigation.navigate('shopStackNavigation')}
-            />
+      <StatusBar backgroundColor={color.transparent} translucent={true} />
+      <View>
+        <View style={styles.topView()}>
+          <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
+            <LinearGradient
+              colors={['rgba(0, 0, 0, .7)', 'rgba(255, 255, 255, 0)']}
+              start={{ x: 0, y: 1 }}
+              locations={[0.2, 0.5]}
+              end={{ x: 0, y: 0 }} style={styles.linearGradient()}>
+              <View style={styles.imageOverlayText()}>
+                <Title title='Fashion sale' style={styles.title()} />
+                <Button
+                  activeOpacity={0.9}
+                  title='Check'
+                  btnStyle={styles.buttonTop()}
+                  onPress={() => navigation.navigate('shopStackNavigation')}
+                />
+              </View>
+            </LinearGradient>
+          </ImageBackground>
+        </View>
+        <View style={styles.bottomTabView()}>
+          <View style={styles.productListHorizontalTop()}>
+            <View>
+              <Title title='New' />
+              <Text style={styles.textLight()}>You've never seen it before!</Text>
+            </View>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('shopStackNavigation')}>
+              <Text style={styles.link()}>View all</Text>
+            </TouchableOpacity>
           </View>
-        </LinearGradient>    
-        </ImageBackground>
-      </View>
-      <View style={styles.bottomTabView()}>
-        <View style={styles.productListHorizontalTop()}>
-        <View>
-          <Title title='New' />
-          <Text style={styles.textLight()}>You've never seen it before!</Text>
+          <FlatList
+            horizontal
+            contentContainerStyle={{ paddingBottom: size.moderateScale(80) }}
+            data={data}
+            renderItem={(item) => {
+              return (
+                <ProductCardMain
+                  onProductPress={() => {
+                    setSelectedProductId(item.id);
+                    setSizeBottomSheetVisible(true);
+                  }}
+                  customProductStyle={styles.productCardHome()}
+                  productImage={item.item.images}
+                  brandName={item.item.brand}
+                  productTitle={item.item.name}
+                  originalPrice={item.item?.originalPrice}
+                  sellingPrice={item.item?.sellingPrice}
+                  ratings={item.item.rating}
+                  ratingsCounts={item.item.rating_count}
+                  newProduct={item.item?.isProductNew}
+                />
+              )
+            }}
+            keyExtractor={(item, index) => item + index}
+          />
         </View>
-        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('shopStackNavigation')}>
-            <Text style={styles.link()}>View all</Text>
+      </View>
+      <BottomSheetContainer
+        isVisible={isSizeBottomSheetVisible}
+        onClose={handleClosePressSizeSheet}
+        customHeight={'43%'}>
+        <Text style={styles.titleBottomSheet()}>Select Size</Text>
+        <View style={styles.sizeContainer()}>
+          {
+            sizes.map((size, index) => {
+              const isSelected = size === userSizeOption;
+              return (
+                <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={[styles.sizeItem(), isSelected && styles.sizeItemActive()]} key={index}>
+                  <Text style={[styles.sizeText(), isSelected && styles.sizeTextActive()]}>{size}</Text>
+                </TouchableOpacity>
+              )
+            })
+          }
+        </View>
+        <TouchableOpacity style={styles.sizeInfo()}>
+          <Text style={styles.sizeInfoText()}>Size info</Text>
+          <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        </View>
-        <FlatList 
-          horizontal
-          contentContainerStyle={{paddingBottom: size.moderateScale(80)}}
-          data={data}
-          renderItem={(item) => {
-            return (
-              <ProductCardMain 
-                onProductPress={() => {
-                  setSelectedProductId(item.id);
-                  setSizeBottomSheetVisible(true);
-                }}
-                customProductStyle={styles.productCardHome()}
-                productImage={item.item.images}
-                brandName={item.item.brand}
-                productTitle={item.item.name}
-                originalPrice={item.item?.originalPrice}
-                sellingPrice={item.item?.sellingPrice} 
-                ratings={item.item.rating}
-                ratingsCounts={item.item.rating_count}
-                newProduct={item.item?.isProductNew}
-              />
-            )
-          }}
-          keyExtractor={(item, index) => item + index}
-        />
-      </View>
-    </View>   
-    <BottomSheetContainer
-      isVisible={isSizeBottomSheetVisible}
-      onClose={handleClosePressSizeSheet}
-      customHeight={'43%'}>
-      <Text style={styles.titleBottomSheet()}>Select Size</Text>
-      <View style={styles.sizeContainer()}>
-        {
-          sizes.map((size, index) => {
-            const isSelected = size === userSizeOption;
-            return (
-              <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={[styles.sizeItem(), isSelected && styles.sizeItemActive()]} key={index}>
-                <Text style={[styles.sizeText(), isSelected && styles.sizeTextActive()]}>{size}</Text>
-              </TouchableOpacity>
-            )
-          })
-        }
-      </View>
-      <TouchableOpacity style={styles.sizeInfo()}>
-        <Text style={styles.sizeInfoText()}>Size info</Text>
-        <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
-      </TouchableOpacity>
-      <Button title='ADD TO FAVORITE' onPress={handleFavoriteBtn} btnStyle={styles.button()} />
-    </BottomSheetContainer>
+        <Button title='ADD TO FAVORITE' onPress={handleFavoriteBtn} btnStyle={styles.button()} />
+      </BottomSheetContainer>
     </Screen>
   )
 }

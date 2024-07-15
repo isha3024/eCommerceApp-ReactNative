@@ -14,7 +14,7 @@ export const Check = props => {
       {...props}>
       <Path
         d="M5.59 10.58L1.42 6.41 0 7.82l5.59 5.59 12-12L16.18 0 5.59 10.58z"
-        fill={props.fill ?? color.primary}
+        fill={props.fill ?? color.success}
       />
     </Svg>
   );

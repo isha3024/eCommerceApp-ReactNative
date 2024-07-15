@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Animated, View } from 'react-native'
 import * as styles from './styles'
-import { IcBackArrow, IcClose, color, size } from '../../theme'
+import { IcBackArrow, IcCheck, IcClose, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 import { Button, Header, InputField, Screen, Text, Title } from '../../components'
 import { EmailValidation } from '../../utils/functions'
@@ -9,6 +9,7 @@ import { EmailValidation } from '../../utils/functions'
 export const ForgetPassword = () => {
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
+  const [isEmailValid, setIsEmailValid] = useState(false)
   const [inputField, setInputField] = useState({
     email: '',
   })
@@ -32,9 +33,11 @@ export const ForgetPassword = () => {
 
   const handleSubmit = () => {
     if(handleValidations()){
-      setErrors({
-        email: ''
-      })
+      if(errors){ 
+        setErrors({
+          email: ''
+        })
+      }
       navigation.navigate('Login')
     }
   }
@@ -43,9 +46,13 @@ export const ForgetPassword = () => {
     let newErrors = {};
     if(!inputField.email){
       newErrors.email = 'Email is required'
-    }
-    else if(EmailValidation(inputField.email)){
+      setIsEmailValid(false)
+    }else if(EmailValidation(inputField.email)){
       newErrors.email = 'Not a valid email address. Should be your@email.com'
+      setIsEmailValid(false)
+    }
+    else {
+      setIsEmailValid(true)
     }
 
     setErrors(newErrors)
@@ -91,9 +98,9 @@ export const ForgetPassword = () => {
           icon
           iconPlace='right'
           renderRightIcon={() => (
-            errors.email ? (
-              <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            ): null
+            errors.email 
+            ? (<IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />)
+            : isEmailValid && <IcCheck width={size.moderateScale(24)} height={size.moderateScale(24)} />
           )}
         />
         {errors.email ? 
@@ -101,7 +108,7 @@ export const ForgetPassword = () => {
           : (<Text style={styles.noError()}></Text>)
         }
         </Animated.View>
-        <Button activeOpacity={0.8} btnStyle={styles.buttonWithText()} title='SEND' disabled={false} onPress={handleSubmit} />
+        <Button activeOpacity={0.8} btnStyle={styles.buttonWithText()} title='SEND' onPress={handleSubmit} />
       </View>
       </Screen>
   )

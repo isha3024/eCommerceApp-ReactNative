@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react'
-import { Animated, Platform, TouchableOpacity, UIManager, View } from 'react-native'
+import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
-import { IcBackArrow, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
+import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
-import { Button, Header, InputField, Screen, Text, Title } from '../../components'
+import { Button, Header, InputField, Text } from '../../components'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -13,7 +13,9 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
-  const [errors, setErrors] = useState({}); 
+  const [errors, setErrors] = useState({});
+  const [isEmailValid, setIsEmailValid] = useState(false)
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
   const [inputField, setInputField] = useState({
     email: '',
     password: ''
@@ -29,7 +31,7 @@ export const LoginScreen = () => {
     ]).start();
   }
   
-  const handleChange = (field, value) => {
+  const handleChange = (value, field) => {
     setInputField({
       ...inputField,
       [field]: value
@@ -48,17 +50,25 @@ export const LoginScreen = () => {
 
   const handleValidations = () => {
     let newErrors = {};
+      
     if(!inputField.email){
       newErrors.email = 'Email is required'
+      setIsEmailValid(false)
     } else if(EmailValidation(inputField.email)){
       newErrors.email = 'Not a valid email address. Should be your@email.com'
-      console.warn(inputField.email)
+      setIsEmailValid(false)
+    } else {
+      setIsEmailValid(true)
     }
 
     if(!inputField.password){
       newErrors.password = 'Password is required'
+      setIsPasswordValid(false)
     }else if(inputField.password.length < 8){
       newErrors.password = 'Password length must be greater than 8'
+      setIsPasswordValid(false)
+    }else {
+      setIsPasswordValid(true)
     }
 
     setErrors(newErrors)
@@ -77,55 +87,56 @@ export const LoginScreen = () => {
   }
 
   return (
-    <Screen withScroll bgColor={color.primary} translucent={true} style={styles.mainView()}>
+    <View style={styles.mainView()}>
       <View style={styles.topContainer()}>
-      <Header
-        headerStyle={styles.header()}
-        headerLeftIcon
-        leftIcon={() => {
-          return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
-        }}
-        leftIconPress={handleNavigation}
-      />
+        <StatusBar translucent backgroundColor={color.primary} barStyle={'dark-content'}/>
+        <Header
+          headerStyle={styles.header()}
+          headerLeftIcon
+          leftIcon={() => {
+            return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
+          }}
+          leftIconPress={handleNavigation}
+        />
         <Text style={styles.mainTitleText()}>Login</Text>
       </View>
       <View style={styles.middleContainer()}>
-        <Animated.View style={[styles.inputView(), errors.email && { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View style={[styles.inputView(), errors.email &&  { transform: [{ translateX: shakeAnim }] }]}>
         <InputField 
           error={errors.email}
-          value={inputField.email}
+          value={inputField?.email}
           placeholder={'Email'}
           label={'Email'}
-          onChangeText={(val) => handleChange('email', val)}
+          onChangeText={(val) => handleChange(val, 'email')}
           keyboardType='email-address'
           icon
           iconPlace='right'
           renderRightIcon={() => (
-            errors.email ? (
-              <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            ): null
+            errors.email ? 
+            (<IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />) 
+            : isEmailValid && (<IcCheck width={size.moderateScale(24)} height={size.moderateScale(24)} />) 
           )}
         />
         {errors.email ? 
-          (<Text style={styles.errorText()}>{errors.email}</Text>) 
-          : (<Text style={styles.noError()}></Text>)
+        (<Text style={styles.errorText()}>{errors.email}</Text>) 
+        : (<Text style={styles.noError()}></Text>)
         }
         </Animated.View>
         <Animated.View style={[styles.inputView(), errors.password && { transform: [{ translateX: shakeAnim }] }]}>
         <InputField
           error={errors.password}
-          value={inputField.password}
+          value={inputField?.password}
           placeholder={'Password'}
           label={'Password'}
-          onChangeText={(val) => handleChange('password', val)}
-          keyboardType='default'
           secureTextEntry={true}
+          onChangeText={(val) => handleChange(val, 'password')}
+          keyboardType='default'
           icon
           iconPlace='right'
           renderRightIcon={() => (
-            errors.password ? (
-              <IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />
-            ): null
+            errors.password 
+            ? (<IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />)
+            : isPasswordValid && (<IcCheck width={size.moderateScale(24)} height={size.moderateScale(24)} fill={color.success} />)
           )}
         />
         {errors.password ? 
@@ -150,6 +161,6 @@ export const LoginScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </Screen>
+    </View>
   )
 }

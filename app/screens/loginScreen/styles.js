@@ -3,6 +3,7 @@ import { color, fontSize, fonts, size } from "../../theme";
 export const mainView = () => ({
   flex: 1,
   backgroundColor: color.primary,
+  justifyContent: "space-between",
 })
 
 export const topContainer = () => ({
@@ -30,8 +31,8 @@ export const inputView = () => ({
 })
 
 export const bottomContainer = () => ({
-  marginTop: size.moderateScale(100),
   paddingHorizontal: size.moderateScale(10),
+  paddingVertical: size.moderateScale(23),
   alignItems: 'center',
   justifyContent: 'center',
 })
@@ -68,7 +69,7 @@ export const noError = () => ({
 })
 
 export const buttonWithText = () => ({
-  marginTop: size.moderateScale(95)
+  marginTop: size.moderateScale(70)
 })
 
 export const buttonContainer = () => ({
