@@ -77,8 +77,8 @@ export const CatalogeScreen = () => {
   const [isSheetVisible, setSheetVisible] = useState(false);
   
   //sort option selected useState
-  const [isSelected, setIsSelected] = useState(sortProductType[4]);
-  const [isSortOptionSelected, setIsSortOptionSelected] = useState(false)
+  const [isSelected, setIsSelected] = useState(sortProductType[3]);
+  const [isSortOptionSelected, setIsSortOptionSelected] = useState(sortProductType[3])
 
   //toggling the product in Grid/List
   const [showGrid, setShowGrid] = useState(true);
@@ -176,9 +176,10 @@ export const CatalogeScreen = () => {
           showRatings={true}
           ratings={item?.ratings}
           ratingsCounts={item?.rating_count}
+          showDiscount={showGrid ? false : true}
           originalPrice={item?.originalPrice}
           sellingPrice={item?.sellingPrice}
-          newProduct={item?.isProductNew}
+          newProduct={showGrid ? false : item?.isProductNew}
           productImage={item?.images}
           topRightIcon={false}
           addToFavoriteIcon={true}
@@ -269,22 +270,18 @@ export const CatalogeScreen = () => {
           onClose={handleClosePress}
           customHeight={'45%'}>
           <Text style={styles.titleBottomSheet()}>Sort by</Text>
+          <View style={styles.mainSortOptionView()}>
           {
-            sortProductType.map((item, index) => {
-              console.log('item::', item)
-              const isSelected = item === isSortOptionSelected;
-              console.log('isSelected: ', isSelected)
+            sortProductType.map((sort) => {
+              const isSelected = sort === isSortOptionSelected;
               return (
-                <TouchableOpacity
-                  key={index}
-                  activeOpacity={0.7}
-                  onPress={() => handleSortOptionChange(item)}
-                  style={styles.sortListItem(isSelected)}>
-                  <Text style={styles.sortItemText(isSelected)}>{item.name}</Text>
+                <TouchableOpacity activeOpacity={0.8} onPress={() => handleSortOptionChange(sort)} style={styles.sortOptionView(isSelected)} key={sort.id}>
+                  <Text style={styles.sortOptionText(isSelected)}>{sort.name}</Text>
                 </TouchableOpacity>
               )
             })
           }
+          </View>    
         </BottomSheetContainer>
         <BottomSheetContainer
           isVisible={isSizeSheetVisible}

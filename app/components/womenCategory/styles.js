@@ -35,7 +35,7 @@ export const selectedCategoriesList = () => ({
 
 export const flatList = () => ({
   flexGrow: 1, 
-  paddingBottom: size.moderateScale(100), 
+  paddingBottom: '32%', 
 })
 
 export const categoryItem = () => ({
@@ -45,7 +45,6 @@ export const categoryItem = () => ({
   height: size.moderateScale(100),
   borderRadius: size.moderateScale(8),
   backgroundColor: color.white,
-  // elevation: size.moderateScale(5),
   zIndex: 5
 })
 

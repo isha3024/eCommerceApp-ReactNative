@@ -117,17 +117,20 @@ export const bottomSheetStyle = () => ({
   backgroundColor: color.primary
 })
 
-export const sortListItem = (isSelected) => ({
-  flex: 1,
-  paddingVertical: size.moderateScale(16),
+export const mainSortOptionView = () => ({
+  marginVertical: size.moderateScale(10)
+})
+
+export const sortOptionView = (isSelected) => ({
+  paddingVertical: '3.5%',
   paddingHorizontal: size.moderateScale(16),
   backgroundColor: isSelected ? color.secondary : color.primary
 })
 
-export const sortItemText = (isSelected) => ({
+export const sortOptionText = (isSelected) => ({
   color: isSelected ? color.white : color.mostlyBlack,
   fontSize: fontSize.littleMedium,
-  fontFamily: isSelected ? fonts.metropolisSemiBold : fonts.metropolisRegular
+  fontFamily: isSelected ? fonts.metropolisSemiBold : fonts.metropolisRegular,
 })
 
 export const sizeItem = () => ({

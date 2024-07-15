@@ -16,6 +16,7 @@ export const ProductCardMain = ({
   customProductImageStyle,
   onProductPress,
   activeOpacity,
+  showDiscount,
   originalPrice,
   sellingPrice,
   ratings,
@@ -58,9 +59,9 @@ export const ProductCardMain = ({
       <Pressable style={[styles.mainProductCardHorizontal(),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
         <View style={styles.imageViewHorizontal()}>
           <Image source={productImage} style={styles.imageHorizontal()} />
-          <View style={[styles.badge(newProduct), sellingPrice && styles.discountBadge()]}>
+          <View style={[styles.badge(newProduct), sellingPrice && showDiscount && styles.discountBadge()]}>
             {
-              sellingPrice ? 
+              sellingPrice && showDiscount ? 
               (
                 <Text style={styles.badgeText()}>-{discount}%</Text>
               )

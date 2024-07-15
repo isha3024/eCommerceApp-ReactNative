@@ -126,6 +126,7 @@ export const HomeScreen = () => {
   )
 
   const handleClosePressSizeSheet = () => {
+    setUserSizeOption(false)
     setSizeBottomSheetVisible(false);
   }
 
