@@ -5,6 +5,7 @@ import * as styles from './styles'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 
@@ -102,7 +103,7 @@ export const RegisterScreen = () => {
     }, 300)
   }
 
-  return (
+  return ( 
     <View style={styles.mainView()}>
       <View style={styles.topContainer()}>
         <StatusBar translucent backgroundColor={color.primary} barStyle='dark-content'/>

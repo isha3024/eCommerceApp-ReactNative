@@ -1,5 +1,8 @@
 import {color, fontSize, fonts, size} from '../../theme';
 
+export const mainView = () => ({
+  backgroundColor: color.primary,
+});
 export const topView = () => ({});
 export const imageBg = () => ({
   width: size.deviceWidth,
@@ -60,6 +63,11 @@ export const productCardHome = () => ({
   marginRight: size.moderateScale(16)
 });
 
+export const flotingBtnStyle = () => ({
+  top: size.moderateScale(163),
+  right: size.moderateScale(16)
+});
+
 export const titleBottomSheet = () => ({
   fontSize: fontSize.middleMedium,
   fontFamily: fonts.metropolisSemiBold,
@@ -72,14 +80,14 @@ export const sizeContainer = () => ({
   marginHorizontal: size.moderateScale(16),
   flexDirection: 'row',
   flexWrap: 'wrap',
-  gap: size.moderateScale(22),
+  columnGap: size.moderateScale(10),
+  rowGap: size.moderateScale(10),
   marginTop: size.moderateScale(22)
 })
 
 export const sizeItem = () => ({
-  width: size.moderateScale(100),
+  width: '30%',
   height: size.moderateScale(40),
-  flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: color.white,

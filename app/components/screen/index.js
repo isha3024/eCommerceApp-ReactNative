@@ -62,7 +62,6 @@ export const Screen = props => {
             barStyle={bgColor ? 'dark-content' : 'light-content'}
           />
           {loading && <Loader />}
-
           <View style={styles.container(style)}>{children}</View>
         </SafeAreaView>
       </TouchableWithoutFeedback>

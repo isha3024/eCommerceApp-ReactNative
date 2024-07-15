@@ -4,7 +4,7 @@ export const mainView = () => ({
   zIndex: 100000,
   alignSelf: 'center',
   justifyContent: 'center',
-  backgroundColor: color.customBlack(0.2),
+  backgroundColor: color.primary,
   height: size.deviceHeight,
   width: size.deviceWidth * 2,
   position: 'absolute',
