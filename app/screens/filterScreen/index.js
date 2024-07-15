@@ -1,11 +1,10 @@
 import React, { useCallback, useState } from 'react'
 import { StatusBar, View, TouchableOpacity } from 'react-native'
-import { Button, Header, Screen, Text } from '../../components'
+import { Button, Header, PriceRange, Screen, Text } from '../../components'
 import { IcBackArrow, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
-import PriceRange from '../../components/priceRange'
 
 const colorsList = ['#020202', '#F6F6F6', '#B82222', '#BEA9A9', '#E2BB8D', '#151867'];
 

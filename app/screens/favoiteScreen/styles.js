@@ -84,7 +84,7 @@ export const bottomContainer = (showGrid) => ({
 })
 
 export const productCardGridItem = () => ({
-  width: size.moderateScale(164),
+  width: size.deviceWidth / 2.35,
   marginHorizontal: size.moderateScale(8),
   marginBottom: size.moderateScale(26)
 })
@@ -95,8 +95,8 @@ export const productCardListItem = () => ({
 })
 
 export const flotingButton = () => ({
-  right: size.moderateScale(-1),
-  bottom: size.moderateScale(-15),
+  right: '4%',
+  top: '55%',
 })
 
 export const flotingButtonList = () => ({
@@ -105,8 +105,13 @@ export const flotingButtonList = () => ({
 })
 
 export const closeIconList = () => ({
-  top: 0,
-  right: size.moderateScale(18),
+  top: '1%',
+  right: '5%',
+})
+
+export const closeIconGrid = () => ({
+  top: '0%',
+  right: '5%',
 })
 
 export const titleBottomSheet = () => ({
@@ -115,6 +120,22 @@ export const titleBottomSheet = () => ({
   color: color.mostlyBlack,
   textAlign: 'center',
   marginBottom: size.moderateScale(10),
+})
+
+export const mainSortOptionView = () => ({
+  marginVertical: size.moderateScale(10)
+})
+
+export const sortOptionView = (isSelected) => ({
+  paddingVertical: '3.5%',
+  paddingHorizontal: size.moderateScale(16),
+  backgroundColor: isSelected ? color.secondary : color.primary
+})
+
+export const sortOptionText = (isSelected) => ({
+  color: isSelected ? color.white : color.mostlyBlack,
+  fontSize: fontSize.littleMedium,
+  fontFamily: isSelected ? fonts.metropolisSemiBold : fonts.metropolisRegular,
 })
 
 export const bottomSheetStyle = () => ({

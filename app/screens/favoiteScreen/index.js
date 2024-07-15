@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react' 
 import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation } from 'react-native'
-import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, SortBy, Text } from '../../components'
-import { IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
+import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
+import { IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color } from '../../theme'
 
 import * as styles from './styles'
 import * as data from '../../json'
@@ -88,8 +88,8 @@ export const FavoriteScreen = ({route}) => {
   const [isSheetVisible, setSheetVisible] = useState(false);
 
   //sort option selected useState
-  const [isSelected, setIsSelected] = useState(sortProductType[4]);
-  const [isSortOptionSelected, setIsSortOptionSelected] = useState(false)
+  const [isSelected, setIsSelected] = useState(sortProductType[3]);
+  const [isSortOptionSelected, setIsSortOptionSelected] = useState(sortProductType[3])
 
   //toggling the product in Grid/List
   const [showGrid, setShowGrid] = useState(true);
@@ -188,10 +188,11 @@ export const FavoriteScreen = ({route}) => {
           showRatings={true}
           showRatingHorizontal={true}
           ratings={item?.ratings}
+          showDiscount={showGrid ? false : true}
           ratingsCounts={item?.rating_count}
           originalPrice={item?.originalPrice}
           sellingPrice={item?.sellingPrice}
-          newProduct={item?.isProductNew}
+          newProduct={showGrid ? false : item?.isProductNew}
           isProductSold={item?.isProductSold}
           productImage={item?.images}
           topRightIcon={true}
@@ -200,7 +201,7 @@ export const FavoriteScreen = ({route}) => {
           showTopRightIcon={true}
           addToCartBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
           customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
-          closeIconStyle={showGrid ? styles.closeIconList() : ''}
+          closeIconStyle={showGrid ? styles.closeIconList() : styles.closeIconGrid()}
           removeFromListIconPress={() => handleProductRemove(item.id)}
         />
       )
@@ -254,6 +255,7 @@ export const FavoriteScreen = ({route}) => {
           {
             showGrid ? (
               <FlatList
+                showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 80 }}
                 data={showProductList}
                 renderItem={renderProducts}
@@ -262,6 +264,7 @@ export const FavoriteScreen = ({route}) => {
               />
             ) : (
               <FlatList
+                showsVerticalScrollIndicator={false}
                 numColumns={2}
                 contentContainerStyle={{ paddingBottom: 80 }}
                 data={showProductList}
@@ -278,21 +281,18 @@ export const FavoriteScreen = ({route}) => {
           customHeight={'45%'}
           onPress={handleClosePress}>
           <Text style={styles.titleBottomSheet()}>Sort by</Text>
+          <View style={styles.mainSortOptionView()}>
           {
-            sortProductType.map((item, index) => {
-              const isSelected = item === isSortOptionSelected;
-              console.log('isSelected: ', isSelected)
+            sortProductType.map((sort) => {
+              const isSelected = sort === isSortOptionSelected;
               return (
-                <TouchableOpacity
-                  key={index}
-                  activeOpacity={0.7}
-                  onPress={() => handleSortOptionChange(item)}
-                  style={styles.sortListItem(isSelected)}>
-                  <Text style={styles.sortItemText(isSelected)}>{item.name}</Text>
+                <TouchableOpacity activeOpacity={0.8} onPress={() => handleSortOptionChange(sort)} style={styles.sortOptionView(isSelected)} key={sort.id}>
+                  <Text style={styles.sortOptionText(isSelected)}>{sort.name}</Text>
                 </TouchableOpacity>
               )
             })
           }
+          </View> 
         </BottomSheetContainer>
       </Screen>
   )

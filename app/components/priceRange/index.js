@@ -4,7 +4,7 @@ import * as styles from './styles';
 import Animated, { useAnimatedStyle, useSharedValue, useAnimatedProps, runOnJS } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-const PriceRange = ({ min, max, steps, onValueChange, sliderWidth }) => {
+export const PriceRange = ({ min, max, steps, onValueChange, sliderWidth }) => {
   const position = useSharedValue(0);
   const positionTwo = useSharedValue(sliderWidth);
   const context = useSharedValue(0);
@@ -113,5 +113,3 @@ const PriceRange = ({ min, max, steps, onValueChange, sliderWidth }) => {
     </View>
   );
 };
-
-export default memo(PriceRange);

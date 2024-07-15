@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -25,7 +23,6 @@ export const RegisterScreen = () => {
   const [isNameValid, setIsNameValid] = useState(false)
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false)
-  console.log('isNameValid: ', isNameValid)
 
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const shake = () => {

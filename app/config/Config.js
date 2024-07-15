@@ -1,8 +1,7 @@
-// import {API_URL, ONE_SIGNAL_APP_ID, ONE_SIGNAL_API_KEY} from '@env';
-// console.log('🚀 ~ API_URL:', API_URL);
+// import {API_NAME} from '@env';
+// console.log('🚀 ~ API_NAME:', API_NAME);
+import { API_NAME } from '@env';
 
 module.exports = {
-  API_URL: API_URL,
-  ONE_SIGNAL_APP_ID: ONE_SIGNAL_APP_ID,
-  ONE_SIGNAL_API_KEY: ONE_SIGNAL_API_KEY,
+  API_NAME: API_NAME
 };

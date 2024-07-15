@@ -237,7 +237,7 @@ export const ProductCardMain = ({
         </TouchableOpacity>
         {
           topRightIcon && (
-            <TouchableOpacity style={styles.closeIcon()}>
+            <TouchableOpacity style={[styles.closeIcon(), closeIconStyle]}>
               <IcClose width={size.moderateScale(15)} height={size.moderateScale(15)} fill={color.darkGray} />
             </TouchableOpacity>
           )
