@@ -88,7 +88,8 @@ export const FavoriteScreen = ({route}) => {
   const [isSheetVisible, setSheetVisible] = useState(false);
 
   //sort option selected useState
-  const [isSelected, setIsSelected] = useState(null);
+  const [isSelected, setIsSelected] = useState(sortProductType[4]);
+  const [isSortOptionSelected, setIsSortOptionSelected] = useState(false)
 
   //toggling the product in Grid/List
   const [showGrid, setShowGrid] = useState(true);
@@ -100,11 +101,11 @@ export const FavoriteScreen = ({route}) => {
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   //on screen load sort product based on price low to high ---- not working
-  useEffect(() => {
-    const preSelectedSortItem = sortProductType.find(item => item.name === 'Price: lowest to high');
-    setIsSelected(preSelectedSortItem);
-    sortProducts(preSelectedSortItem);
-  }, []);
+  // useEffect(() => {
+  //   const preSelectedSortItem = sortProductType.find(item => item.name === 'Price: lowest to high');
+  //   setIsSelected(preSelectedSortItem);
+  //   sortProducts(preSelectedSortItem);
+  // }, []);
 
   useEffect(() => {
     setShowProductList(products)
@@ -127,6 +128,8 @@ export const FavoriteScreen = ({route}) => {
     let sortedList = [...products];
     // console.log('list: ', sortedList);
     switch (sortOption.id) {
+      case 3: 
+        sortedList.sort((a, b) => a.ratings - b.ratings);
       case 4:
         sortedList.sort((a, b) => a.originalPrice - b.originalPrice);
         break;
@@ -142,8 +145,11 @@ export const FavoriteScreen = ({route}) => {
   //handling the sort option selected but not working as expected
   const handleSortOptionChange = (sortOption) => {
     setIsSelected(sortOption);
-    setSheetVisible(false);
+    setIsSortOptionSelected(sortOption);
     sortProducts(sortOption);
+    setTimeout(() => {
+      setSheetVisible(false);
+    }, 300)
   }
 
   //rendering the sort options using the renderItem function in FlatLists
@@ -272,11 +278,21 @@ export const FavoriteScreen = ({route}) => {
           customHeight={'45%'}
           onPress={handleClosePress}>
           <Text style={styles.titleBottomSheet()}>Sort by</Text>
-          <FlatList
-            data={sortProductType}
-            renderItem={renderSortProductTypes}
-            keyExtractor={(item) => item.id}
-          />
+          {
+            sortProductType.map((item, index) => {
+              const isSelected = item === isSortOptionSelected;
+              console.log('isSelected: ', isSelected)
+              return (
+                <TouchableOpacity
+                  key={index}
+                  activeOpacity={0.7}
+                  onPress={() => handleSortOptionChange(item)}
+                  style={styles.sortListItem(isSelected)}>
+                  <Text style={styles.sortItemText(isSelected)}>{item.name}</Text>
+                </TouchableOpacity>
+              )
+            })
+          }
         </BottomSheetContainer>
       </Screen>
   )

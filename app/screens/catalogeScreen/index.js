@@ -133,7 +133,7 @@ export const CatalogeScreen = () => {
     sortProducts(sortOption);
     setTimeout(() => {
       setSheetVisible(false);
-    }, 3000)
+    }, 300)
   }
 
   //selecting the user selected size option and when the user selected the size then only navigate to mainProductScreen
