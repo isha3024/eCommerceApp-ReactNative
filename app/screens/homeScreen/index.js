@@ -244,11 +244,11 @@ export const HomeScreen = () => {
             })
           }
         </View>
-        <TouchableOpacity style={styles.sizeInfo()}>
+        <TouchableOpacity style={styles.sizeInfo()} activeOpacity={0.6}>
           <Text style={styles.sizeInfoText()}>Size info</Text>
           <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        <Button title='ADD TO FAVORITE' onPress={handleFavoriteBtn} btnStyle={styles.button()} />
+        <Button activeOpacity={0.8} title='ADD TO FAVORITE' onPress={handleFavoriteBtn} btnStyle={styles.button()} />
       </BottomSheetContainer>
     </Screen>
   )

@@ -3,9 +3,13 @@ import { color, fontSize, fonts, size } from "../../theme";
 export const header = () => ({
   backgroundColor: color.white,
   elevation: size.moderateScale(10),
-  paddingHorizontal: size.moderateScale(14)
+  paddingHorizontal: size.moderateScale(14),
+  zIndex: size.moderateScale(1)
 })
 
+export const mainScrollView = () => ({
+  paddingBottom: size.moderateScale(100)
+})
 export const mainView = () => ({
   
 })
@@ -30,7 +34,7 @@ export const innerFilterItem = () => ({
   alignItem: 'center',
   flexWrap: 'wrap',
   gap: size.moderateScale(15),
-  elevation: size.moderateScale(2)
+  elevation: size.moderateScale(2),
 })
 
 export const categoryFilterItem = () => ({
@@ -45,8 +49,8 @@ export const categoryFilterItem = () => ({
 })
 
 export const colorItem = () => ({
-  width: size.moderateScale(44),
-  height: size.moderateScale(44),
+  width: size.moderateScale(40),
+  height: size.moderateScale(40),
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: size.moderateScale(50),
@@ -61,8 +65,8 @@ export const colorItemActive = () => ({
 export const colors = (colorBg) => ({
   position: 'absolute',
   backgroundColor: colorBg ? colorBg : color.white,
-  width: '85%',
-  height: '85%',
+  width: '100%',
+  height: '100%',
   borderRadius: size.moderateScale(50)
 })
 
@@ -96,7 +100,7 @@ export const activeSizes = () => ({
 })
 
 export const categoryItem = () => ({
-  width: size.moderateScale(100),
+  width: '30%',
   height: size.moderateScale(40),
   flexDirection: 'row',
   alignItems: 'center',

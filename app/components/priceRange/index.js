@@ -1,115 +1,64 @@
-import React, { memo } from 'react';
-import { TextInput, View } from 'react-native';
-import * as styles from './styles';
-import Animated, { useAnimatedStyle, useSharedValue, useAnimatedProps, runOnJS } from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import React, { useCallback, useState } from "react"
+import { View, Text, StyleSheet } from "react-native"
 
-export const PriceRange = ({ min, max, steps, onValueChange, sliderWidth }) => {
-  const position = useSharedValue(0);
-  const positionTwo = useSharedValue(sliderWidth);
-  const context = useSharedValue(0);
-  const contextTwo = useSharedValue(0);
+import Thumb from "./Thumb"
+import Rail from "./Rail"
+import RailSelected from "./RailSelected"
+import RnRangeSlider from "rn-range-slider"
+import { color, fonts, fontSize } from "../../theme"
 
-  const pan = Gesture.Pan()
-    .onBegin(() => {
-      context.value = position.value;
-    })
-    .onUpdate(e => {
-      if (context.value + e.translationX < 0) {
-        position.value = 0;
-      } else if (context.value + e.translationX > positionTwo.value) {
-        position.value = positionTwo.value;
-      } else {
-        position.value = context.value + e.translationX;
-      }
-    })
-    .onEnd(() => {
-      runOnJS(onValueChange)({
-        min: min + Math.floor(position.value / (sliderWidth / ((max - min) / steps))) * steps,
-        max: min + Math.floor(positionTwo.value / (sliderWidth / ((max - min) / steps))) * steps,
-      });
-    });
 
-  const panTwo = Gesture.Pan()
-    .onBegin(() => {
-      contextTwo.value = positionTwo.value;
-    })
-    .onUpdate(e => {
-      if (contextTwo.value + e.translationX > sliderWidth) {
-        positionTwo.value = sliderWidth;
-      } else if (contextTwo.value + e.translationX < position.value) {
-        positionTwo.value = position.value;
-      } else {
-        positionTwo.value = contextTwo.value + e.translationX;
-      }
-    })
-    .onEnd(() => {
-      runOnJS(onValueChange)({
-        min: min + Math.floor(position.value / (sliderWidth / ((max - min) / steps))) * steps,
-        max: min + Math.floor(positionTwo.value / (sliderWidth / ((max - min) / steps))) * steps,
-      });
-    });
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: position.value }],
-  }));
+const PriceRange = ({lowPrice, highPrice, minValue, maxValue}) => {
 
-  const animatedStyleTwo = useAnimatedStyle(() => ({
-    transform: [{ translateX: positionTwo.value }],
-  }));
+  const [rangeDisabled, setRangeDisabled] = useState(false)
+  const [low, setLow] = useState(lowPrice)
+  const [high, setHigh] = useState(highPrice)
+  const [min, setMin] = useState(minValue)
+  const [max, setMax] = useState(maxValue)
+  console.log('lowPrice: ', low, ' highPrice:', high);
 
-  const sliderStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: position.value }],
-    width: positionTwo.value - position.value,
-  }));
-
-  const AnimatedText = Animated.createAnimatedComponent(TextInput);
-  const minLabelText = useAnimatedProps(() => ({
-    text: `$${
-      min +
-      Math.floor(position.value / (sliderWidth / ((max - min) / steps))) * steps
-    }`,
-  }));
-
-  const maxLabelText = useAnimatedProps(() => ({
-    text: `$${
-      min +
-      Math.floor(positionTwo.value / (sliderWidth / ((max - min) / steps))) * steps
-    }`,
-  }));
-
+  const renderThumb = useCallback(name => <Thumb name={name} />, [])
+  const renderRail = useCallback(() => <Rail />, [])
+  const renderRailSelected = useCallback(() => <RailSelected />, [])
+  const handleValueChange = useCallback((lowValue, highValue) => {
+    setLow(lowValue)
+    setHigh(highValue)
+  }, [])
+  
   return (
-    <View style={styles.rangeContainer()}>
-      <View style={styles.labelContainer()}>
-        <AnimatedText
-          style={styles.label()}
-          animatedProps={minLabelText}
-          editable={false}
-          defaultValue={`$${
-            min +
-            Math.floor(position.value / (sliderWidth / ((max - min) / steps))) * steps
-          }`}
+    <View>
+        <View style={styles.horizontalContainer}>
+          <Text style={styles.valueText}>${low}</Text>
+          <Text style={styles.valueText}>${high}</Text>
+        </View>
+        <RnRangeSlider
+          style={styles.slider}
+          min={min}
+          max={max}
+          step={1}
+          disableRange={rangeDisabled}
+          renderThumb={renderThumb}
+          renderRail={renderRail}
+          renderRailSelected={renderRailSelected}
+          onValueChanged={handleValueChange}
         />
-        <AnimatedText
-          style={styles.label()}
-          animatedProps={maxLabelText}
-          editable={false}
-          defaultValue={`$${
-            min +
-            Math.floor(positionTwo.value / (sliderWidth / ((max - min) / steps))) * steps
-          }`}
-        />
-      </View>
-      <View>
-        <View style={styles.trackBack()} />
-        <Animated.View style={[styles.trackFront(), sliderStyle]} />
-        <GestureDetector gesture={pan}>
-          <Animated.View style={[styles.thumb(), animatedStyle]} />
-        </GestureDetector>
-        <GestureDetector gesture={panTwo}>
-          <Animated.View style={[styles.thumb(), animatedStyleTwo]} />
-        </GestureDetector>
-      </View>
     </View>
-  );
-};
+  )
+}
+
+export default PriceRange
+
+const styles = StyleSheet.create({
+  slider: {
+  },
+  horizontalContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  valueText: {
+    color: color.mostlyBlack,
+    fontSize: fontSize.small,
+    fontFamily: fonts.metropolisMedium
+  },
+});

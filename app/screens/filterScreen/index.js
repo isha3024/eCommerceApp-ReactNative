@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import { StatusBar, View, TouchableOpacity } from 'react-native'
-import { Button, Header, PriceRange, Screen, Text } from '../../components'
+import { Button, Header, Screen, Text } from '../../components'
 import { IcBackArrow, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
+import PriceRange from '../../components/priceRange'
+// import PriceRange from '../../components/priceRange'
 
 const colorsList = ['#020202', '#F6F6F6', '#B82222', '#BEA9A9', '#E2BB8D', '#151867'];
 
@@ -16,10 +18,9 @@ const category = ['All', 'Women', 'Men', 'Boys', 'Girls']
 export const FilterScreen = () => {
   
   const navigation = useNavigation();
-  const [selectColors, setSelectColors] = useState([colorsList[0], colorsList[4]]);
-  console.log('selectColors', selectColors);
-  const [selectSize, setSelectSize] = useState([sizeList[1], sizeList[2]]);
-  const [selectCategory, setSelectCategory] = useState([category[0]]);
+  const [selectColors, setSelectColors] = useState([]);
+  const [selectSize, setSelectSize] = useState([]);
+  const [selectCategory, setSelectCategory] = useState([]);
   const MIN_DEFAULT = 10;
   const MAX_DEFAULT = 500;
   const [minValue, setMinValue] = useState(MIN_DEFAULT);
@@ -56,9 +57,9 @@ export const FilterScreen = () => {
   }
  
   const discardFilters = () => {
-    setSelectColors([colorsList[0], colorsList[4]]);
-    setSelectSize([sizeList[1], sizeList[2]]);
-    setSelectCategory([category[0]]);
+    setSelectColors([]);
+    setSelectSize([]);
+    setSelectCategory([]);
     setMinValue(MIN_DEFAULT);
     setMaxValue(MAX_DEFAULT);
     setTimeout(() => {
@@ -74,7 +75,6 @@ export const FilterScreen = () => {
   
   return (
     <>
-      <Screen bgColor={color.white} withScroll>
         <StatusBar translucent={true} />
         <Header
           headerStyle={styles.header()}
@@ -86,18 +86,13 @@ export const FilterScreen = () => {
             return (<IcBackArrow />)
           }}
         />
+      <Screen scrollStyle={styles.mainScrollView()} bgColor={color.white} withScroll>
         <View style={styles.mainView()}>
           <View style={styles.filterItem()}>
             <Text style={styles.filterItemText()}>Price range</Text>
             <View style={styles.innerFilterItem()}>
             <View style={styles.sliderContainer()}>
-              <PriceRange 
-                min={MIN_DEFAULT}
-                max={MAX_DEFAULT}
-                steps={1}
-                sliderWidth={353}
-                onValueChange={handlePriceChange}
-              />
+              <PriceRange lowPrice={0} highPrice={500} minValue={0} maxValue={500} />
             </View>
             </View>
           </View>
