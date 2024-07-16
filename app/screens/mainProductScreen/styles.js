@@ -42,14 +42,14 @@ export const productOptions = () => ({
   paddingHorizontal: size.moderateScale(18),
 })
 
-export const productDropdown = () => ({
+export const productDropdown = (userSizeOption) => ({
   height: size.moderateScale(40),
   width: size.moderateScale(126),
   paddingHorizontal: size.moderateScale(12),
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
-  borderColor: color.darkGray,
+  borderColor: userSizeOption ? color.secondary : color.darkGray,
   borderWidth: size.moderateScale(0.5),
   borderRadius: size.moderateScale(8),
 })
@@ -173,49 +173,38 @@ export const productCardHome = () => ({
   marginRight: size.moderateScale(16)
 });
 
-export const sizeBottomSheetContainer = () => ({
-})
-
-export const bottomSheetTitle = () => ({
-  color: color.mostlyBlack,
-  fontFamily: fonts.metropolisSemiBold,
+export const titleBottomSheet = () => ({
   fontSize: fontSize.middleMedium,
-  textAlign: 'center'
+  fontFamily: fonts.metropolisSemiBold,
+  color: color.mostlyBlack,
+  textAlign: 'center',
+  marginBottom: size.moderateScale(10),
 })
 
-export const bottomSheetContainer = () => ({
+export const sizeContainer = () => ({
   marginHorizontal: size.moderateScale(16),
   flexDirection: 'row',
   flexWrap: 'wrap',
-  gap: size.moderateScale(22),
+  columnGap: size.moderateScale(10),
+  rowGap: size.moderateScale(10),
   marginTop: size.moderateScale(22)
 })
 
-export const sizeItem = () => ({
-  width: size.moderateScale(100),
+export const sizeItem = (isSelected) => ({
+  width: '30%',
   height: size.moderateScale(40),
-  flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: color.white,
-  borderColor: color.darkGray,
+  backgroundColor: isSelected ? color.secondary : color.white,
+  borderColor: isSelected ? color.secondary : color.darkGray,
   borderWidth: size.moderateScale(1),
   borderRadius: size.moderateScale(8)
 })
 
-export const sizeItemActive = () => ({
-  backgroundColor: color.secondary,
-  borderColor: color.secondary,
-})
-
-export const sizeText = () => ({
-  color: color.mostlyBlack,
+export const sizeText = (isSelected) => ({
+  color: isSelected ? color.white :color.mostlyBlack,
   fontSize: fontSize.small,
   fontFamily: fonts.metropolisMedium
-})
-
-export const sizeTextActive = () => ({
-  color: color.white,
 })
 
 export const sizeInfo = () => ({
@@ -237,7 +226,7 @@ export const sizeInfoText = () => ({
 })
 
 export const button = () => ({
-  marginTop: size.moderateScale(28),
+  marginVertical: size.moderateScale(28),
   marginHorizontal: size.moderateScale(16)
 })
 

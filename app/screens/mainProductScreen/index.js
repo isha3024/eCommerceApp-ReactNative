@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { View, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -6,7 +6,7 @@ import * as productData from '../../json';
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, StarRatings, Text } from '../../components';
 import { IcBackArrow, IcFilledHeart, IcHeart, IcShare, color, size } from '../../theme';
 import * as styles from './styles'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useScrollToTop } from '@react-navigation/native';
 
 
 const productDetail = productData.productList;
@@ -25,6 +25,7 @@ export const MainProductScreen = ({ route }) => {
   const [isColorBottomSheetVisible, setIsColorBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(selectedSize);
   const [selectColors, setSelectColors] = useState([]);
+
 
   const onAddToFavorite = () => {
     if (filledHeart) {
@@ -62,6 +63,27 @@ export const MainProductScreen = ({ route }) => {
     setUserSizeOption(size);
   }
 
+  const handleAddToCartBtn = () => {
+    if (!userSizeOption) {
+      Alert.alert(
+        '',
+        'Please select size',
+        [
+          {
+            text: 'OK',
+            onPress: () => null,
+          }
+        ]
+      )
+      setIsSizeBottomSheetVisible(false)
+    }else {
+      navigation.navigate('cartStackNavigation', { selectedSize: userSizeOption, selectedId: selectedProductId })
+      setUserSizeOption(false)
+      setIsSizeBottomSheetVisible(true);
+    }
+  }
+
+
   const handleRatingsReviews = () => {
     navigation.navigate('ratingsReviewsScreen', { productReview: selectedProduct.ratings })
   }
@@ -94,7 +116,7 @@ export const MainProductScreen = ({ route }) => {
             <Image source={selectedProduct?.mainProductImageTwo} />
           </ScrollView>
           <View style={styles.productOptions()}>
-            <TouchableOpacity onPress={handleSizeDropdownPress} activeOpacity={0.5} style={styles.productDropdown()}>
+            <TouchableOpacity onPress={handleSizeDropdownPress} activeOpacity={0.5} style={styles.productDropdown(userSizeOption)}>
               <Text style={styles.productOptionText()}>Size</Text>
               <IcBackArrow style={styles.dropDownArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
             </TouchableOpacity>
@@ -173,32 +195,32 @@ export const MainProductScreen = ({ route }) => {
       <BottomSheetContainer
         isVisible={isSizeBottomSheetVisible}
         onClose={handleSizeDropdownPressClose}
-        customHeight={'40%'}>
-        <Text style={styles.bottomSheetTitle()}>Select Size</Text>
-        <View style={styles.bottomSheetContainer()}>
+        customHeight={'45%'}>
+        <Text style={styles.titleBottomSheet()}>Select Size</Text>
+        <View style={styles.sizeContainer()}>
           {
             sizes.map((size, index) => {
               const isSelected = size === userSizeOption;
               return (
-                <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={[styles.sizeItem(), isSelected && styles.sizeItemActive()]} key={index}>
-                  <Text style={[styles.sizeText(), isSelected && styles.sizeTextActive()]}>{size}</Text>
+                <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={styles.sizeItem(isSelected)} key={index}>
+                  <Text style={styles.sizeText(isSelected)}>{size}</Text>
                 </TouchableOpacity>
               )
             })
           }
         </View>
-        <TouchableOpacity style={styles.sizeInfo()}>
+        <TouchableOpacity style={styles.sizeInfo()} activeOpacity={0.6}>
           <Text style={styles.sizeInfoText()}>Size info</Text>
           <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        <Button title='ADD TO CART' btnStyle={styles.button()} />
+        <Button activeOpacity={0.8} title='ADD TO CART' onPress={handleAddToCartBtn} btnStyle={styles.button()} />
       </BottomSheetContainer>
       <BottomSheetContainer
         isVisible={isColorBottomSheetVisible}
         onClose={handleColorDropdownPressClose}
         customHeight={'35%'}>
-        <Text style={styles.bottomSheetTitle()}>Select Color</Text>
-        <View style={styles.bottomSheetContainer()}>
+        <Text style={styles.titleBottomSheet()}>Select Color</Text>
+        <View style={styles.sizeContainer()}>
           {
             colorsList.map((color) => {
               return (

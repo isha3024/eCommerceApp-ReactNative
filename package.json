@@ -4,10 +4,19 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "emulators": "npx react-native run-android --list-devices",
     "ios": "react-native run-ios",
-    "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "node ./bin/postInstall",
+    "clean": "rm -rf node_modules && rm -rf yarn.lock && cd ios && rm -rf Pods && rm -rf Podfile.lock && cd .. && cd android && rm -rf build && cd app && rm -rf build && cd .. && cd ..",
+    "generate_apk": "cd android && ./gradlew app:assembleRelease",
+    "pod_install": "cd ios && pod install && cd ..",
+    "lint": "eslint --fix \"app/**/*.{js,jsx}\"",
+    "format": "prettier --write \"app/**/*.{js,jsx}\"",
+    "ipad_pro": "npx react-native run-ios --simulator='iPad Pro (12.9-inch) (6th generation)'",
+    "ipad_air": "npx react-native run-ios --simulator='iPad Air (5th generation)'",
+    "ipad": "npx react-native run-ios --simulator='iPad (9th generation)'"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.6.3",
@@ -37,7 +46,8 @@
     "react-native-tab-view": "^3.5.2",
     "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": "^10.1.0",
-    "rn-range-slider": "^2.2.2"
+    "rn-range-slider": "^2.2.2",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
