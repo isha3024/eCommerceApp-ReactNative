@@ -73,6 +73,7 @@ export const pamentSectionTitle = () => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
+  paddingRight: size.moderateScale(27)
 })
 
 export const paymentDetails = () => ({

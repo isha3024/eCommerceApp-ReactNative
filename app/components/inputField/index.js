@@ -63,7 +63,7 @@ export const InputField = ({
         ]}>{isFocused && label }</Animated.Text>}
       <TextInput 
         placeholder={isFocused ? '' : placeholder}
-        placeholderTextColor={isFocused ? color.white : color.darkGray}
+        placeholderTextColor={isFocused ? '' : color.darkGray}
         style={[
           styles.inputField('',isFocused), customTextInputStyles]}
         value={value} 

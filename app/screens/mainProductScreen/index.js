@@ -190,7 +190,7 @@ export const MainProductScreen = ({ route }) => {
         {/* Bottom Sheet Containers */}
       </Screen>
       <View style={styles.bottomView()}>
-        <Button title='ADD TO CART' />
+        <Button title='ADD TO CART' onPress={() => navigation.navigate('cartStackNavigation')} />
       </View>
       <BottomSheetContainer
         isVisible={isSizeBottomSheetVisible}

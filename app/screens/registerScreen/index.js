@@ -1,17 +1,36 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
-
+import { userAdd } from '../../redux'
+import { useDispatch } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 export const RegisterScreen = () => {
+
+  const setData = async () => {
+    await AsyncStorage.setItem('user', 'Isha');
+  }
+
+  const getData = async () => {
+    const user = await AsyncStorage.getItem('user');
+    console.warn('user:', user)
+  }
+
+  const removeData = async () => {
+    await AsyncStorage.removeItem('user');
+  }
+
+  // useEffect(() => {
+  //   addUser()
+  // },[])
 
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
@@ -23,6 +42,7 @@ export const RegisterScreen = () => {
   const [isNameValid, setIsNameValid] = useState(false)
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false)
+  
 
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const shake = () => {
@@ -79,25 +99,27 @@ export const RegisterScreen = () => {
   }
 
   const handleSubmit = () => {
-    if(validateForm()){
-      setErrors({
-        name: '',
-        email: '',
-        password: ''
-      })
-      navigation.navigate('Login')
-    }
+    setData()
+    // if(validateForm()){
+    //   setErrors({
+    //     name: '',
+    //     email: '',
+    //     password: ''
+    //   })
+    //   navigation.navigate('Login')
+    // }
   }
 
   const handleNavigation = () => {
-    setErrors({
-      name: '',
-      email: '',
-      password: ''
-    })
-    setTimeout(() => {
-      navigation.navigate('Login')
-    }, 300)
+    getData()
+    // setErrors({
+    //   name: '',
+    //   email: '',
+    //   password: ''
+    // })
+    // setTimeout(() => {
+    //   navigation.navigate('Login')
+    // }, 300)
   }
 
   return ( 
@@ -110,6 +132,7 @@ export const RegisterScreen = () => {
           leftIcon={() => {
             return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
           }}
+          leftIconPress={removeData}
         />
         <Text style={styles.mainTitleText()}>Sign Up</Text>
       </View>

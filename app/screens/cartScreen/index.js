@@ -18,7 +18,6 @@ export const CartScreen = () => {
   const [promoCodeValue, setPromoCodeValue] = useState('');
   const [originalPromoCodes, setOriginalPromoCodes] = useState(data.promoCards);
   const [filteredPromoCodes, setFilteredPromoCodes] = useState(data.promoCards);
-  console.log('filteredPromoCodes: ',filteredPromoCodes);
   
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
@@ -104,14 +103,6 @@ export const CartScreen = () => {
     showCartOptions()
   }
 
-  // const handleSearchCode = (value) => {
-  //   setPromoCodeValue(value);
-  //   const filteredCodes = originalPromoCodes.filter((code)=>{
-  //     return code.code.toLowerCase().includes(value.toLowerCase())
-  //   })
-  //   console.log('handleSearchCode called with value:', filteredCodes.find(discount => discount.id).code);
-  //   setFilteredPromoCodes(filteredCodes.find(discount => discount.id));
-  // }
   const handleSearchCode = (value) => {
     setPromoCodeValue(value);
     const filteredCodes = originalPromoCodes.filter((code) => {
@@ -209,7 +200,7 @@ export const CartScreen = () => {
               <Button
                 title='CHECK OUT'
                 btnStyle={styles.button()}
-                onPress={() => navigation.navigate('checkoutScreen')}
+                onPress={() => navigation.navigate('checkoutScreen', {orderTotal: orderTotalAmount() })}
               />
             </>
           ) : 

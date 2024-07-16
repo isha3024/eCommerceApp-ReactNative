@@ -42,6 +42,13 @@ export const _generateOtp = async body => {
   return _api_calls('POST', '/generate-otp', headers, body);
 };
 
+export const _userAdd = async body => {
+  let {_api_calls} = HttpCalls;
+  let headers = await headersData({});
+
+  return _api_calls('POST', '/user-add', headers, body);
+}
+
 //verify Otp
 export const _verifyOtp = async body => {
   let {_api_calls} = HttpCalls;

@@ -35,14 +35,14 @@ export const CheckoutScreen = ({route}) => {
         <Text style={styles.sectionTitle()}>Shipping address</Text>
         <View style={styles.addressContainer()}>
           <View style={styles.changeAddress()}>
-            <Text style={styles.username()}>{checkoutAddress.name}</Text>
+            <Text style={styles.username()}>{checkoutAddress.name ? checkoutAddress.name : 'Jane Doe'}</Text>
             <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate('addressScreen')}>
               <Text style={styles.redText()}>Change</Text>
             </TouchableOpacity>
           </View>
           <View>
-            <Text style={styles.bodyText()}>{checkoutAddress.address}</Text>
-            <Text style={styles.bodyText()}>{checkoutAddress.city}, {checkoutAddress.province} {checkoutAddress.zipCode}, {checkoutAddress.country}</Text>
+            <Text style={styles.bodyText()}>{checkoutAddress.address ? checkoutAddress.address : '3, Newbridge Court'}</Text>
+            <Text style={styles.bodyText()}>{checkoutAddress.city ? checkoutAddress.city : 'Chino Hills'}, {checkoutAddress.province ? checkoutAddress.province : 'CA'} {checkoutAddress.zipCode ? checkoutAddress.zipCode : '91709'}, {checkoutAddress.country ? checkoutAddress.country : 'United States'}</Text>
           </View>
         </View>
         <View style={styles.paymentContainer()}>
@@ -56,7 +56,7 @@ export const CheckoutScreen = ({route}) => {
             <View style={styles.paymnetCard()}>
               <IcMasterCard width={size.moderateScale(32)} height={size.moderateScale(25)} />
             </View>
-            <Text style={styles.bodyText()}>{paymentCardSelected.length !== 0 ? paymentCardSelected.maskedCardNumber : 'No Payment Card Selected'}</Text>
+            <Text style={styles.bodyText()}>{paymentCardSelected.maskedCardNumber ? paymentCardSelected.maskedCardNumber : '**** **** **** 3947'}</Text>
           </View>
         </View>
         <Text style={styles.sectionTitle()}>Delivery method</Text>

@@ -16,11 +16,9 @@ export const AddressScreen = () => {
   
   const [addresses, setAddresses] = useState(customerAddress);
   const [checkboxFilled, setCheckboxFilled] = useState({[addresses[0].id]: true});
-  // const [selectedAddress, setSelectedAddress] = useState(addresses[0])
 
   const selectedAddress = useMainContext()?.selectedAddress;
   const setSelectedAddress = useMainContext()?.setSelectedAddress;
-  console.log('selectedAddress in Address:', selectedAddress);
 
   const toggleCheckbox = (id) => {
     setCheckboxFilled(prev => {
@@ -45,7 +43,6 @@ export const AddressScreen = () => {
 
   useEffect(() => {
     setSelectedAddress(selectedAddress);
-    console.log('selectedAddress: ', selectedAddress)
   }, [selectedAddress])
 
   return (

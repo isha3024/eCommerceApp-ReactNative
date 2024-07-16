@@ -7,6 +7,7 @@ import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, co
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
 
+
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
@@ -148,7 +149,7 @@ export const LoginScreen = () => {
           <Text style={styles.text()}>Forget your password?</Text>
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        <Button activeOpacity={0.8} btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={handleSubmit} />
+        <Button activeOpacity={0.8} btnStyle={styles.buttonWithText()} title='LOGIN' disabled={false} onPress={handleSubmit} />
       </View>
       <View style={styles.bottomContainer()}>
         <Text style={styles.text()}>Or sign up with social account</Text>
