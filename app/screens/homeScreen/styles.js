@@ -85,30 +85,21 @@ export const sizeContainer = () => ({
   marginTop: size.moderateScale(22)
 })
 
-export const sizeItem = () => ({
+export const sizeItem = (isSelected) => ({
   width: '30%',
   height: size.moderateScale(40),
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: color.white,
-  borderColor: color.darkGray,
+  backgroundColor: isSelected ? color.secondary : color.white,
+  borderColor: isSelected ? color.secondary : color.darkGray,
   borderWidth: size.moderateScale(1),
   borderRadius: size.moderateScale(8)
 })
 
-export const sizeItemActive = () => ({
-  backgroundColor: color.secondary,
-  borderColor: color.secondary,
-})
-
-export const sizeText = () => ({
-  color: color.mostlyBlack,
+export const sizeText = (isSelected) => ({
+  color: isSelected ? color.white :color.mostlyBlack,
   fontSize: fontSize.small,
   fontFamily: fonts.metropolisMedium
-})
-
-export const sizeTextActive = () => ({
-  color: color.white,
 })
 
 export const sizeInfo = () => ({

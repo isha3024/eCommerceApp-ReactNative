@@ -84,7 +84,7 @@ export const bottomContainer = (showGrid) => ({
 })
 
 export const productCardGridItem = () => ({
-  width: size.moderateScale(164),
+  width: size.deviceWidth / 2.35,
   marginHorizontal: size.moderateScale(8),
   marginBottom: size.moderateScale(26)
 })
@@ -95,9 +95,8 @@ export const productCardListItem = () => ({
 })
 
 export const flotingButton = () => ({
-  right: size.moderateScale(8),
-  top: 180
-  // bottom: size.moderateScale(-15)
+  right: '4%',
+  top: '55%',
 })
 
 export const flotingButtonList = () => ({
@@ -133,39 +132,30 @@ export const sortOptionText = (isSelected) => ({
   fontFamily: isSelected ? fonts.metropolisSemiBold : fonts.metropolisRegular,
 })
 
-export const sizeItem = () => ({
-  width: size.moderateScale(100),
-  height: size.moderateScale(40),
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: color.white,
-  borderColor: color.darkGray,
-  borderWidth: size.moderateScale(1),
-  borderRadius: size.moderateScale(8)
-})
-
-export const sizeItemActive = () => ({
-  backgroundColor: color.secondary,
-  borderColor: color.secondary,
-})
-
-export const sizeText = () => ({
-  color: color.mostlyBlack,
-  fontSize: fontSize.small,
-  fontFamily: fonts.metropolisMedium
-})
-
-export const sizeTextActive = () => ({
-  color: color.white,
-})
-
 export const sizeContainer = () => ({
   marginHorizontal: size.moderateScale(16),
   flexDirection: 'row',
   flexWrap: 'wrap',
-  gap: size.moderateScale(22),
+  columnGap: size.moderateScale(10),
+  rowGap: size.moderateScale(10),
   marginTop: size.moderateScale(22)
+})
+
+export const sizeItem = (isSelected) => ({
+  width: '30%',
+  height: size.moderateScale(40),
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: isSelected ? color.secondary : color.white,
+  borderColor: isSelected ? color.secondary : color.darkGray,
+  borderWidth: size.moderateScale(1),
+  borderRadius: size.moderateScale(8)
+})
+
+export const sizeText = (isSelected) => ({
+  color: isSelected ? color.white :color.mostlyBlack,
+  fontSize: fontSize.small,
+  fontFamily: fonts.metropolisMedium
 })
 
 export const sizeInfo = () => ({

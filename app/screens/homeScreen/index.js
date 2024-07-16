@@ -237,8 +237,8 @@ export const HomeScreen = () => {
             sizes.map((size, index) => {
               const isSelected = size === userSizeOption;
               return (
-                <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={[styles.sizeItem(), isSelected && styles.sizeItemActive()]} key={index}>
-                  <Text style={[styles.sizeText(), isSelected && styles.sizeTextActive()]}>{size}</Text>
+                <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={styles.sizeItem(isSelected)} key={index}>
+                  <Text style={styles.sizeText(isSelected)}>{size}</Text>
                 </TouchableOpacity>
               )
             })

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react' 
-import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ScrollView } from 'react-native'
+import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ScrollView, Alert } from 'react-native'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, SortBy, Text } from '../../components'
 import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 
@@ -142,11 +142,28 @@ export const CatalogeScreen = () => {
   };
 
   const handleNavigation = () => {
-    if(userSizeOption){
+    if(!userSizeOption){
+      Alert.alert(
+        '',
+        'Please select the size',
+        [
+          {
+            text: 'OK',
+            onPress: () => null,
+          },
+          {
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel'
+          }
+        ]
+      )
+      setSizeSheetVisible(true);
+    }else {
       navigation.navigate('mainProductScreen', { selectedSize: userSizeOption, productId: selectedProductId })
       setUserSizeOption(false)
+      setSizeSheetVisible(false);
     }
-    setSizeSheetVisible(false);
   }
 
   //handling the sort option bottom sheet visibility
@@ -247,6 +264,7 @@ export const CatalogeScreen = () => {
           {
             showGrid ? (
               <FlatList
+                showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 80 }}
                 data={showProductList}
                 renderItem={renderProducts}
@@ -255,6 +273,7 @@ export const CatalogeScreen = () => {
               />
             ) : (
               <FlatList
+                showsVerticalScrollIndicator={false}
                 numColumns={2}
                 contentContainerStyle={{ paddingBottom: 80 }}
                 data={showProductList}
@@ -286,20 +305,20 @@ export const CatalogeScreen = () => {
         <BottomSheetContainer
           isVisible={isSizeSheetVisible}
           onClose={handleClosePressSizeSheet}
-          customHeight={'50%'}>
+          customHeight={'53%'}>
           <Text style={styles.titleBottomSheet()}>Select Size</Text>
           <View style={styles.sizeContainer()}>
           {
             sizes.map((size, index) => {
-            const isSelected = size === userSizeOption;
+              const isSelected = size === userSizeOption;
               return (
-                <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={[styles.sizeItem(), isSelected && styles.sizeItemActive()]} key={index}>
-                  <Text style={[styles.sizeText(), isSelected && styles.sizeTextActive()]}>{size}</Text>
+                <TouchableOpacity onPress={() => selectSizeHandler(size)} activeOpacity={0.5} style={styles.sizeItem(isSelected)} key={index}>
+                  <Text style={styles.sizeText(isSelected)}>{size}</Text>
                 </TouchableOpacity>
               )
             })
           }
-          </View>
+        </View>
           <TouchableOpacity style={styles.sizeInfo()}>
             <Text style={styles.sizeInfoText()}>Size info</Text>
             <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
