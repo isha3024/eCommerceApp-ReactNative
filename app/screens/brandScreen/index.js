@@ -10,8 +10,21 @@ const brands = ['adidas', 'adidas Originals', 'Blend', 'Boutique Moschino', 'Cha
 
 export const BrandScreen = () => {
   const [searchValue, setSearchValue] = useState('');
+  const [showSearchedBrands, setshowSearchedBrands] = useState(brands);
   const [selectBrands, setSelectBrands] = useState([]);
   
+
+  const searchBrands = (val) => {
+    setSearchValue(val);
+    if (val.length > 0) {
+      const filteredBrands = brands.filter((brand) => brand.toLowerCase().includes(val.toLowerCase()));
+      setshowSearchedBrands(filteredBrands);
+    }
+    else {
+      setshowSearchedBrands(brands);
+    }
+  }
+
   const toggleBrands = (brand) => {
     if(selectBrands.includes(brand)){
       setSelectBrands(selectBrands.filter(b => b !== brand));
@@ -20,10 +33,7 @@ export const BrandScreen = () => {
     }
   }
 
-  useEffect(() => {
-    if(selectBrands.length === 0){
-      setSelectBrands([brands[1], brands[6], brands[9]])
-    }})
+
   const navigation = useNavigation();
   return (
     <Screen bgColor={color.white} withScroll>
@@ -44,13 +54,13 @@ export const BrandScreen = () => {
             placeholder='Search'
             placeholderTextColor={color.darkGray}
             value={searchValue}
-            onChangeText={(val) => setSearchValue(val)}
+            onChangeText={searchBrands}
             style={styles.textInputField()}
           />
       </View>
       <View style={styles.brandContainer()}>
         {
-          brands.map((brand, index) =>{
+          showSearchedBrands.map((brand, index) =>{
             return (
               <TouchableOpacity onPress={() => toggleBrands(brand)} key={index} style={styles.brandList()}>
                 <Text style={[styles.brandName(), selectBrands.includes(brand) && styles.selectedBrandName()]}>{brand}</Text>

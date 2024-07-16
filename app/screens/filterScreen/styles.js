@@ -65,8 +65,8 @@ export const colorItemActive = () => ({
 export const colors = (colorBg) => ({
   position: 'absolute',
   backgroundColor: colorBg ? colorBg : color.white,
-  width: '100%',
-  height: '100%',
+  width: '90%',
+  height: '90%',
   borderRadius: size.moderateScale(50)
 })
 
