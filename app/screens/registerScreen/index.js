@@ -6,8 +6,6 @@ import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, co
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
 import { userAdd } from '../../redux'
-import { useDispatch } from 'react-redux'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -15,25 +13,9 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 
 export const RegisterScreen = () => {
 
-  const setData = async () => {
-    await AsyncStorage.setItem('user', 'Isha');
-  }
-
-  const getData = async () => {
-    const user = await AsyncStorage.getItem('user');
-    console.warn('user:', user)
-  }
-
-  const removeData = async () => {
-    await AsyncStorage.removeItem('user');
-  }
-
-  // useEffect(() => {
-  //   addUser()
-  // },[])
-
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
+  const shakeAnim = useRef(new Animated.Value(0)).current;
   const [inputField, setInputField] = useState({
     name: '',
     email: '',
@@ -43,8 +25,6 @@ export const RegisterScreen = () => {
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false)
   
-
-  const shakeAnim = useRef(new Animated.Value(0)).current;
   const shake = () => {
     Animated.sequence([
       Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
@@ -99,27 +79,24 @@ export const RegisterScreen = () => {
   }
 
   const handleSubmit = () => {
-    setData()
-    // if(validateForm()){
-    //   setErrors({
-    //     name: '',
-    //     email: '',
-    //     password: ''
-    //   })
-    //   navigation.navigate('Login')
-    // }
+    if(validateForm()){
+      setErrors({
+        name: '',
+        email: '',
+        password: ''
+      })
+    userAdd(inputField)
+    // navigation.navigate('Login')
+    }
   }
 
   const handleNavigation = () => {
-    getData()
-    // setErrors({
-    //   name: '',
-    //   email: '',
-    //   password: ''
-    // })
-    // setTimeout(() => {
-    //   navigation.navigate('Login')
-    // }, 300)
+    setErrors({
+      name: '',
+      email: '',
+      password: ''
+    })
+    navigation.navigate('Login')
   }
 
   return ( 
@@ -132,7 +109,6 @@ export const RegisterScreen = () => {
           leftIcon={() => {
             return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
           }}
-          leftIconPress={removeData}
         />
         <Text style={styles.mainTitleText()}>Sign Up</Text>
       </View>

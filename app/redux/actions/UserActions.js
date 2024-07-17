@@ -12,6 +12,7 @@ import {
   _getNotificationList,
   _getProfileReferredList,
   _notificationStatusUpdate,
+  _userAdd,
 } from '../../services';
 import * as actions from '../Types';
 import Toast from 'react-native-toast-message';
@@ -37,6 +38,7 @@ export const generateOtp = body => {
       });
   };
 };
+
 export const verifyOtp = body => {
   return dispatch => {
     return _verifyOtp(body)

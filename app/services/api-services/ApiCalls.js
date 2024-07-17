@@ -43,6 +43,7 @@ export const _generateOtp = async body => {
 };
 
 export const _userAdd = async body => {
+  console.log('in API CALLS file')
   let {_api_calls} = HttpCalls;
   let headers = await headersData({});
 
