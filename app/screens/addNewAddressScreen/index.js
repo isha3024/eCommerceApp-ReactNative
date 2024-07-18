@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import { View } from 'react-native'
-import { Button, Header, InputField, Screen, Text } from '../../components'
-
-import * as styles from './styles'
-import { color, IcBackArrow, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+
+import { Button, Header, InputField, Screen } from '../../components'
+import { color, IcBackArrow, size } from '../../theme'
+import * as styles from './styles'
+
 export const AddNewAddressScreen = ({route}) => {
-  console.log('route: ', route)
+
   const navigation = useNavigation();
   const [name, setName] = useState('');
   const [addressLineOne, setAddress] = useState('');

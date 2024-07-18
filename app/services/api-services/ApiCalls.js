@@ -42,12 +42,22 @@ export const _generateOtp = async body => {
   return _api_calls('POST', '/generate-otp', headers, body);
 };
 
+//registration -Isha
 export const _userAdd = async body => {
   console.log('in API CALLS file')
   let {_api_calls} = HttpCalls;
   let headers = await headersData({});
 
   return _api_calls('POST', '/user-add', headers, body);
+}
+
+//Login - Isha
+export const _userLogin = async body => {
+  // console.log('in API CALLS file')
+  let {_api_calls} = HttpCalls;
+  let headers = await headersData({});
+
+  return _api_calls('POST', '/login-user', headers, body);
 }
 
 //verify Otp

@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { ActivityIndicator, TouchableOpacity } from 'react-native';
 
 import { Text } from '../text';
 import * as styles from './styles';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { color } from '../../theme';
 
-export const Button = ({ title, onPress, activeOpacity, btnStyle, btnTextStyle, disabled, border, icon, renderIcon }) => {
+export const Button = ({ title, onPress, activeOpacity, btnStyle, btnTextStyle, disabled, border, icon, renderIcon, loading }) => {
+  const [isDisabled, setIsDisabled] = useState(disabled || loading);
+  
+  useEffect(() => {
+    setIsDisabled(disabled || loading)
+  },[disabled, loading])
 
-  const [isDisabled, setIsDisabled] = useState(disabled);
 
   return (
     <TouchableOpacity
@@ -18,9 +22,10 @@ export const Button = ({ title, onPress, activeOpacity, btnStyle, btnTextStyle, 
         styles.btnContainer(isDisabled, border), 
         btnStyle]}
     >
-    {icon ? (
-        renderIcon()
-      ) : null}
+    { loading 
+      ? (<ActivityIndicator color={color.white}/>) 
+      : (<>{icon && renderIcon ? renderIcon() : null}</>)
+    }
       <Text style={[styles.titleStyle(), btnTextStyle, border && styles.titleStyle2()]}>{title}</Text>
     </TouchableOpacity>
   );

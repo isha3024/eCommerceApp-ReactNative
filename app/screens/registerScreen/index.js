@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react'
-import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
+import { Alert, Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
 import { userAdd } from '../../redux'
+import Toast from 'react-native-toast-message'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -24,6 +25,8 @@ export const RegisterScreen = () => {
   const [isNameValid, setIsNameValid] = useState(false)
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false)
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
   
   const shake = () => {
     Animated.sequence([
@@ -78,14 +81,32 @@ export const RegisterScreen = () => {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = () => {
-    if(validateForm()){
+  const  handleSubmit = async () => {
+    if (validateForm()) {
       setErrors({
         name: '',
         email: '',
         password: ''
       })
-    navigation.navigate('Login')
+      setLoading(true)
+      setFormSubmitted(true)
+      try {
+        const response = await userAdd(inputField);
+        console.log('response in register:', response);
+        if (response.statusCode === 201) {
+          Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('Login')}])
+        }
+        else {
+          Alert.alert('Error', response.message, [{ text: 'Ok', onPress: () => null}])
+        }
+      } catch (error) {
+        console.log('error in register: ', error)
+        Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
+      }
+      finally {
+        setLoading(false)
+        setFormSubmitted(false)
+      }
     }
   }
 
@@ -128,6 +149,7 @@ export const RegisterScreen = () => {
             label={'Name'}
             autoCapitalize={true}
             onChangeText={(val) => handleChange(val, 'name')}
+            editable={loading ? false : true}
             keyboardType='default'
             icon
             iconPlace='right'
@@ -150,6 +172,8 @@ export const RegisterScreen = () => {
           label={'Email'}
           onChangeText={(val) => handleChange(val, 'email')}
           keyboardType='email-address'
+          editable={loading ? false : true}
+          autoCapitalize='none'
           icon
           iconPlace='right'
           renderRightIcon={() => (
@@ -172,6 +196,7 @@ export const RegisterScreen = () => {
           secureTextEntry={true}
           onChangeText={(val) => handleChange(val, 'password')}
           keyboardType='default'
+          editable={loading ? false : true}
           icon
           iconPlace='right'
           renderRightIcon={() => (
@@ -190,7 +215,14 @@ export const RegisterScreen = () => {
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>
         {/* <Button btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={() => navigation.navigate('Login')} /> */}
-        <Button activeOpacity={0.8} btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={handleSubmit} />
+        <Button 
+          activeOpacity={0.8} 
+          btnStyle={styles.buttonWithText()} 
+          title='SIGN UP' 
+          disabled={loading} 
+          loading={loading}
+          onPress={handleSubmit} 
+        />
       </View>
       <View style={styles.bottomContainer()}>
         <Text style={styles.text()}>Or sign up with social account</Text>

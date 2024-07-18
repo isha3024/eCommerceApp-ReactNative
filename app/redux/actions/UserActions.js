@@ -12,7 +12,6 @@ import {
   _getNotificationList,
   _getProfileReferredList,
   _notificationStatusUpdate,
-  _userAdd,
 } from '../../services';
 import * as actions from '../Types';
 import Toast from 'react-native-toast-message';

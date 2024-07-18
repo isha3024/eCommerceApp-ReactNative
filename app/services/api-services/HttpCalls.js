@@ -1,7 +1,7 @@
 // INFO: all API call methods added here
-import { API_URL } from '../../config';
+import { BASE_URL } from '../../config';
 import axios from 'axios';
-import {store, userLogout} from '../../redux';
+import { store, userLogout } from '../../redux';
 
 const showLog = true;
 
@@ -15,25 +15,18 @@ function _post(url, headers, data) {
         ? data
         : JSON.stringify(data),
   };
-  // console.log('🚀 ~ _post ~ options:', options);
+  console.log('🚀 ~ _post ~ options:', options);
 
   showLog && console.log('POST API OPTIONS ==>', options);
 
   return axios(options)
     .then(res => {
-      // console.log('🚀 ~ _post ~ res:', res);
       showLog && console.log('POST API RESPONSE ==>', res.data);
       return res.data;
     })
     .catch(async err => {
       showLog && console.log('POST API ERROR ==>', err);
       if (err.response.data.message == 'Invalid token') {
-        // const userId = useSelector(state => {
-        //   return state.authReducer.userLoginResponse.u_id;
-        // });
-        // let playerId = await OneSignal.getDeviceState().then(res => {
-        //   return res.userId;
-        // });
         await store.dispatch(userLogout());
       }
       throw 'response' in err
@@ -43,6 +36,7 @@ function _post(url, headers, data) {
         : err;
     });
 }
+
 function _put(url, headers, data) {
   const options = {
     url: url,
@@ -70,6 +64,7 @@ function _put(url, headers, data) {
         : err;
     });
 }
+
 function _patch(url, headers, data) {
   const options = {
     url: url,
@@ -152,7 +147,7 @@ function _delete(url, headers, data) {
 }
 
 function _api_calls(type, url, headers = {}, data = {}) {
-  url = `${API_URL + url}`;
+  url = `${'https://7bfe-49-36-67-12.ngrok-free.app' + url}`;
 
   switch (type) {
     case 'POST':
@@ -170,6 +165,6 @@ function _api_calls(type, url, headers = {}, data = {}) {
   }
 }
 
-const HttpCalls = {_api_calls, _post, _get, _delete, _put};
+const HttpCalls = { _api_calls, _post, _get, _delete, _put };
 
 export default HttpCalls;

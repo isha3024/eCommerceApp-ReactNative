@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react'
-import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
+import { Alert, Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
+import { userLogin } from '../../redux'
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -13,10 +14,13 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 }
 
 export const LoginScreen = () => {
+
   const navigation = useNavigation();
   const [errors, setErrors] = useState({});
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false)
+  const [formIsSubmitting, setFormIsSubmittingd] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [inputField, setInputField] = useState({
     email: '',
     password: ''
@@ -38,16 +42,6 @@ export const LoginScreen = () => {
       [field]: value
     });
   };
-
-  const handleSubmit = () => {
-    if(handleValidations()){
-      setErrors({
-        email: '',
-        password: ''
-      })
-      navigation.navigate('bottomStackNavigation')
-    }
-  }
 
   const handleValidations = () => {
     let newErrors = {};
@@ -77,7 +71,37 @@ export const LoginScreen = () => {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleNavigation = () => {
+  const  handleSubmit = async () => {
+    if (handleValidations()) {
+      setErrors({
+        name: '',
+        email: '',
+        password: ''
+      })
+      setLoading(true)
+      setFormIsSubmittingd(true)
+      try {
+        const response = await userLogin(inputField);
+        console.log('response in login:', response);
+        if (response.statusCode === 201) {
+          Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('bottomStackNavigation')}])
+        }
+        else {
+          Alert.alert('Error', response.message, [{ text: 'Cancel', onPress: () => null}])
+        }
+      }
+       catch (error) {
+        console.log('error in login: ', error)
+        Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
+      }
+      finally {
+        setLoading(false)
+        setFormIsSubmittingd(false)
+      }
+    }
+  }
+
+  const handleHeaderBackPress = () => {
     setErrors({
       email: '',
       password: ''
@@ -89,7 +113,7 @@ export const LoginScreen = () => {
     navigation.navigate('Register')
   }
 
-  const handleForgetPassword = () => {
+  const handleForgetPasswordPress = () => {
     setErrors({
       email: '',
       password: ''
@@ -113,7 +137,7 @@ export const LoginScreen = () => {
           leftIcon={() => {
             return (<IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(15)} />)
           }}
-          leftIconPress={handleNavigation}
+          leftIconPress={handleHeaderBackPress}
         />
         <Text style={styles.mainTitleText()}>Login</Text>
       </View>
@@ -126,6 +150,7 @@ export const LoginScreen = () => {
           label={'Email'}
           onChangeText={(val) => handleChange(val, 'email')}
           keyboardType='email-address'
+          editable={loading ? false : true}
           icon
           iconPlace='right'
           renderRightIcon={() => (
@@ -148,6 +173,7 @@ export const LoginScreen = () => {
           secureTextEntry={true}
           onChangeText={(val) => handleChange(val, 'password')}
           keyboardType='default'
+          editable={loading ? false : true}
           icon
           iconPlace='right'
           renderRightIcon={() => (
@@ -161,11 +187,18 @@ export const LoginScreen = () => {
           : (<Text style={styles.noError()}></Text>)
         }
         </Animated.View>
-        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={handleForgetPassword}>
+        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={handleForgetPasswordPress}>
           <Text style={styles.text()}>Forget your password?</Text>
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        <Button activeOpacity={0.8} btnStyle={styles.buttonWithText()} title='LOGIN' disabled={false} onPress={handleSubmit} />
+        <Button 
+          activeOpacity={0.8} 
+          btnStyle={styles.buttonWithText()} 
+          title='LOGIN' 
+          disabled={loading} 
+          loading={loading}
+          onPress={handleSubmit} 
+        />
       </View>
       <View style={styles.bottomContainer()}>
         <Text style={styles.text()}>Or sign up with social account</Text>
