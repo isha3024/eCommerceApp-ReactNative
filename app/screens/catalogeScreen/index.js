@@ -287,7 +287,7 @@ export const CatalogeScreen = () => {
         <BottomSheetContainer
           isVisible={isSheetVisible}
           onClose={handleClosePress}
-          customHeight={'45%'}>
+          customHeight={'42%'}>
           <Text style={styles.titleBottomSheet()}>Sort by</Text>
           <View style={styles.mainSortOptionView()}>
           {
@@ -305,7 +305,7 @@ export const CatalogeScreen = () => {
         <BottomSheetContainer
           isVisible={isSizeSheetVisible}
           onClose={handleClosePressSizeSheet}
-          customHeight={'53%'}>
+          customHeight={'47%'}>
           <Text style={styles.titleBottomSheet()}>Select Size</Text>
           <View style={styles.sizeContainer()}>
           {

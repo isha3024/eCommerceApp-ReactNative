@@ -36,7 +36,7 @@ export const MenCategories = () => {
 
   const renderCategoryItem = ({item, index}) => {
     return (
-      <TouchableOpacity style={styles.categoryItem()}>
+      <TouchableOpacity activeOpacity={0.7} style={styles.categoryItem()}>
         <View style={styles.categoryItemNameView()}>
          <Text style={styles.categoryItemName()}>{item.categoryName}</Text>
         </View>
@@ -50,14 +50,15 @@ export const MenCategories = () => {
 
   return (
     <View style={styles.categoriesSection()}>
-      <TouchableOpacity activeOpacity={0.5} style={styles.summerSale()}>
+      <TouchableOpacity activeOpacity={0.9} style={styles.summerSale()}>
           <Text style={styles.title()}>SUMMER SALE</Text>
           <Text style={styles.text()}>Up to 50% off</Text>
         </TouchableOpacity>
         <View style={styles.selectedCategoriesList()}>
           <FlatList 
+            showsVerticalScrollIndicator={false}
             ListFooterComponent={<View />}
-            ListFooterComponentStyle={{height:200}}
+            ListFooterComponentStyle={{height:210}}
             data={menData}
             renderItem={renderCategoryItem}
             keyExtractor={item => item.categoryName}

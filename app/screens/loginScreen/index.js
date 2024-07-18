@@ -82,7 +82,25 @@ export const LoginScreen = () => {
       email: '',
       password: ''
     })
+    setInputField({
+      email: '',
+      password: ''
+    })
     navigation.navigate('Register')
+  }
+
+  const handleForgetPassword = () => {
+    setErrors({
+      email: '',
+      password: ''
+    })
+    setInputField({
+      email: '',
+      password: ''
+    })
+    setIsEmailValid(false);
+    setIsPasswordValid(false);
+    navigation.navigate('ForgetPassword')
   }
 
   return (
@@ -143,7 +161,7 @@ export const LoginScreen = () => {
           : (<Text style={styles.noError()}></Text>)
         }
         </Animated.View>
-        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={() => navigation.navigate('ForgetPassword')}>
+        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={handleForgetPassword}>
           <Text style={styles.text()}>Forget your password?</Text>
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>

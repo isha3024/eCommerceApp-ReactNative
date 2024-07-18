@@ -74,7 +74,7 @@ export const HomeScreen = () => {
   }
 
   const selectSizeHandler = (size) => {
-    setUserSizeOption(size);
+    size === userSizeOption ? setUserSizeOption(false) : setUserSizeOption(size)
   };
 
   const handleFavoriteBtn = () => {

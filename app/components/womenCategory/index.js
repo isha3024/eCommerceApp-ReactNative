@@ -50,7 +50,7 @@ export const WomenCategories = () => {
   const navigation = useNavigation();
   const renderCategoryItem = ({item, index}) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('catalogeScreen')} style={styles.categoryItem()}>
+      <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('catalogeScreen')} style={styles.categoryItem()}>
         <View style={styles.categoryItemNameView()}>
          <Text style={styles.categoryItemName()}>{item.categoryName}</Text>
         </View>
@@ -64,7 +64,7 @@ export const WomenCategories = () => {
 
   return (
     <View style={styles.categoriesSection()}>
-        <TouchableOpacity activeOpacity={0.5} style={styles.summerSale()}>
+        <TouchableOpacity activeOpacity={0.9} style={styles.summerSale()}>
           <Text style={styles.title()}>SUMMER SALE</Text>
           <Text style={styles.text()}>Up to 50% off</Text>
         </TouchableOpacity>

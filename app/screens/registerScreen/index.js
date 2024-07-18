@@ -85,7 +85,6 @@ export const RegisterScreen = () => {
         email: '',
         password: ''
       })
-    // userAdd(inputField)
     navigation.navigate('Login')
     }
   }
@@ -96,6 +95,14 @@ export const RegisterScreen = () => {
       email: '',
       password: ''
     })
+    setInputField({
+      name: '',
+      email: '',
+      password: ''
+    })
+    setIsNameValid(false);
+    setIsEmailValid(false);
+    setIsPasswordValid(false);
     navigation.navigate('Login')
   }
 

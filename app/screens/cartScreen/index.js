@@ -13,9 +13,9 @@ import * as styles from './styles'
 export const CartScreen = () => {
 
   const navigation = useNavigation();
-  const dispatch = useDispatch()
-  const cartData = useSelector(state => state.practice)
-  console.log('cartData: ', JSON.stringify(cartData))  
+  // const dispatch = useDispatch()
+  // const cartData = useSelector(state => state.practice)
+  // console.log('cartData: ', JSON.stringify(cartData))  
 
   const [orderedProducts, setOrderedProducts] = useState(data.orderedProducts);
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
