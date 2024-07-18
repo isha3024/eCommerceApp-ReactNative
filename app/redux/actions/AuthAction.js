@@ -14,7 +14,7 @@ export const userAdd = (body) => {
         return response;
       })
       .catch(error => {
-        console.log('response: ', error)
+        console.log('error: ', error)
         Toast.show({
           type: 'error',
           text1: error.message,
