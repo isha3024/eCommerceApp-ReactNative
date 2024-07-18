@@ -1,72 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { View, ImageBackground, TouchableOpacity, FlatList, StatusBar, BackHandler, Alert } from 'react-native'
 import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
-import { color, IcBackArrow, images, size } from '../../theme'
-
-import * as styles from './styles'
-import LinearGradient from 'react-native-linear-gradient'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import LinearGradient from 'react-native-linear-gradient'
 
-const data = [
-  {
-    name: "Evening Dress",
-    brand: "Dorothy Perkins",
-    images: images.ImgCard,
-    rating: 5,
-    rating_scale: 10.0,
-    rating_count: 12,
-    originalPrice: 17.99,
-    isProductNew: true
-  },
-  {
-    name: "Dorothi Perkins",
-    merchant: "Sports Dress",
-    brand: "Shoemaster",
-    description: "Brilliant, colorful shoes made from recycled materials.",
-    images: images.ImgCard,
-    rating: 4,
-    rating_scale: 10.0,
-    rating_count: 4,
-    originalPrice: 22,
-    sellingPrice: 11,
-    isProductNew: false
-  },
-  {
-    name: "Sport Dress",
-    merchant: "Example Store",
-    brand: "Sitlly",
-    description: "Brilliant, colorful shoes made from recycled materials.",
-    images: images.ImgCard,
-    rating: 1,
-    rating_scale: 10.0,
-    rating_count: 22,
-    originalPrice: 14,
-    isProductNew: false
-  },
-  {
-    name: "Dinner Dress",
-    merchant: "Example Store",
-    brand: "Puma",
-    images: images.ImgCard,
-    rating: 2,
-    rating_scale: 10.0,
-    rating_count: 12,
-    originalPrice: 17,
-    isProductNew: true
-  },
-  {
-    name: "Shorts",
-    merchant: "Example Store",
-    brand: "H&M",
-    images: images.ImgCard,
-    rating: 4,
-    rating_scale: 10.0,
-    rating_count: 12,
-    originalPrice: 30,
-    sellingPrice: 20,
-    isProductNew: false
-  }
-]
+import * as data from '../../json'
+import { color, IcBackArrow, images, size } from '../../theme'
+import * as styles from './styles'
+
+
+const products = data.productList;
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
 
@@ -202,7 +145,7 @@ export const HomeScreen = () => {
           <FlatList
             horizontal
             contentContainerStyle={{ paddingBottom: size.moderateScale(80) }}
-            data={data}
+            data={products}
             renderItem={(item) => {
               return (
                 <ProductCardMain

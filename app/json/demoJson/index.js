@@ -186,6 +186,7 @@ export const orderedProducts = [
   {
     id: 1,
     productName: 'Pullover',
+    productBrand: 'Mango',
     productColorSelected: 'Black',
     productSizeSelected: 'L',
     productPrice: 51,
@@ -195,6 +196,7 @@ export const orderedProducts = [
   {
     id: 2,
     productName: 'T-Shirt',
+    productBrand: 'Mango',
     productColorSelected: 'Gray',
     productSizeSelected: 'L',
     productPrice: 22,
@@ -204,6 +206,7 @@ export const orderedProducts = [
   {
     id: 3,
     productName: 'Sport Dress',
+    productBrand: 'Mango',
     productColorSelected: 'Black',
     productSizeSelected: 'M',
     productPrice: 30,
@@ -254,4 +257,157 @@ export const paymentCardDetails = [
     cardExpiryDate: '12/2020',
     cardCvv: '123'
   }
+]
+
+export const userOrdersDetails = [
+  {
+    orderNo: 1947031,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isCancelled: false,
+    isProcessing: false,
+    isDelivered: true
+  },
+  {
+    orderNo: 1947032,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isCancelled: false,
+    isProcessing: false,
+    isDelivered: true
+  },
+  {
+    orderNo: 1947033,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isCancelled: false,
+    isProcessing: false,
+    isDelivered: true
+  },
+  {
+    orderNo: 1947034,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isCancelled: false,
+    isProcessing: false,
+    isDelivered: true
+  },
+  {
+   orderNo: 1947035,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isCancelled: false,
+    isProcessing: false,
+    isDelivered: true
+  },
+  {
+    orderNo: 1947036,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: true,
+    isCancelled: false,
+    isDelivered: false
+  },
+  {
+    orderNo: 1947037,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: true,
+    isCancelled: false,
+    isDelivered: false
+  },
+  {
+    orderNo: 1947038,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: true,
+    isCancelled: false,
+    isDelivered: false
+  },
+  {
+    orderNo: 1947039,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: true,
+    isCancelled: false,
+    isDelivered: false
+  },
+  {
+   orderNo: 1947040,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: true,
+    isCancelled: false,
+    isDelivered: false
+  },
+  {
+    orderNo: 1947041,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: false,
+    isDelivered: false,
+    isCancelled: true,
+  },
+  {
+    orderNo: 1947042,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: false,
+    isDelivered: false,
+    isCancelled: true,
+  },
+  {
+    orderNo: 1947043,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: false,
+    isDelivered: false,
+    isCancelled: true,
+  },
+  {
+    orderNo: 1947044,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: false,
+    isDelivered: false,
+    isCancelled: true,
+  },
+  {
+   orderNo: 1947045,
+    orderDate: '05-12-2019',
+    trackingNum: 'IW3475453455',
+    quantity: 3,
+    totalAmount: 112,
+    isProcessing: false,
+    isDelivered: false,
+    isCancelled: true,
+  },
 ]

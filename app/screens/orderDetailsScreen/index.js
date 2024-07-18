@@ -1,13 +1,52 @@
 import React from 'react'
 import { View } from 'react-native'
-
-import * as styles from './styles'
-import { Button, Header, ProductCardMain, Screen, Text } from '../../components'
-import { color, IcBackArrow, IcMasterCard, IcSearch, images } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 
-export const OrderDetailsScreen = () => {
+import { Button, Header, ProductCardMain, Screen, Text } from '../../components'
+import { color, IcBackArrow, IcMasterCard, IcSearch, images } from '../../theme'
+import * as data from '../../json'
+import * as styles from './styles'
+
+const orderProducts = data.orderedProducts;
+
+export const OrderDetailsScreen = ({route}) => {
+  const {source} = route.params;
   const navigation = useNavigation()
+
+  const showOrder = () => {
+    let order;
+    let textColor;
+    switch (source) {
+      case 'orderDelivered':
+        order = 'Delivered';
+        textColor = color.success;
+        break;
+      case 'orderProcessing':
+        order = 'Processing';
+        textColor = color.lightOrange;
+        break;
+      case 'orderCancelled':
+        order = 'Cancelled';
+        textColor = color.error;
+        break;
+      default:
+        textColor = null;
+    }
+    return [textColor, order];
+  }
+
+  const handleReOrder = () => {
+
+  }
+
+  const totalAmount = () => {
+    let total = 0;
+    orderProducts.map((product) => {
+      total += product.productPrice * product.productQuantity;
+    })
+    return Math.floor(total);
+  }
+
   return (
     <View style={styles.mainView()}>
       <Header 
@@ -34,43 +73,27 @@ export const OrderDetailsScreen = () => {
             <Text style={styles.date()}>Tracking number: </Text>
             <Text style={styles.trackingNumValue()}>IW3475453455</Text>
           </View>
-          <Text style={styles.successText()}>Delivered</Text>
+          <Text style={[styles.successText(), {color: showOrder()[0]}]}>{showOrder()[1]}</Text>
         </View>
         <Text style={styles.darkTextItem()}>3 items</Text>
         <View style={styles.orderedItemsList()}>
-          <ProductCardMain 
-            activeOpacity={0.7}
-            productHorizontal={true}
-            productImage={images.ImgCard}
-            productTitle='Pullover'
-            brandName='Mango'
-            productColor='Gray'
-            productSize='L'
-            originalPrice='51'
-            productUnits={3}
-          />
-          <ProductCardMain 
-            activeOpacity={0.7}
-            productHorizontal={true}
-            productImage={images.ImgCard}
-            productTitle='Pullover'
-            brandName='Mango'
-            productColor='Gray'
-            productSize='L'
-            originalPrice='51'
-            productUnits={3}
-          />
-          <ProductCardMain 
-            activeOpacity={0.7}
-            productHorizontal={true}
-            productImage={images.ImgCard}
-            productTitle='Pullover'
-            brandName='Mango'
-            productColor='Gray'
-            productSize='L'
-            originalPrice='51'
-            productUnits={3}
-          />
+          {
+            orderProducts.map((product) => {
+              return (
+                <ProductCardMain
+                  activeOpacity={0.7}
+                  productHorizontal={true}
+                  productImage={product.productImage}
+                  productTitle={product.productName}
+                  brandName={product.productBrand}
+                  productColor={product.productColorSelected}
+                  productSize={product.productSizeSelected}
+                  originalPrice={product.productPrice}
+                  productUnits={product.productQuantity}
+                />
+              )
+            })
+          }
         </View>
         <View style={styles.orderInfo()}>
           <Text style={styles.orderInfoTitle()}>Order information</Text>
@@ -97,11 +120,11 @@ export const OrderDetailsScreen = () => {
           </View>
           <View style={styles.information()}>
             <Text style={styles.lightText()}>Total Amount:</Text>
-            <Text style={styles.darkTextMedium()}>133$</Text>
+            <Text style={styles.darkTextMedium()}>{totalAmount()}$</Text>
           </View>
         </View>
         <View style={styles.buttonContainer()}>
-          <Button border title='Reorder' btnStyle={styles.button()} />
+          <Button border title='Reorder' btnStyle={styles.button()} onPress={handleReOrder} />
           <Button title='Leave Feedback' btnStyle={styles.button()} />
         </View>
       </Screen>

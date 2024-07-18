@@ -137,6 +137,11 @@ export const promoCodesWrapper = () => ({
   gap: size.moderateScale(20)
 })
 
+export const promoCardList = () => ({
+  paddingTop: size.moderateScale(18),
+  gap: size.moderateScale(24)
+})
+
 export const promoCard = () => ({
   flexDirection: 'row',
   alignItems: 'center',

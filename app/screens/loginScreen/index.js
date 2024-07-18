@@ -82,9 +82,7 @@ export const LoginScreen = () => {
       email: '',
       password: ''
     })
-    setTimeout(() => {
-      navigation.navigate('Register')
-    }, 300)
+    navigation.navigate('Register')
   }
 
   return (

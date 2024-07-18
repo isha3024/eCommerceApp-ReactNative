@@ -4,50 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 
 import * as styles from './styles'
 import { Text } from '../text';
+import * as data from '../../json'
 import { Button } from '../button';
 
-const orderCancelledDetails = [
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isCancelled: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isCancelled: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isCancelled: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isCancelled: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isCancelled: true
-  },
-]
+
+const userOrderDetails = data.userOrdersDetails;
+const cancelledOrders = userOrderDetails.filter(item => item.isCancelled === true)
 
 export const OrderCancelled = () => {
   const navigation = useNavigation();
@@ -77,7 +39,7 @@ export const OrderCancelled = () => {
             border
             title='Details'
             btnStyle={styles.button()}
-            onPress={() => navigation.navigate('orderDetailsScreen')}
+            onPress={() => navigation.navigate('orderDetailsScreen', {source: 'orderCancelled',isCancelled: item.isCancelled})}
           />
           <Text style={styles.cancelText()}>{item.isCancelled ? 'Cancelled' : null}</Text>
         </View>
@@ -87,7 +49,7 @@ export const OrderCancelled = () => {
   return (
     <View style={styles.orderInfo()}>
       <FlatList 
-        data={orderCancelledDetails}
+        data={cancelledOrders}
         renderItem={renderOrderCancelledSelected}
         contentContainerStyle={styles.flatListOrder()}
       />

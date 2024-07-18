@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
@@ -85,8 +85,8 @@ export const RegisterScreen = () => {
         email: '',
         password: ''
       })
-    userAdd(inputField)
-    // navigation.navigate('Login')
+    // userAdd(inputField)
+    navigation.navigate('Login')
     }
   }
 

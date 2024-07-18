@@ -1,5 +1,5 @@
 // INFO: all API call methods added here
-import {BASE_URL} from '../../config';
+import { API_URL } from '../../config';
 import axios from 'axios';
 import {store, userLogout} from '../../redux';
 
@@ -152,7 +152,7 @@ function _delete(url, headers, data) {
 }
 
 function _api_calls(type, url, headers = {}, data = {}) {
-  url = `${BASE_URL + url}`;
+  url = `${API_URL + url}`;
 
   switch (type) {
     case 'POST':

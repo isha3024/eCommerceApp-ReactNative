@@ -40,42 +40,42 @@ export const CartScreen = () => {
     }, 300)
   }
 
-  // const increaseQuantity = (id) => {
-  //   const updateCart = orderedProducts.map(cart => {
-  //     if(cart.id === id) {
-  //       const newProductQuantity = cart.productQuantity + 1;
-  //       const newProductPrice = cart.productPrice * (newProductQuantity / cart.productQuantity)
-  //       return {
-  //         ...cart, 
-  //         productQuantity: newProductQuantity,
-  //         productPrice: Math.floor(newProductPrice)
-  //       }
-  //     }
-  //     return cart;
-  //   })
-  //   setOrderedProducts(updateCart)
-  // }
-
-  // const decreaseQuantity = (id) => {
-  //   const updateCart = orderedProducts.map(cart => {
-  //     if (cart.id === id && cart.productQuantity > 1) {
-  //       const newProductQuantity = cart.productQuantity - 1;
-  //       const newProductPrice = cart.productPrice / (cart.productQuantity / newProductQuantity)
-  //       return { 
-  //         ...cart, 
-  //         productQuantity:newProductQuantity,
-  //         productPrice:  Math.floor(newProductPrice)
-  //       };
-  //     }
-  //     return cart;
-  //   });
-  //   setOrderedProducts(updateCart);
-  // };
-
-
-  const handleAddToCartRedux = (item) => {
-    dispatch(addToCart(item))
+  const increaseQuantity = (id) => {
+    const updateCart = orderedProducts.map(cart => {
+      if(cart.id === id) {
+        const newProductQuantity = cart.productQuantity + 1;
+        const newProductPrice = cart.productPrice * (newProductQuantity / cart.productQuantity)
+        return {
+          ...cart, 
+          productQuantity: newProductQuantity,
+          productPrice: Math.floor(newProductPrice)
+        }
+      }
+      return cart;
+    })
+    setOrderedProducts(updateCart)
   }
+
+  const decreaseQuantity = (id) => {
+    const updateCart = orderedProducts.map(cart => {
+      if (cart.id === id && cart.productQuantity > 1) {
+        const newProductQuantity = cart.productQuantity - 1;
+        const newProductPrice = cart.productPrice / (cart.productQuantity / newProductQuantity)
+        return { 
+          ...cart, 
+          productQuantity:newProductQuantity,
+          productPrice:  Math.floor(newProductPrice)
+        };
+      }
+      return cart;
+    });
+    setOrderedProducts(updateCart);
+  };
+
+
+  // const handleAddToCartRedux = (item) => {
+  //   dispatch(addToCart(item))
+  // }
 
   const showCartOptionsOfProduct = (id) => {
     setShowCartOptions((option) => {
@@ -138,9 +138,9 @@ export const CartScreen = () => {
         showRatings={false}
         showRatingHorizontal={false}
         selectQuantity={item.productQuantity}
-        // increaseQuantity={() => increaseQuantity(item.id)}
-        // deccreaseQuantity={() => decreaseQuantity(item.id)}
-        increaseQuantity={() => handleAddToCartRedux(item)}
+        increaseQuantity={() => increaseQuantity(item.id)}
+        deccreaseQuantity={() => decreaseQuantity(item.id)}
+        // increaseQuantity={() => handleAddToCartRedux(item)}
         cartOptions={true}
         cartOptionPress={() => showCartOptionsOfProduct(item.id)}
       />
@@ -164,8 +164,8 @@ export const CartScreen = () => {
     <Screen bgColor={color.primary} style={styles.mainView()}>
       <View style={styles.topView()}>
         <Header 
-          title
-          headerTitle={cartData.length}
+          // title
+          // headerTitle={cartData.length}
           headerStyle={styles.header()}
           headerRightIcon
           rightIcon={() => {
@@ -269,9 +269,7 @@ export const CartScreen = () => {
           }
         </View>
         <Text style={styles.bottomSheetTitle()}>Your promo codes</Text>
-        <View>
-          
-        </View>
+        <View style={styles.promoCardList()}>
         {
           filteredPromoCodes.map((promoCode, id) => {
             return(
@@ -297,6 +295,8 @@ export const CartScreen = () => {
             )
           })
         }
+        </View>
+        
       </BottomSheetContainer>
     </Screen>
   )

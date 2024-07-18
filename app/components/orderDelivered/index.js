@@ -1,53 +1,14 @@
 import React from 'react'
 import { View, FlatList } from 'react-native'
-
-import * as styles from './styles'
-import { Button } from '../button'
-import { Text } from '../text'
 import { useNavigation } from '@react-navigation/native'
 
-const orderDeliverdDetails = [
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isDelivered: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isDelivered: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isDelivered: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isDelivered: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isDelivered: true
-  },
-]
+import { Button } from '../button'
+import { Text } from '../text'
+import * as data from '../../json'
+import * as styles from './styles'
+
+const userOrderDetails = data.userOrdersDetails;
+const deliveredOrders = userOrderDetails.filter(item => item.isDelivered === true)
 
 export const OrderDelivered = () => {
 
@@ -78,7 +39,7 @@ export const OrderDelivered = () => {
             border
             title='Details'
             btnStyle={styles.button()}
-            onPress={() => navigation.navigate('orderDetailsScreen')}
+            onPress={() => navigation.navigate('orderDetailsScreen', {source: 'orderDelivered', isDelivered: item.isDelivered})}
           />
           <Text style={styles.successText()}>{item.isDelivered ? 'Delivered' : null}</Text>
         </View>
@@ -89,7 +50,7 @@ export const OrderDelivered = () => {
   return (
     <View style={styles.orderInfo()}>
       <FlatList 
-        data={orderDeliverdDetails}
+        data={deliveredOrders}
         renderItem={renderOrderDetailsSelected}
         contentContainerStyle={styles.flatListOrder()}
       />

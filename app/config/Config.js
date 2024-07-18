@@ -1,6 +1,6 @@
-import { BASE_URL } from '@env';
-console.log('🚀 ~ BASE_URL:', BASE_URL);
+import { API_URL } from '@env';
+console.log('🚀 ~ API_URL:', API_URL);
 
 module.exports = {
-  BASE_URL: BASE_URL
+  API_URL: API_URL
 };

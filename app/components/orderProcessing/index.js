@@ -2,53 +2,13 @@ import React from 'react'
 import { FlatList, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 
-import * as styles from './styles'
 import { Text } from '../text';
 import { Button } from '../button';
+import * as data from '../../json'
+import * as styles from './styles'
 
-
-const orderProcessingDetails = [
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isProcessing: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isProcessing: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isProcessing: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isProcessing: true
-  },
-  {
-    orderNo: 1947034,
-    orderDate: '05-12-2019',
-    trackingNum: 'IW3475453455',
-    quantity: 3,
-    totalAmount: 112,
-    isProcessing: true
-  },
-]
+const userOrderDetails = data.userOrdersDetails;
+const processingOrders = userOrderDetails.filter(item => item.isProcessing === true)
 
 
 export const OrderProcessing = () => {
@@ -79,7 +39,7 @@ export const OrderProcessing = () => {
             border
             title='Details'
             btnStyle={styles.button()}
-            onPress={() => navigation.navigate('orderDetailsScreen')}
+            onPress={() => navigation.navigate('orderDetailsScreen', {source: 'orderProcessing', isProcessing: item.isProcessing})}
           />
           <Text style={styles.processingText()}>{item.isProcessing ? 'Processing' : null}</Text>
         </View>
@@ -89,7 +49,7 @@ export const OrderProcessing = () => {
   return (
     <View style={styles.orderInfo()}>
       <FlatList 
-        data={orderProcessingDetails}
+        data={processingOrders}
         renderItem={renderOrderProcessingSelected}
         contentContainerStyle={styles.flatListOrder()}
       />
