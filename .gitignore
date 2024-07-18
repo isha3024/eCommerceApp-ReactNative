@@ -66,4 +66,4 @@ yarn-error.log
 /coverage
 
 #env file
-/env
+.env
