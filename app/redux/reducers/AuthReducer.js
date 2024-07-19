@@ -1,32 +1,21 @@
 import * as actions from '../Types';
 
 const initialState = {
-  userLoginResponse: null,
-  isUserLogin: false,
+  userData: {},
+  isLoggedIn: false
 };
 
 export const AuthReducer = (state = initialState, action) => {
-  const {type, payload} = action;
-
-  switch (type) {
-    case actions.USER_LOGIN:
+  switch (action.type) {
+    case actions.USER_LOGIN_SUCCESS:
       return {
         ...state,
-        userLoginResponse: payload.userLoginResponse,
-        isUserLogin: payload.isUserLogin,
-        ...payload,
+        userData: action.payload,
+        isLoggedIn: true
       };
-    case actions.SET_USER_LOGGED_IN:
-      return {
-        ...state,
-        ...payload,
-      };
-    case actions.SET_USER_LOGGED_OUT:
-      return {
-        ...state,
-        ...payload,
-      };
-    default:
-      return state;
+    case actions.USER_LOGOUT:
+      return initialState;
+    default: 
+      return state
   }
 };

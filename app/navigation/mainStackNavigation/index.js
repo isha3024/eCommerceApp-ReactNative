@@ -1,15 +1,18 @@
-import React, {useEffect, useState, useSelector} from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AddNewAddressScreen, AddressScreen, BrandScreen, CheckoutScreen, FilterScreen, MainProductScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
-import { color } from '../../theme';
+import { useSelector } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
 
 export const MainStackNavigation = () => {
+
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+  console.log(isLoggedIn)
   const [showSplashScreen, setHideSplashScreen] = useState(true);
 
   useEffect(() => {
@@ -32,7 +35,17 @@ export const MainStackNavigation = () => {
             }}
           />
         ) : null}
-        {
+        { isLoggedIn 
+        ? (
+          <Stack.Screen
+          name="bottomStackNavigation"
+          component={BottomStackNavigation}
+          options={{
+            headerShown: false,
+          }}
+        />
+        ) 
+        : (
           <Stack.Screen
             name="authStackNavigation"
             component={AuthStackNavigation}
@@ -40,14 +53,21 @@ export const MainStackNavigation = () => {
               headerShown: false,
             }}
           />
-        }
-        <Stack.Screen
+        ) }
+        {/* <Stack.Screen
+            name="authStackNavigation"
+            component={AuthStackNavigation}
+            options={{
+              headerShown: false,
+            }}
+          /> */}
+        {/* <Stack.Screen
           name="bottomStackNavigation"
           component={BottomStackNavigation}
           options={{
             headerShown: false,
           }}
-        />
+        /> */}
         <Stack.Screen
           name="filterScreen"
           component={FilterScreen}

@@ -6,7 +6,6 @@ import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, co
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
 import { userAdd } from '../../redux'
-import Toast from 'react-native-toast-message'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true);
