@@ -2,10 +2,12 @@ import React, { useRef, useState } from 'react'
 import { Alert, Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
-import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
+import { IcBackArrow, IcCheck, IcClose, IcEyeClose, IcEyeOpen, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
-import { userAdd } from '../../redux'
+
+import { useDispatch } from 'react-redux'
+import { userAdd } from '../../redux/actions/AuthAction'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -14,18 +16,19 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 export const RegisterScreen = () => {
 
   const navigation = useNavigation();
-  const [errors, setErrors] = useState({});
+  const dispatch = useDispatch()
   const shakeAnim = useRef(new Animated.Value(0)).current;
+  const [errors, setErrors] = useState({});
+  const [isNameValid, setIsNameValid] = useState(false)
+  const [isEmailValid, setIsEmailValid] = useState(false)
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [formIsSubmitting, setFormIsSubmitting] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [inputField, setInputField] = useState({
     name: '',
     email: '',
     password: ''
   })
-  const [isNameValid, setIsNameValid] = useState(false)
-  const [isEmailValid, setIsEmailValid] = useState(false)
-  const [isPasswordValid, setIsPasswordValid] = useState(false)
-  const [formSubmitted, setFormSubmitted] = useState(false)
-  const [loading, setLoading] = useState(false)
   
   const shake = () => {
     Animated.sequence([
@@ -88,23 +91,26 @@ export const RegisterScreen = () => {
         password: ''
       })
       setLoading(true)
-      setFormSubmitted(true)
+      setFormIsSubmitting(true)
+      const responseBody = {
+        name: inputField.name,
+        email: inputField.email,
+        password: inputField.password
+      }
+      // console.log(responseBody)
       try {
-        const response = await userAdd(inputField);
+        const response = await userAdd(responseBody);
         console.log('response in register:', response);
         if (response.statusCode === 201) {
           Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('Login')}])
         }
-        else {
-          Alert.alert('Error', response.message, [{ text: 'Ok', onPress: () => null}])
-        }
       } catch (error) {
-        console.log('error in register: ', error)
+        // console.log('error in register: ', error)
         Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
       }
       finally {
         setLoading(false)
-        setFormSubmitted(false)
+        setFormIsSubmitting(false)
       }
     }
   }

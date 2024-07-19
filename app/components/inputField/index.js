@@ -43,9 +43,7 @@ export const InputField = ({
     }).start()
   }, [focusAnim, isFocused])
   return (
-    <Animated.View 
-      style={[
-        styles.rootContainer(error)]}>
+    <Animated.View style={[styles.rootContainer(error, editable)]}>
       {isFocused && <Animated.Text style={[
         styles.labelText(),
         {
@@ -60,20 +58,20 @@ export const InputField = ({
           fontFamily: isFocused ? fonts.metropolisRegular : fonts.metropolisMedium,
           fontSize: isFocused ? fontSize.mediumSmall : fontSize.small,
         },
-        ]}>{isFocused && label }</Animated.Text>}
-      <TextInput 
+      ]}>{isFocused && label}</Animated.Text>}
+      <TextInput
         placeholder={isFocused ? '' : placeholder}
         placeholderTextColor={isFocused ? '' : color.darkGray}
         style={[
-          styles.inputField('',isFocused), customTextInputStyles]}
-        value={value} 
+          styles.inputField('', isFocused), customTextInputStyles]}
+        value={value}
         onChangeText={onChangeText}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onPress={onPress}
         maxLength={maxLength}
         multiline={multiline}
-        autoCapitalize= {autoCapitalize ?? 'none'}
+        autoCapitalize={autoCapitalize ?? 'none'}
         editable={editable}
         keyboardType={keyboardType}
         returnKeyType={returnKeyType}
@@ -81,9 +79,9 @@ export const InputField = ({
         selectionColor={selectionColor ?? color.veryDarkGray}
         onSubmitEditing={onSubmitEditing}
         {...props}
-        />
-        <View style={styles.rightIcon()}>
-          {icon && iconPlace ===  'right' ? (
+      />
+      <View style={styles.rightIcon()}>
+        {icon && iconPlace === 'right' ? (
           renderRightIcon()
         ) : null}
       </View>

@@ -11,8 +11,8 @@ const Stack = createNativeStackNavigator();
 
 export const MainStackNavigation = () => {
 
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-  console.log(isLoggedIn)
+  // const isLoggedIn = useSelector(state => state.authReducer)
+  // console.log(isLoggedIn)
   const [showSplashScreen, setHideSplashScreen] = useState(true);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export const MainStackNavigation = () => {
             }}
           />
         ) : null}
-        { isLoggedIn 
+        {/* { isLoggedIn 
         ? (
           <Stack.Screen
           name="bottomStackNavigation"
@@ -53,21 +53,21 @@ export const MainStackNavigation = () => {
               headerShown: false,
             }}
           />
-        ) }
-        {/* <Stack.Screen
+        ) } */}
+        <Stack.Screen
             name="authStackNavigation"
             component={AuthStackNavigation}
             options={{
               headerShown: false,
             }}
-          /> */}
-        {/* <Stack.Screen
+          /> 
+         <Stack.Screen
           name="bottomStackNavigation"
           component={BottomStackNavigation}
           options={{
             headerShown: false,
           }}
-        /> */}
+        />
         <Stack.Screen
           name="filterScreen"
           component={FilterScreen}

@@ -7,10 +7,9 @@ const initialState = {
 
 export const AuthReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actions.USER_LOGIN_SUCCESS:
+    case actions.SET_USER_LOGGED_IN:
       return {
         ...state,
-        userData: action.payload,
         isLoggedIn: true
       };
     case actions.USER_LOGOUT:

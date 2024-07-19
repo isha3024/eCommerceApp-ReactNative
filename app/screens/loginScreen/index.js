@@ -19,7 +19,7 @@ export const LoginScreen = () => {
   const [errors, setErrors] = useState({});
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false)
-  const [formIsSubmitting, setFormIsSubmittingd] = useState(false)
+  const [formIsSubmitting, setFormIsSubmitting] = useState(false)
   const [loading, setLoading] = useState(false)
   const [inputField, setInputField] = useState({
     email: '',
@@ -74,29 +74,28 @@ export const LoginScreen = () => {
   const  handleSubmit = async () => {
     if (handleValidations()) {
       setErrors({
-        name: '',
         email: '',
         password: ''
       })
       setLoading(true)
-      setFormIsSubmittingd(true)
+      setFormIsSubmitting(true)
+      const responseBody = {
+        email: inputField.email,
+        password: inputField.password
+      }
       try {
-        const response = await userLogin(inputField);
-        console.log('response in login:', response);
+        const response = await userLogin(responseBody);
+        console.log('response in register:', response);
         if (response.statusCode === 201) {
           Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('bottomStackNavigation')}])
         }
-        else {
-          Alert.alert('Error', response.message, [{ text: 'Cancel', onPress: () => null}])
-        }
-      }
-       catch (error) {
-        console.log('error in login: ', error)
+      } catch (error) {
+        console.log('error in register: ', error)
         Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
       }
       finally {
         setLoading(false)
-        setFormIsSubmittingd(false)
+        setFormIsSubmitting(false)
       }
     }
   }
@@ -187,7 +186,7 @@ export const LoginScreen = () => {
           : (<Text style={styles.noError()}></Text>)
         }
         </Animated.View>
-        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={handleForgetPasswordPress}>
+        <TouchableOpacity style={styles.textAlignRight()} activeOpacity={0.5} onPress={loading ? () => null : handleForgetPasswordPress}>
           <Text style={styles.text()}>Forget your password?</Text>
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>

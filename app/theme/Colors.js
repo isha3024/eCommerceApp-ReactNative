@@ -9,6 +9,7 @@ export const color = {
   error: 'rgb(240,31,14)',
   lightOrange: 'rgb(255,186,73)',
   mostlyBlack: 'rgb(34,34,34)',
+  disabledColor: 'rgb(249, 246, 238)',
   transparent: 'rgba(0, 0, 0, 0)',
   customTransparent: opacity => `rgba(0, 0, 0, 0.2)`,
   customWhite: opacity => `rgba(255, 255, 255,${opacity ?? 1})`,

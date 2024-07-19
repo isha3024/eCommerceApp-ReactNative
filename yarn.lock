@@ -4597,6 +4597,7 @@ __metadata:
     react-redux: "npm:^9.1.2"
     react-test-renderer: "npm:18.2.0"
     redux: "npm:^5.0.1"
+    redux-persist: "npm:^6.0.0"
     redux-thunk: "npm:^3.1.0"
     rn-range-slider: "npm:^2.2.2"
     typescript: "npm:5.0.4"
@@ -8994,6 +8995,15 @@ __metadata:
     react: ">= 15.2.1"
     react-native: ">= 0.30.0"
   checksum: 10c0/58c2f5fa6372b31f82a1fc976ddbf9c45fa2c1a2fcaab417e39096152c4815463357ff410603db1df7dabab3a383bdef80db04c54a667bc40c5a0ce130e68961
+  languageName: node
+  linkType: hard
+
+"redux-persist@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "redux-persist@npm:6.0.0"
+  peerDependencies:
+    redux: ">4.0.0"
+  checksum: 10c0/8242d265ab8d28bbc95cf2dc2a05b869eb67aa309b1ed08163c926f3af56dd8eb1ea62118286083461b8ef2024d3b349fd264e5a62a70eb2e74d068c832d5bf2
   languageName: node
   linkType: hard
 

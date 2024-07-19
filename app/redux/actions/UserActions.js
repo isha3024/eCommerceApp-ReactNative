@@ -67,6 +67,7 @@ export const verifyOtp = body => {
       });
   };
 };
+
 export const referredList = (id, isStudent) => {
   return () => {
     return _referredList(id, isStudent)
@@ -86,6 +87,7 @@ export const referredList = (id, isStudent) => {
       });
   };
 };
+
 export const imageList = data => {
   return () => {
     return _imageList(data)
@@ -101,6 +103,7 @@ export const imageList = data => {
       });
   };
 };
+
 export const logout = body => {
   return dispatch => {
     return _logout(body)
@@ -122,6 +125,7 @@ export const logout = body => {
       });
   };
 };
+
 export const deleteAccount = () => {
   return () => {
     return _deleteAccount()
@@ -133,6 +137,7 @@ export const deleteAccount = () => {
       });
   };
 };
+
 export const profile = data => {
   return () => {
     return _profile(data)
@@ -144,6 +149,7 @@ export const profile = data => {
       });
   };
 };
+
 export const getAllCourseList = () => {
   return () => {
     return _getAllCourseList()
@@ -176,6 +182,7 @@ export const getReferList = () => {
       });
   };
 };
+
 export const getProfileReferList = (id, isStudent) => {
   return () => {
     return _getProfileReferredList(id, isStudent)
@@ -207,6 +214,7 @@ export const getNotificationList = () => {
       });
   };
 };
+
 export const addRefer = body => {
   return () => {
     return _addRefer(body)
@@ -219,6 +227,7 @@ export const addRefer = body => {
       });
   };
 };
+
 export const notificationStatusUpdate = (u_id, body) => {
   return () => {
     return _notificationStatusUpdate(u_id, body)

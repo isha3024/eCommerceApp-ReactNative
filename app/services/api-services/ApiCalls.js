@@ -67,6 +67,7 @@ export const _verifyOtp = async body => {
   let headers = await headersData({});
   return _api_calls('POST', '/login', headers, body);
 };
+
 export const _referredList = async (id, isStudent) => {
   let {_api_calls} = HttpCalls;
 
@@ -79,6 +80,7 @@ export const _referredList = async (id, isStudent) => {
     headers,
   );
 };
+
 export const _imageList = async () => {
   let {_api_calls} = HttpCalls;
 
@@ -106,6 +108,7 @@ export const _getAllCourseList = async () => {
   });
   return _api_calls('GET', '/courses', headers);
 };
+
 export const _logout = async body => {
   let {_api_calls} = HttpCalls;
 
@@ -134,6 +137,7 @@ export const _getReferList = async () => {
   });
   return _api_calls('GET', '/referred', headers);
 };
+
 export const _getProfileReferredList = async (id, isStudent) => {
   let {_api_calls} = HttpCalls;
 
@@ -146,6 +150,7 @@ export const _getProfileReferredList = async (id, isStudent) => {
     headers,
   );
 };
+
 export const _getNotificationList = async () => {
   let {_api_calls} = HttpCalls;
 
@@ -163,6 +168,7 @@ export const _deleteAccount = async (u_id, body) => {
   });
   return _api_calls('PATCH', `/deactivate`, headers, body);
 };
+
 export const _notificationStatusUpdate = async (u_id, body) => {
   let {_api_calls} = HttpCalls;
   let headers = await headersData({

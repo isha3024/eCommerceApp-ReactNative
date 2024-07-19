@@ -1,12 +1,12 @@
 import { color, fontSize, fonts, size } from "../../theme";
 
-export const rootContainer = (error) => ({
+export const rootContainer = (error, editable) => ({
   flexDirection: 'row',
   alignItems: 'center',
   borderRadius: size.moderateScale(4),
-  backgroundColor: color.white,
+  backgroundColor: !editable ? color.disabledColor : color.white,
   borderWidth: size.moderateScale(1),
-  borderColor: error ? color.error : color.white,
+  borderColor: error ? color.error : editable ? color.white : color.disabledColor,
   elevation: size.moderateScale(3),
   paddingLeft: size.moderateScale(10)
 })
@@ -19,7 +19,7 @@ export const inputField = (rightIcon, isFocus) => ({
   paddingRight: rightIcon ? 0 : size.moderateScale(20),
   fontFamily: fonts.metropolisRegular,
   fontSize: fontSize.small,
-  color: color.mostlyBlack
+  color: color.mostlyBlack,
 })
 
 export const labelText = () => ({

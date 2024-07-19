@@ -6,6 +6,8 @@ import {MainContextProvider} from './contexts/MainContext';
 import {MainStackNavigation} from './navigation';
 import {color, fonts, size} from './theme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { store } from './redux';
+import { Provider } from 'react-redux';
 
 const App = () => {
   
@@ -14,6 +16,7 @@ const App = () => {
   // }, [])
 
   return (
+    <Provider store={store}>
     <GestureHandlerRootView>
     <SafeAreaView style={styles.container}>
       <MainContextProvider>
@@ -25,6 +28,7 @@ const App = () => {
       </MainContextProvider>
     </SafeAreaView>
     </GestureHandlerRootView>
+    </Provider>
   );
 };
 const styles = StyleSheet.create({
