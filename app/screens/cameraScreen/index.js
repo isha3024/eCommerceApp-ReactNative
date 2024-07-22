@@ -1,48 +1,15 @@
-import { View, ActivityIndicator, StatusBar, TouchableOpacity, ImageBackground } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
-import { Camera, useCameraDevices } from 'react-native-vision-camera';
+import { View, StatusBar, ImageBackground } from 'react-native';
+import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 
-import { color, IcBackArrow, IcCamera, images } from '../../theme';
-import * as styles from './styles';
+import { color, IcBackArrow, images } from '../../theme';
 import { Button, Header, Text } from '../../components';
+import * as styles from './styles';
 
 export const CameraScreen = () => {
 
-  const camera = useRef(null)
-  const [showCamera, setShowCamera] = useState(true);
-  const [imageSource, setImageSource] = useState('');
-  const [hasPermission, setHasPermission] = useState(false)
-  const devices = useCameraDevices();
-  console.log('devices:==>', devices)
-  const cameraDevice = devices.back;
-
-  useEffect(() => {
-    const getUserPermission = async () => {
-      const newCameraPermission = await Camera.requestCameraPermission();
-      console.log('newCameraPermission:==> ', newCameraPermission);
-      setHasPermission(newCameraPermission === 'granted');
-    };
-
-    getUserPermission();
-  }, []);
-
-  const captureImage = async () => {
-    if (camera.current !== null) {
-      const photo = await camera.current.takePhoto({});
-      setImageSource(photo.path);
-      setShowCamera(false);
-      console.log('image.path:==> ', photo.path);
-    }
-  }
-
-  if (!hasPermission) {
-    return <ActivityIndicator size="small" color={color.error} />;
-  }
-
-  if (cameraDevice === null) {
-    return <ActivityIndicator size="large" color={color.error} />
-  }
-
+  const navigation = useNavigation()
+  
   return (
     <View style={styles.mainView()}>
       <View style={styles.topView()}>
@@ -58,15 +25,18 @@ export const CameraScreen = () => {
         />
       </View>
       <View style={styles.visualSearchWrapper()}>
-        <ImageBackground source={images.VisualSearchImage} style={styles.bgImage()}>
+        <ImageBackground source={images.VisualSearchImage} resizeMode='cover' style={styles.bgImage()}>
           <View style={styles.centeredView()}>
             <Text style={styles.searchText()}>Search for an outfit by taking a photo or uploading an image</Text>
             <Button 
+              activeOpacity={0.9}
               title='TAKE A PHOTO'
+              onPress={() => navigation.navigate('captureImageScreen')}
             />
             <Button 
               title='UPLOAD AN IMAGE'
               border
+              textWhite
               btnStyle={styles.buttonBorder()}
               btnTextStyle={styles.buttonText()}
             />

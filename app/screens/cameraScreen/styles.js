@@ -2,7 +2,7 @@ import { color, fonts, fontSize, size } from "../../theme";
 
 export const mainView = () => ({
   flex: 1,
-  backgroundColor: color.primary,
+  // backgroundColor: color.primary,
 })
 
 export const topView = () => ({
@@ -20,7 +20,6 @@ export const visualSearchWrapper = () => ({
 export const bgImage = () => ({
   width: '100%',
   height: '100%',
-  alignItems: 'center',
   justifyContent: 'center',
 })
 
@@ -29,12 +28,14 @@ export const centeredView = () => ({
 })
 
 export const searchText = () => ({
-  fontSize: fontSize.middleSmallMedium,
-  fontFamily: fonts.metropolisSemiBold
+  fontSize: fontSize.medium,
+  fontFamily: fonts.metropolisSemiBold,
+  marginBottom: size.moderateScale(28)
 })
 
 export const buttonBorder = () => ({
-  borderColor: color.white
+  borderColor: color.white,
+  marginTop: size.moderateScale(16)
 })
 
 export const buttonText = () => ({

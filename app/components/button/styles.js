@@ -29,9 +29,9 @@ export const titleStyle = () => ({
   fontFamily: fonts.metropolisMedium,
 });
 
-export const titleStyle2 = () => ({
+export const titleStyle2 = (textWhite) => ({
   fontSize: fontSize.small,
-  color: color.veryDarkGray,
+  color: textWhite ? color.white : color.veryDarkGray,
   fontFamily: fonts.metropolisMedium,
 });
 

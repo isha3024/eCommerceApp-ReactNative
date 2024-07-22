@@ -5,7 +5,7 @@ import { Text } from '../text';
 import * as styles from './styles';
 import { color } from '../../theme';
 
-export const Button = ({ title, onPress, activeOpacity, btnStyle, btnTextStyle, disabled, border, icon, renderIcon, loading }) => {
+export const Button = ({ title, onPress, activeOpacity, btnStyle, btnTextStyle, textWhite, disabled, border, icon, renderIcon, loading }) => {
   const [isDisabled, setIsDisabled] = useState(disabled || loading);
   
   useEffect(() => {
@@ -26,7 +26,7 @@ export const Button = ({ title, onPress, activeOpacity, btnStyle, btnTextStyle, 
       ? (<ActivityIndicator color={color.white}/>) 
       : (<>{icon && renderIcon ? renderIcon() : null}</>)
     }
-      <Text style={[styles.titleStyle(), btnTextStyle, border && styles.titleStyle2()]}>{title}</Text>
+      <Text style={[styles.titleStyle(), btnTextStyle, border && styles.titleStyle2(textWhite)]}>{title}</Text>
     </TouchableOpacity>
   );
 };
