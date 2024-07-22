@@ -30,4 +30,5 @@ export const images = {
   imgDiscount2: require('./image/images/DiscountImg2.png'),
   imgDiscount3: require('./image/images/DiscountImg3.png'),
   ImgOrderComplete: require('./image/images/ImgOrderComplete.png'),
+  VisualSearchImage: require('./image/images/VisualSearchImage.png'),
 };

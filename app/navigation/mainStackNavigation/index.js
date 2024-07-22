@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AddNewAddressScreen, AddressScreen, BrandScreen, CheckoutScreen, FilterScreen, MainProductScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
+import { AddNewAddressScreen, AddressScreen, BrandScreen, CameraScreen, CheckoutScreen, FilterScreen, MainProductScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
 import { useSelector } from 'react-redux';
@@ -31,10 +31,16 @@ export const MainStackNavigation = () => {
             component={SplashScreen}
             options={{
               headerShown: false,
-              
             }}
           />
         ) : null}
+        <Stack.Screen
+            name="cameraScreen"
+            component={CameraScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
         {/* { isLoggedIn 
         ? (
           <Stack.Screen
@@ -54,13 +60,13 @@ export const MainStackNavigation = () => {
             }}
           />
         ) } */}
-        <Stack.Screen
+        {/* <Stack.Screen
             name="authStackNavigation"
             component={AuthStackNavigation}
             options={{
               headerShown: false,
             }}
-          /> 
+          />  */}
          <Stack.Screen
           name="bottomStackNavigation"
           component={BottomStackNavigation}

@@ -23,4 +23,5 @@ export * from './addressScreen';
 export * from './addNewAddressScreen';
 export * from './checkoutScreen';
 export * from './successScreen';
+export * from './cameraScreen';
 // export * from './referScreen';

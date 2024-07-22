@@ -147,7 +147,7 @@ function _delete(url, headers, data) {
 }
 
 function _api_calls(type, url, headers = {}, data = {}) {
-  url = `${'https://34f9-2405-201-2006-700c-1e9-822e-bcb5-c0bf.ngrok-free.app' + url}`;
+  url = `${'https://localhost:8000' + url}`;
 
   switch (type) {
     case 'POST':

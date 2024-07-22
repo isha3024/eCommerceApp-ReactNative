@@ -38,7 +38,7 @@ import { List } from './image/svgIcons/IcList';
 import { CheckBoxInactive } from './image/svgIcons/IcCheckboxInactive';
 import { CheckBoxActive } from './image/svgIcons/IcCheckboxActive';
 import { Thumb } from './image/svgIcons/IcThumb';
-import { Camera } from './image/svgIcons/IcCamera';
+import { Camera } from './image/svgIcons/IcCamera.js';
 import { MasterCard } from './image/svgIcons/IcMasterCard';
 import { Plus } from './image/svgIcons/IcPlus';
 import { Help } from './image/svgIcons/IcHelp';
