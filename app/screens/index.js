@@ -25,4 +25,5 @@ export * from './checkoutScreen';
 export * from './successScreen';
 export * from './cameraScreen';
 export * from './captureImageScreen';
+export * from './imagesScreen';
 // export * from './referScreen';

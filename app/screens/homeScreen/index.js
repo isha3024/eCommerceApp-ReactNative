@@ -7,6 +7,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import * as data from '../../json'
 import { color, IcBackArrow, images, size } from '../../theme'
 import * as styles from './styles'
+import { categoryList } from '../../redux'
 
 
 const products = data.productList;
@@ -14,15 +15,12 @@ const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
 
 export const HomeScreen = () => {
+
   const navigation = useNavigation();
-
   const [showLoader, setShowLoader] = useState(false)
-
   const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
-
   //showing the user selected size option
   const [userSizeOption, setUserSizeOption] = useState(false);
-
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   useEffect(() => {
@@ -68,6 +66,7 @@ export const HomeScreen = () => {
     }, [])
   )
 
+
   const handleClosePressSizeSheet = () => {
     setUserSizeOption(false)
     setSizeBottomSheetVisible(false);
@@ -106,7 +105,7 @@ export const HomeScreen = () => {
       StatusBar.setBackgroundColor(color.transparent);
       StatusBar.setTranslucent(true);
       StatusBar.setBarStyle('dark-content')
-    })
+    },[])
   );
 
 

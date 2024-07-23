@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AddNewAddressScreen, AddressScreen, BrandScreen, CameraScreen, CaptureImageScreen, CheckoutScreen, FilterScreen, MainProductScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
+import { AddNewAddressScreen, AddressScreen, BrandScreen, CameraScreen, CaptureImageScreen, CheckoutScreen, FilterScreen, ImagesScreen, MainProductScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
 import { useSelector } from 'react-redux';
@@ -11,8 +11,7 @@ const Stack = createNativeStackNavigator();
 
 export const MainStackNavigation = () => {
 
-  // const isLoggedIn = useSelector(state => state.authReducer)
-  // console.log(isLoggedIn)
+  const isLoggedIn = useSelector(state => state.authReducer)
   const [showSplashScreen, setHideSplashScreen] = useState(true);
 
   useEffect(() => {
@@ -34,31 +33,7 @@ export const MainStackNavigation = () => {
             }}
           />
         ) : null}
-        <Stack.Screen
-            name="cameraScreen"
-            component={CameraScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-        <Stack.Screen
-            name="captureImageScreen"
-            component={CaptureImageScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-        {/* { isLoggedIn 
-        ? (
-          <Stack.Screen
-          name="bottomStackNavigation"
-          component={BottomStackNavigation}
-          options={{
-            headerShown: false,
-          }}
-        />
-        ) 
-        : (
+        {!showSplashScreen && !isLoggedIn ? (
           <Stack.Screen
             name="authStackNavigation"
             component={AuthStackNavigation}
@@ -66,21 +41,35 @@ export const MainStackNavigation = () => {
               headerShown: false,
             }}
           />
-        ) } */}
-        {/* <Stack.Screen
-            name="authStackNavigation"
-            component={AuthStackNavigation}
+        ) : null}
+        {/* {!showSplashScreen && isLoggedIn ? (
+          <Stack.Screen
+            name="bottomStackNavigation"
+            component={BottomStackNavigation}
             options={{
               headerShown: false,
             }}
-          />  */}
-         <Stack.Screen
-          name="bottomStackNavigation"
-          component={BottomStackNavigation}
+          />
+        ) : null} */}
+        <Stack.Screen
+          name="cameraScreen"
+          component={CameraScreen}
           options={{
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="captureImageScreen"
+          component={CaptureImageScreen}
+          options={{
+            headerShown: false,
+          }} />
+        <Stack.Screen
+          name="imagesScreen"
+          component={ImagesScreen}
+          options={{
+            headerShown: false,
+          }} />
         <Stack.Screen
           name="filterScreen"
           component={FilterScreen}
@@ -94,14 +83,14 @@ export const MainStackNavigation = () => {
           options={{
             headerShown: false,
           }}
-        />    
+        />
         <Stack.Screen
           name="mainProductScreen"
           component={MainProductScreen}
           options={{
             headerShown: false,
           }}
-        />    
+        />
         <Stack.Screen
           name="ratingsReviewsScreen"
           component={RatingsReviewsScreen}

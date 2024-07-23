@@ -52,6 +52,8 @@ import { EyeOpen } from './image/svgIcons/IcEyeOpen';
 import { EyeClose } from './image/svgIcons/IcEyeClose';
 import { Flash } from './image/svgIcons/IcFlash.js';
 import { Sync } from './image/svgIcons/IcSync.js';
+import { Video } from './image/svgIcons/IcVideo.js';
+import { Error } from './image/svgIcons/IcError.js';
 
 export const IcHome = props => <Home {...props} />;
 export const IcPhone = props => <Phone {...props} />;
@@ -104,3 +106,5 @@ export const IcEyeOpen = props => <EyeOpen {...props} />;
 export const IcEyeClose = props => <EyeClose {...props} />;
 export const IcFlash = props => <Flash {...props} />;
 export const IcSync = props => <Sync {...props} />;
+export const IcVideo = props => <Video {...props} />;
+export const IcError = props => <Error {...props} />;

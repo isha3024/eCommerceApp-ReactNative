@@ -105,7 +105,6 @@ export const RegisterScreen = () => {
           Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('Login')}])
         }
       } catch (error) {
-        // console.log('error in register: ', error)
         Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
       }
       finally {

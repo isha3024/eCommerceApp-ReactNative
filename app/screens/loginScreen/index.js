@@ -6,7 +6,8 @@ import * as styles from './styles'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
-import { userLogin } from '../../redux'
+import { setUserLoggedIn, userLogin } from '../../redux'
+import { useDispatch } from 'react-redux'
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -16,6 +17,7 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 export const LoginScreen = () => {
 
   const navigation = useNavigation();
+  const dispatch = useDispatch()
   const [errors, setErrors] = useState({});
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false)
@@ -87,6 +89,7 @@ export const LoginScreen = () => {
         const response = await userLogin(responseBody);
         console.log('response in register:', response);
         if (response.statusCode === 201) {
+          dispatch(setUserLoggedIn(response.data));
           Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('bottomStackNavigation')}])
         }
       } catch (error) {
