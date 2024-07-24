@@ -11,18 +11,17 @@ import {
   TouchableOpacity,
   StyleSheet,
   PermissionsAndroid,
-  Image,
+  // Image,
   Modal,
   ScrollView,
   Alert,
-  Animated,
 } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
-import {
-  Camera,
-  useCameraDevice,
-  useCameraPermission,
-} from 'react-native-vision-camera';
+import { Camera, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
+import Animated from 'react-native-reanimated';
+import { PanGestureHandler, PinchGestureHandler} from 'react-native-gesture-handler';
+
 
 import {Header, Text} from '../../components';
 import {
@@ -36,17 +35,10 @@ import {
   size,
 } from '../../theme';
 import * as styles from './styles';
-import {
-  PanGestureHandler,
-  PinchGestureHandler,
-} from 'react-native-gesture-handler';
 
 export const CaptureImageScreen = () => {
-  const scaleImage = useRef(new Animated.Value(1)).current;
-  const translateX = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(0)).current;
-  const pinchRef = createRef();
-  const panRef = createRef();
+
+  const navigation = useNavigation()
 
   const camera = useRef(null);
   const [cameraPosition, setCameraPosition] = useState('back');
@@ -54,11 +46,13 @@ export const CaptureImageScreen = () => {
   const [photoTaken, setPhotoTaken] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
   const [photos, setPhotos] = useState([]);
-  const [activePhoto, setActivePhoto] = useState(0);
-  const [showModal, setShowModal] = useState(false);
-  const [panEnabled, setPanEnabled] = useState(false);
 
   const device = useCameraDevice(cameraPosition);
+
+  useFocusEffect(useCallback(() => {
+    StatusBar.setBackgroundColor(color.primary);
+    StatusBar.setBarStyle('dark-content')
+  }))
 
   const getUserPermission = async () => {
     const cameraPermission = await Camera.getCameraPermissionStatus();
@@ -116,10 +110,6 @@ export const CaptureImageScreen = () => {
     }
   };
 
-  const openImageModal = () => {
-    setShowModal(true);
-  };
-
   const alertNoMedia = () => {
     Alert.alert(
       'No Media',
@@ -127,54 +117,6 @@ export const CaptureImageScreen = () => {
       [{text: 'OK'}],
       {cancelable: false},
     );
-  };
-
-  const slideImages = ({nativeEvent}) => {
-    const slide = Math.ceil(
-      nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width,
-    );
-    if (slide !== activePhoto) {
-      setActivePhoto(slide);
-    }
-  };
-
-  const onPinchEvent = Animated.event([{nativeEvent: scaleImage}], {
-    useNativeDriver: true,
-  });
-
-  const onPanEvent = Animated.event(
-    [
-      {
-        nativeEvent: {
-          translationX: translateX,
-          translationY: translateY,
-        },
-      },
-    ],
-    {useNativeDriver: true},
-  );
-
-  const handlePinchStateChange = ({nativeEvent}) => {
-    if (nativeEvent.state === STATE.ACTIVE) {
-      setPanEnabled(true);
-    }
-    const handleScale = nativeEvent.scaleImage;
-    if (handleScale < 1) {
-      Animated.spring(scale, {
-        toValue: 1,
-        useNativeDriver: true,
-      }).start();
-      Animated.spring(translateX, {
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
-      Animated.spring(translateY, {
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
-
-      setPanEnabled(false);
-    }
   };
 
   useEffect(() => {
@@ -233,10 +175,11 @@ export const CaptureImageScreen = () => {
       <View style={styles.bottomView()}>
         <View style={styles.cameraButtonView()}>
           {photos.length > 0 ? (
-            <TouchableOpacity activeOpacity={0.7} onPress={openImageModal}>
-              <Image
+            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('imagesScreen', {photos : [...photos]})}>
+              <Animated.Image
                 source={{uri: 'file://' + photos[photos.length - 1].path}}
                 style={styles.thumNail()}
+                sharedTransitionTag="imageFullScreen"
               />
             </TouchableOpacity>
           ) : (
@@ -275,49 +218,6 @@ export const CaptureImageScreen = () => {
           />
         </TouchableOpacity>
       </View>
-      <Modal visible={showModal} onRequestClose={() => setShowModal(false)}>
-        {showModal && (
-          <StatusBar
-            backgroundColor={color.mostlyBlack}
-            barStyle="light-content"
-          />
-        )}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          style={styles.imageScrollView()}
-          onScroll={slideImages}
-          contentContainerStyle={{alignItems: 'center'}}>
-          {[...photos].reverse().map((photo, index) => (
-            <View key={index}>
-              <PanGestureHandler
-                onGestureEvent={onPanEvent}
-                ref={panRef}
-                simultaneousHandlers={[pinchRef]}
-                enabled={panEnabled}
-                failOffsetX={[-1000, 1000]}
-                shouldCancelWhenOutside>
-                <Animated.View>
-                  <PinchGestureHandler
-                    ref={pinchRef}
-                    onGestureEvent={onPinchEvent}
-                    simultaneousHandlers={[panRef]}
-                    onHandlerStateChange={handlePinchStateChange}>
-                    <Animated.Image
-                      source={{uri: 'file://' + photo.path}}
-                      style={[
-                        styles.fullImage(),
-                        {transform: [{scale: scaleImage}, {translateX}, {translateY}]},
-                      ]}
-                    />
-                  </PinchGestureHandler>
-                </Animated.View>
-              </PanGestureHandler>
-            </View>
-          ))}
-        </ScrollView>
-      </Modal>
     </>
   );
 };
