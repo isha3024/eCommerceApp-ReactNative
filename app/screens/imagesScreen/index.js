@@ -1,40 +1,80 @@
-import React, { useCallback } from 'react'
-import { View, ScrollView, Dimensions, Image, StatusBar } from 'react-native'
-import Animated from 'react-native-reanimated';
-
-import * as styles from './styles'
-import { Text } from '../../components';
-import { color, fontSize, size } from '../../theme';
+import React, { useCallback } from 'react';
+import { View, ScrollView, StatusBar } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
-
-// const width = Dimensions.get('window')
+import { color, size } from '../../theme';
+import * as styles from './styles';
 
 export const ImagesScreen = ({ route }) => {
+  const capturedImages = route.params.photos;
+  const scales = capturedImages.map(() => useSharedValue(1));
+  const savedScales = capturedImages.map(() => useSharedValue(1));
 
-  useFocusEffect(useCallback(() => {
-    StatusBar.setBackgroundColor(color.mostlyBlack);
-    StatusBar.setBarStyle('light-content')
-  }))
 
-  const capturesImages = route.params.photos;
-  // console.log('capturesImages::', capturesImages)
+  const createPinchGesture = (index) => {
+    return Gesture.Pinch()
+    .onUpdate((e) => {
+     const newScale =  savedScales[index].value * e.scale;
+     if(newScale >= 1) {
+      scales[index].value = newScale
+     }
+    })
+    .onEnd(() => {
+      if (scales[index].value < 1) {
+        scales[index].value = 1;
+      }
+      savedScales[index].value = scales[index].value;
+    });
+  }
+
+  const createDoubleTapGesture = (index) => {
+    return Gesture.Tap()
+    .numberOfTaps(2)
+    .onEnd(() => {
+      if (scales[index].value > 1) {
+        scales[index].value = withSpring(1);
+        savedScales[index].value = 1      
+      }
+      else {
+        scales[index].value = withSpring(2);
+        savedScales[index].value = 2;
+      }
+      
+    });
+  }
+
+  const animatedStyle = (index) => useAnimatedStyle(() => ({
+    transform: [{ scale: scales[index].value }]
+  }));
+
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBackgroundColor(color.mostlyBlack);
+      StatusBar.setBarStyle('light-content');
+    }, [])
+  );
+
   return (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
       pagingEnabled={true}
       style={styles.imageScrollView()}
-      contentContainerStyle={{ alignItems: 'center' }}>
-      {[...capturesImages].reverse().map((photo, index) => (
+      contentContainerStyle={{ alignItems: 'center' }}
+    >
+      {[...capturedImages].reverse().map((photo, index) => (
         <View key={index}>
-          <Animated.Image
-            source={{ uri: 'file://' + photo.path }}
-            style={{width: size.deviceWidth, height: size.deviceHeight}}
-            sharedTransitionTag = {index === 0 ? 'imageFullScreen' : index.toString()}
-          />
+          <GestureDetector gesture={Gesture.Exclusive(createPinchGesture(index), createDoubleTapGesture(index))}>
+            <Animated.Image
+              source={{ uri: 'file://' + photo.path }}
+              style={[{ width: size.deviceWidth, height: size.deviceHeight }, animatedStyle(index)]}
+              sharedTransitionTag={index === 0 ? 'imageFullScreen' : index.toString()}
+            />
+          </GestureDetector>
         </View>
       ))}
     </ScrollView>
-  )
-}
+  );
+};
