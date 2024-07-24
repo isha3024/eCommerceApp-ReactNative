@@ -48,6 +48,7 @@ import { Flash } from './image/svgIcons/IcFlash.js';
 import { Sync } from './image/svgIcons/IcSync.js';
 import { Video } from './image/svgIcons/IcVideo.js';
 import { Error } from './image/svgIcons/IcError.js';
+import { Moon } from './image/svgIcons/IcMoon.js';
 
 export const IcBackArrow = props => <BackArrow {...props} />;
 export const IcCheck = props => <Check {...props} />;
@@ -96,3 +97,4 @@ export const IcFlash = props => <Flash {...props} />;
 export const IcSync = props => <Sync {...props} />;
 export const IcVideo = props => <Video {...props} />;
 export const IcError = props => <Error {...props} />;
+export const IcMoon = props => <Moon {...props} />;

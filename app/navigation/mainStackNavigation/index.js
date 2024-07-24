@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AddNewAddressScreen, AddressScreen, BrandScreen, CameraScreen, CaptureImageScreen, CheckoutScreen, FilterScreen, ImagesScreen, MainProductScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
+import { AddNewAddressScreen, AddressScreen, BrandScreen, CameraScreen, CaptureImageScreen, CheckoutScreen, DemoScreen, FilterScreen, ImagesScreen, MainProductScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
 import { useSelector } from 'react-redux';
@@ -33,7 +33,14 @@ export const MainStackNavigation = () => {
             }}
           />
         ) : null}
-        {!showSplashScreen && !isLoggedIn ? (
+        <Stack.Screen 
+          name="demoScreen"
+            component={DemoScreen}
+            options={{
+              headerShown: false,
+            }}
+        />
+        {/* {!showSplashScreen && !isLoggedIn ? (
           <Stack.Screen
             name="authStackNavigation"
             component={AuthStackNavigation}
@@ -41,7 +48,7 @@ export const MainStackNavigation = () => {
               headerShown: false,
             }}
           />
-        ) : null}
+        ) : null} */}
         {/* {!showSplashScreen && isLoggedIn ? (
           <Stack.Screen
             name="bottomStackNavigation"
@@ -51,7 +58,7 @@ export const MainStackNavigation = () => {
             }}
           />
         ) : null} */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="cameraScreen"
           component={CameraScreen}
           options={{
@@ -138,8 +145,7 @@ export const MainStackNavigation = () => {
           component={SuccessScreen}
           options={{
             headerShown: false,
-          }}
-        />
+          }} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
