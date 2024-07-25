@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View, Text, Platform, PermissionsAndroid, Alert, ToastAndroid, FlatList, Animated } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Heatmap, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service'
 
 import { Button, Header, Screen } from '../../components';
@@ -22,6 +22,7 @@ export const DemoScreen = () => {
   const [permissionGranted, setPermissionGranted] = useState(false)
   const [updatedMarkerPos, setUpdatedMarkerPos] = useState(initialLocation)
   const [visibleMarkers, setVisibleMarkers] = useState([])
+  const [zoomLevel, setZoomLevel] = useState(15)
   const [region, setRegion] = useState({
     latitude: initialLocation.latitude,
     longitude: initialLocation.longitude,
@@ -145,19 +146,21 @@ export const DemoScreen = () => {
       latitude: (region.latitude).toFixed(4),
       longitude: (region.longitude).toFixed(4)
     })
+    
+    const newZoomLevel = Math.log2(360 / region.longitudeDelta) * 2;
+    setZoomLevel(newZoomLevel)
   }
+  const shouldShowMarker = zoomLevel >= 10
 
   const fitToMarker = () => {
-    const markersInView = cityLocations.filter(marker => 
-      marker.latitude <= region.latitude + region.latitudeDelta / 2 &&
-      marker.latitude >= region.latitude - region.latitudeDelta / 2 &&
-      marker.longitude <= region.longitude + region.longitudeDelta / 2 &&
-      marker.longitude >= region.longitude - region.longitudeDelta / 2
-    );
-    setVisibleMarkers(markersInView);
+    const coordinates = cityLocations.map(marker => ({
+      latitude: marker.latitude,
+      longitude: marker.longitude,
+    }));
+    console.log('coordinates::: ', coordinates)
     if(mapRef.current){
-      mapRef.current.fitToCoordinates(visibleMarkers, {
-        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+      mapRef.current.fitToCoordinates(coordinates, {
+        edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
         animated: true,
       })
     }
@@ -181,22 +184,13 @@ export const DemoScreen = () => {
     checkPermissionGranted()
   }, [])
 
-  useEffect(() => {
-    getLocation()
-  }, [])
+  // useEffect(() => {
+  //   getLocation()
+  // }, [])
 
 
   return (
-    <Screen bgColor={color.primary} style={styles.mainView()} translucent={true}>
-      <Header
-        title
-        headerTitle='Google Maps API'
-        headerStyle={styles.header()}
-        headerLeftIcon
-        leftIcon={() => {
-          return (<IcBackArrow />)
-        }}
-      />
+    <Screen bgColor={color.transparent} style={styles.mainView()} translucent={true}>
       <View style={styles.middleView()}>
         {
           permissionGranted
@@ -212,7 +206,7 @@ export const DemoScreen = () => {
                   loadingEnabled={true}
                 >
                   {
-                    cityLocations.map((marker, index) => {
+                    shouldShowMarker && cityLocations.map((marker, index) => {
                       return (
                         <Marker
                           key={index}
@@ -225,6 +219,24 @@ export const DemoScreen = () => {
                       )
                     })
                   }
+                  <Heatmap
+                    points={
+                      cityLocations.map((marker, index) => {
+                        return {
+                          coordinate: {
+                            latitude: marker.latitude,
+                            longitude: marker.longitude
+                          }
+                        }
+                      })
+                    }
+                    radius={20}
+                    opacity={0.8}
+                    gradient={{
+                      colors: ["#00cc00", "#ff0000"],
+                      startPoints: [0.2, 1.0]
+                    }}
+                    />
                 </MapView>
                 <TouchableOpacity activeOpacity={0.7} onPress={mapDarkMode} style={styles.lightDarkMode()}>
                   <IcMoon darkColor={color.mostlyBlack} width={size.moderateScale(30)} height={size.moderateScale(30)} />

@@ -33,7 +33,7 @@ export const Screen = props => {
         <StatusBar
           translucent={translucent}
           backgroundColor={bgColor ?? color.white}
-          barStyle={bgColor ? 'dark-content' : 'light-content'}
+          barStyle={bgColor ? 'light-content' : 'dark-content'}
         />
         {loading && <Loader />}
         <KeyboardAwareScrollView
@@ -59,7 +59,7 @@ export const Screen = props => {
           <StatusBar
             translucent={translucent}
             backgroundColor={bgColor ?? color.white}
-            barStyle={bgColor ? 'dark-content' : 'light-content'}
+            barStyle={bgColor ? 'light-content' : 'dark-content'}
           />
           {loading && <Loader />}
           <View style={styles.container(style)}>{children}</View>
