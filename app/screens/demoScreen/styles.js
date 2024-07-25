@@ -14,6 +14,42 @@ export const middleView = () => ({
   flex: 1
 });
 
+export const markerContainer = () => ({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: [{translateX: size.moderateScale(-10)}, {translateY: size.moderateScale(-10)}],
+  zIndex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+});
+
+export const visibleMarkers = () => ({
+  position: 'absolute',
+  bottom: '15%',
+  right: '5%',
+  zIndex: 1,
+  width: size.moderateScale(150),
+  paddingVertical: size.moderateScale(8)
+});
+
+export const locationTextView = () => ({
+  backgroundColor: color.lightOrange,
+  position: 'absolute',
+  zIndex: size.moderateScale(1),
+  top: '50%',
+  left: '50%',
+  transform: [{translateX: size.moderateScale(-50)}, {translateY: size.moderateScale(-65)}],
+  padding: size.moderateScale(10),
+  borderRadius: size.moderateScale(5)
+});
+
+export const locationText = () => ({
+  fontSize: fontSize.verySmall,
+  fontFamily: fonts.metropolisSemiBold,
+  color: color.veryDarkGray
+});
+
 export const lightDarkMode = () => ({
   position: 'absolute',
   top: size.moderateScale(10),
@@ -25,22 +61,28 @@ export const lightDarkMode = () => ({
   zIndex: size.moderateScale(10),
 });
 
-export const goToHomeBtn = () => ({
+export const bottomView = () => ({
   position: 'absolute',
+  zIndex: size.moderateScale(1),
   bottom: size.moderateScale(20),
-  right: size.moderateScale(30),
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: size.deviceWidth,
+  paddingHorizontal:  size.moderateScale(15),
+});
+
+export const staticBtnText = () => ({
   alignItems: 'center',
   justifyContent: 'center',
-  zIndex: size.moderateScale(10),
   paddingHorizontal: size.moderateScale(15),
   paddingVertical: size.moderateScale(5),
   backgroundColor: color.lightOrange,
   borderRadius: size.moderateScale(5)
 });
 
-export const goToHomeBtnText = () => ({
+export const btnText = () => ({
   color: color.mostlyBlack,
-  fontSize: fontSize.littleMedium,
+  fontSize: fontSize.littleSmall,
   fontFamily: fonts.metropolisSemiBold,
   textTransform: 'uppercase'
 });
@@ -71,6 +113,28 @@ export const grantPermissionBtnText = () => ({
   color: color.mostlyBlack,
   fontSize: fontSize.littleMedium,
   fontFamily: fonts.metropolisBold,
+});
+
+export const sliderView = () => ({
+  position: 'absolute',
+  bottom: size.moderateScale(60),
+  paddingLeft: size.moderateScale(16),
+  zIndex: size.moderateScale(1)
+});
+
+export const sliderItemView = () => ({
+  backgroundColor: color.primary,
+  width: size.deviceWidth - 100,
+  paddingHorizontal: size.moderateScale(10),
+  paddingVertical: size.moderateScale(10),
+  borderRadius: size.moderateScale(5),
+});
+
+export const nameOfCity = () => ({
+  color: color.mostlyBlack,
+  fontSize: fontSize.littleMedium,
+  fontFamily: fonts.metropolisBold,
+  textAlign: 'left'
 });
 
 export const mapStyle = [

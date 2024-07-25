@@ -2399,16 +2399,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/geolocation@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "@react-native-community/geolocation@npm:3.3.0"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/73fdf30a15637a9af29f103cd804375c2e895a2ebfd1af7979767902dfd88038032fb2af8d0b7c82fa74c84e2a84aff84777965de8ed73e3ef9721dc6fa67603
-  languageName: node
-  linkType: hard
-
 "@react-native/assets-registry@npm:0.74.84":
   version: 0.74.84
   resolution: "@react-native/assets-registry@npm:0.74.84"
@@ -4569,7 +4559,6 @@ __metadata:
     "@gorhom/bottom-sheet": "npm:^4.6.3"
     "@react-native-async-storage/async-storage": "npm:^1.24.0"
     "@react-native-camera-roll/camera-roll": "npm:^7.8.3"
-    "@react-native-community/geolocation": "npm:^3.3.0"
     "@react-native/babel-preset": "npm:0.74.84"
     "@react-native/eslint-config": "npm:0.74.84"
     "@react-native/metro-config": "npm:0.74.84"
