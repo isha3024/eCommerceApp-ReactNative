@@ -2,12 +2,12 @@ import React from 'react';
 import { CartScreen, FavoriteScreen, HomeScreen, OnBoardingScreen, ProfileScreen, ShopScreen, ShopScreenV2 } from '../../screens';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CustomBottomTabBar } from '../../components';
+import { HomeStackNavigation } from '../homeStacknavigation';
 import { ShopStackNavigation } from '../shopStackNavigation';
-import { HomeStackNavigation } from '../homeStackNavigation';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { ProfileStackNavigation } from '../profileStackNavigation';
 import { FavoriteStackNavigation } from '../favoriteStackNavigation';
 import { CartStackNavigation } from '../cartStackNavigation';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 
 const Tab = createBottomTabNavigator();

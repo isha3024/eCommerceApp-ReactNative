@@ -36,7 +36,7 @@ export const OrderDetailsScreen = ({route}) => {
   }
 
   const handleReOrder = () => {
-
+    navigation.navigate('cartStackNavigation')
   }
 
   const totalAmount = () => {

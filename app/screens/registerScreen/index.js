@@ -90,29 +90,31 @@ export const RegisterScreen = () => {
         email: '',
         password: ''
       })
-      setLoading(true)
-      setFormIsSubmitting(true)
-      const responseBody = {
-        name: inputField.name,
-        email: inputField.email,
-        password: inputField.password
-      }
-      // console.log(responseBody)
-      try {
-        const response = await userAdd(responseBody);
-        console.log('response in register:', response);
-        if (response.statusCode === 201) {
-          Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('Login')}])
-        }
-      } catch (error) {
-        Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
-      }
-      finally {
-        setLoading(false)
-        setFormIsSubmitting(false)
-      }
+      navigation.navigate('Login')
+      // setLoading(true)
+      // setFormIsSubmitting(true)
+      // const responseBody = {
+      //   name: inputField.name,
+      //   email: inputField.email,
+      //   password: inputField.password
+      // }
+      // try {
+      //   const response = await userAdd(responseBody);
+      //   console.log('response in register:', response);
+      //   if (response.statusCode === 201) {
+          // Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('Login')}])
+           
+    //     }
+    //   } catch (error) {
+    //     Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
+    //   }
+    //   finally {
+    //     setLoading(false)
+    //     setFormIsSubmitting(false)
+    //   }
+    // }
     }
-  }
+}
 
   const handleNavigation = () => {
     setErrors({

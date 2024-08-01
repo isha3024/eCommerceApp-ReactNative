@@ -7,7 +7,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import * as data from '../../json'
 import { color, IcBackArrow, images, size } from '../../theme'
 import * as styles from './styles'
-import { categoryList } from '../../redux'
+// import { categoryList } from '../../redux'
 
 
 const products = data.productList;

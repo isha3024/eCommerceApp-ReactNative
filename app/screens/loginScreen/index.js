@@ -79,27 +79,28 @@ export const LoginScreen = () => {
         email: '',
         password: ''
       })
-      setLoading(true)
-      setFormIsSubmitting(true)
-      const responseBody = {
-        email: inputField.email,
-        password: inputField.password
-      }
-      try {
-        const response = await userLogin(responseBody);
-        console.log('response in register:', response);
-        if (response.statusCode === 201) {
-          dispatch(setUserLoggedIn(response.data));
-          Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('bottomStackNavigation')}])
-        }
-      } catch (error) {
-        console.log('error in register: ', error)
-        Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
-      }
-      finally {
-        setLoading(false)
-        setFormIsSubmitting(false)
-      }
+      navigation.navigate('bottomStackNavigation')
+      // setLoading(true)
+      // setFormIsSubmitting(true)
+      // const responseBody = {
+      //   email: inputField.email,
+      //   password: inputField.password
+      // }
+      // try {
+      //   const response = await userLogin(responseBody);
+      //   console.log('response in register:', response);
+      //   if (response.statusCode === 201) {
+      //     dispatch(setUserLoggedIn(response.data));
+      //     Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('bottomStackNavigation')}])
+      //   }
+      // } catch (error) {
+      //   console.log('error in register: ', error)
+      //   Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
+      // }
+      // finally {
+      //   setLoading(false)
+      //   setFormIsSubmitting(false)
+      // }
     }
   }
 

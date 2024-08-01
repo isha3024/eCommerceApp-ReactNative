@@ -195,7 +195,7 @@ export const MainProductScreen = ({ route }) => {
       <BottomSheetContainer
         isVisible={isSizeBottomSheetVisible}
         onClose={handleSizeDropdownPressClose}
-        customHeight={'45%'}>
+        customHeight={'40%'}>
         <Text style={styles.titleBottomSheet()}>Select Size</Text>
         <View style={styles.sizeContainer()}>
           {
@@ -218,7 +218,7 @@ export const MainProductScreen = ({ route }) => {
       <BottomSheetContainer
         isVisible={isColorBottomSheetVisible}
         onClose={handleColorDropdownPressClose}
-        customHeight={'35%'}>
+        customHeight={'30%'}>
         <Text style={styles.titleBottomSheet()}>Select Color</Text>
         <View style={styles.sizeContainer()}>
           {
