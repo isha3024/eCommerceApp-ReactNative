@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Animated, FlatList, Image, LogBox, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Animated, FlatList, Image, LogBox, TextInput, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useSelector } from 'react-redux'
 
 import * as data from '../../json'
-import { addToCart } from '../../redux'
-import { useDispatch } from 'react-redux'
 import { color, IcChevronRight, IcClose, IcSearch, size } from '../../theme'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import * as styles from './styles'
@@ -13,9 +10,6 @@ import * as styles from './styles'
 export const CartScreen = () => {
 
   const navigation = useNavigation();
-  // const dispatch = useDispatch()
-  // const cartData = useSelector(state => state.practice)
-  // console.log('cartData: ', JSON.stringify(cartData))  
 
   const [orderedProducts, setOrderedProducts] = useState(data.orderedProducts);
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
@@ -72,11 +66,6 @@ export const CartScreen = () => {
     setOrderedProducts(updateCart);
   };
 
-
-  // const handleAddToCartRedux = (item) => {
-  //   dispatch(addToCart(item))
-  // }
-
   const showCartOptionsOfProduct = (id) => {
     setShowCartOptions((option) => {
      return {...option, [id]: !option[id]}
@@ -104,6 +93,10 @@ export const CartScreen = () => {
   const addToFavorite = (id) => {
     const updateCart = orderedProducts.map(cart => {
       if (cart.id === id) {
+        Alert.alert(
+          'Product Added to Favorites',
+          'You have successfully added this product to your favorites',
+        )
         return {
           ...cart, 
           isFavorite: !cart.isFavorite
@@ -112,7 +105,7 @@ export const CartScreen = () => {
       return cart;
     })
     setOrderedProducts(updateCart);
-    showCartOptions()
+    setShowCartOptions({})
   }
 
   const handleSearchCode = (value) => {
@@ -128,7 +121,6 @@ export const CartScreen = () => {
     return (
       <>
       <ProductCardMain
-        // activeOpacity={1}
         productHorizontal
         productTitle={item.productName}
         productImage={item.productImage}
@@ -140,7 +132,6 @@ export const CartScreen = () => {
         selectQuantity={item.productQuantity}
         increaseQuantity={() => increaseQuantity(item.id)}
         deccreaseQuantity={() => decreaseQuantity(item.id)}
-        // increaseQuantity={() => handleAddToCartRedux(item)}
         cartOptions={true}
         cartOptionPress={() => showCartOptionsOfProduct(item.id)}
       />
@@ -164,8 +155,6 @@ export const CartScreen = () => {
     <Screen bgColor={color.primary} style={styles.mainView()}>
       <View style={styles.topView()}>
         <Header 
-          // title
-          // headerTitle={cartData.length}
           headerStyle={styles.header()}
           headerRightIcon
           rightIcon={() => {

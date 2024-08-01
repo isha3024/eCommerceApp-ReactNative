@@ -6,8 +6,6 @@ import { IcBackArrow, IcCheck, IcClose, IcEyeClose, IcEyeOpen, IcFacebook, IcFor
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
 
-import { useDispatch } from 'react-redux'
-import { userAdd } from '../../redux/actions/AuthAction'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -16,7 +14,6 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 export const RegisterScreen = () => {
 
   const navigation = useNavigation();
-  const dispatch = useDispatch()
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const [errors, setErrors] = useState({});
   const [isNameValid, setIsNameValid] = useState(false)
