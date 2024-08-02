@@ -12,7 +12,6 @@ const Stack = createNativeStackNavigator();
 export const MainStackNavigation = () => {
 
   const isUserRegistered = useSelector(state => state.authUser.isUserRegistered);
-  console.log('user: ', isUserRegistered)
   const [showSplashScreen, setHideSplashScreen] = useState(true);
 
   useEffect(() => {

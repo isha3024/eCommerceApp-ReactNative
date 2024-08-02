@@ -1,22 +1,21 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-// import thunk from 'redux-thunk';
 import { authReducer } from './AuthReducer';
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REHYDRATE, REGISTER } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { userReducer } from './UserReducers';
 
 const persistConfig = {
   key: 'root',
-  storage: AsyncStorage
-}
+  storage: AsyncStorage,
+};
 
 const rootReducer = combineReducers({
-  authUser: authReducer
+  authUser: authReducer,
+  user: userReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Configure store with middleware
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -27,4 +26,4 @@ export const store = configureStore({
     }),
 });
 
-export const persistor = persistStore(store)
+export const persistor = persistStore(store);

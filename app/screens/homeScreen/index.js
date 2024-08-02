@@ -4,67 +4,26 @@ import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } fr
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import * as data from '../../json'
 import { color, IcBackArrow, images, size } from '../../theme'
 import * as styles from './styles'
+import { useDispatch, useSelector } from 'react-redux'
+import { loadProducts } from '../../redux'
 // import { categoryList } from '../../redux'
 
-
-const products = data.productList;
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
 
 export const HomeScreen = () => {
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const productList = useSelector(state => state.user);
+
+  const [products, setProducts] = useState({})
   const [showLoader, setShowLoader] = useState(false)
   const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
-  //showing the user selected size option
   const [userSizeOption, setUserSizeOption] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
-
-  useEffect(() => {
-    setShowLoader(true)
-    setTimeout(() => {
-      setShowLoader(false)
-    }, 1000)
-  }, [])
-
-  useFocusEffect(
-    useCallback(() => {
-
-      const handleBackPress = () => {
-        Alert.alert(
-          'Exit App',
-          'Are you sure you want to exit?',
-          [
-            {
-              text: 'Cancel',
-              onPress: () => null,
-              style: 'cancel' 
-            },
-            {
-              text: 'Exit',
-              onPress: () => BackHandler.exitApp(),
-    
-            }
-          ]
-        )
-        return true;
-      }
-
-      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-      return () => {
-        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-      }
-    })
-  )
-
-  useFocusEffect(
-    useCallback(() => {
-      setSizeBottomSheetVisible(false)
-    }, [])
-  )
 
 
   const handleClosePressSizeSheet = () => {
@@ -100,6 +59,17 @@ export const HomeScreen = () => {
     }
   }
 
+  const getProductList = async () => {
+    try {
+      const productsNew = await dispatch(loadProducts());
+      // console.log('productsNew:: ', productsNew);
+      setProducts(productsNew);
+    }
+    catch(error) {
+      console.log('error:: ', error)
+    }
+  }
+
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBackgroundColor(color.transparent);
@@ -107,6 +77,44 @@ export const HomeScreen = () => {
       StatusBar.setBarStyle('dark-content')
     },[])
   );
+
+  useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        Alert.alert(
+          'Exit App',
+          'Are you sure you want to exit?',
+          [
+            {text: 'Cancel',onPress: () => null},
+            {text: 'Exit',onPress: () => BackHandler.exitApp()}
+          ]
+        )
+        return true;
+      }
+
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      }
+    })
+  )
+
+  useFocusEffect(
+    useCallback(() => {
+      setSizeBottomSheetVisible(false)
+    }, [])
+  )
+
+  useEffect(() => {
+    setShowLoader(true)
+    setTimeout(() => {
+      setShowLoader(false)
+    }, 1000)
+  }, [])
+
+  useEffect(() => {
+    getProductList()
+  },[])
 
 
   return (
