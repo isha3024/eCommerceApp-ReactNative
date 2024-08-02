@@ -1,34 +1,33 @@
-import React, { useEffect } from 'react';
-import {LogBox, SafeAreaView, StyleSheet} from 'react-native';
-
-import {LocalizationProvider} from './contexts';
-import {MainContextProvider} from './contexts/MainContext';
-import {MainStackNavigation} from './navigation';
-import {color, fonts, size} from './theme';
+import React from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-// import { store } from './redux';
-// import { Provider } from 'react-redux';
+
+import { LocalizationProvider } from './contexts';
+import { MainContextProvider } from './contexts/MainContext';
+import { MainStackNavigation } from './navigation';
+import { color, fonts, size } from './theme';
+import { Provider } from 'react-redux';
+import { persistor, store } from './redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const App = () => {
-  
-  // useEffect(() => {
-  //   LogBox.ignoreLogs(["[Reanimated] Tried to modify key `reduceMotion` of an object which has been already passed to a worklet."])
-  // }, [])
 
   return (
-    // <Provider store={store}>
-    <GestureHandlerRootView>
-    <SafeAreaView style={styles.container}>
-      <MainContextProvider>
-        <LocalizationProvider>
-          {/* <Text>App</Text> */}
-          <MainStackNavigation />
-          {/* <DemoScreen /> */}
-        </LocalizationProvider>
-      </MainContextProvider>
-    </SafeAreaView>
-    </GestureHandlerRootView>
-    // </Provider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+      <GestureHandlerRootView>
+        <SafeAreaView style={styles.container}>
+          <MainContextProvider>
+            <LocalizationProvider>
+              {/* <Text>App</Text> */}
+              <MainStackNavigation />
+              {/* <DemoScreen /> */}
+            </LocalizationProvider>
+          </MainContextProvider>
+        </SafeAreaView>
+      </GestureHandlerRootView>
+      </PersistGate>
+    </Provider>
   );
 };
 const styles = StyleSheet.create({

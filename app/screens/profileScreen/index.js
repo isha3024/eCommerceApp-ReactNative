@@ -1,14 +1,31 @@
 import React from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, TouchableOpacity, View } from 'react-native';
 
 import * as styles from './styles';
 import { Header, Screen, Text } from '../../components';
-import { color, IcBackArrow, IcSearch, images, size } from '../../theme';
+import { color, IcBackArrow, IcLogout, images, size } from '../../theme';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '../../redux';
 
 export const ProfileScreen = () => {
-  
+
   const navigation = useNavigation();
+  const dispatch = useDispatch()
+  const userInfo = useSelector(state => state.authUser.userInfo);
+  // console.log('user: ', userInfo)
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {text: 'Cancel',onPress: () => null},
+        {text: 'OK', onPress: () => dispatch(logoutUser())}
+      ]
+    )
+  }
+  
   return (
     <Screen translucent={true} bgColor={color.primary} style={styles.mainContainer()}>
       <Header 
@@ -16,9 +33,10 @@ export const ProfileScreen = () => {
         headerRightIcon
         rightIcon={() => {
           return (
-            <IcSearch />
+            <IcLogout />
           )
         }}
+        rightIconPress={handleLogout}
       />
       <View style={styles.profileContainer()}>
         <Text style={styles.mainTitle()}>My profile</Text>
@@ -27,8 +45,8 @@ export const ProfileScreen = () => {
             <Image source={images.imgAvatarLogo} style={styles.profileImg()}/>
           </View>
           <View>
-            <Text style={styles.profileName()}>Matilda Brown</Text>
-            <Text style={styles.profileEmail()}>matildabrown@mail.com</Text>
+            <Text style={styles.profileName()}>{userInfo.name}</Text>
+            <Text style={styles.profileEmail()}>{userInfo.email}</Text>
           </View>
         </View>
         <View style={styles.profileOptionsList()}>

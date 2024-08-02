@@ -1,10 +1,12 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Alert, Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
-import { IcBackArrow, IcCheck, IcClose, IcEyeClose, IcEyeOpen, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
+import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
+import { useDispatch } from 'react-redux'
+import { registerUser } from '../../redux'
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -14,13 +16,13 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 export const RegisterScreen = () => {
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const [errors, setErrors] = useState({});
   const [isNameValid, setIsNameValid] = useState(false)
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [formIsSubmitting, setFormIsSubmitting] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [inputField, setInputField] = useState({
     name: '',
     email: '',
@@ -81,35 +83,21 @@ export const RegisterScreen = () => {
   }
 
   const  handleSubmit = async () => {
-    if (validateForm()) {
+    if (!validateForm()) {
+      return;
+    }else {
       setErrors({
         name: '',
         email: '',
         password: ''
       })
-      navigation.navigate('Login')
-      // setLoading(true)
-      // setFormIsSubmitting(true)
-      // const responseBody = {
-      //   name: inputField.name,
-      //   email: inputField.email,
-      //   password: inputField.password
-      // }
-      // try {
-      //   const response = await userAdd(responseBody);
-      //   console.log('response in register:', response);
-      //   if (response.statusCode === 201) {
-          // Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('Login')}])
-           
-    //     }
-    //   } catch (error) {
-    //     Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
-    //   }
-    //   finally {
-    //     setLoading(false)
-    //     setFormIsSubmitting(false)
-    //   }
-    // }
+      const data = {
+        name: inputField.name,
+        email: inputField.email,
+        password: inputField.password
+      }
+      console.log('data: ', data)
+      dispatch(registerUser(data))
     }
 }
 
@@ -152,7 +140,7 @@ export const RegisterScreen = () => {
             label={'Name'}
             autoCapitalize={true}
             onChangeText={(val) => handleChange(val, 'name')}
-            editable={loading ? false : true}
+            editable={true}
             keyboardType='default'
             icon
             iconPlace='right'
@@ -175,7 +163,7 @@ export const RegisterScreen = () => {
           label={'Email'}
           onChangeText={(val) => handleChange(val, 'email')}
           keyboardType='email-address'
-          editable={loading ? false : true}
+          editable={true}
           autoCapitalize='none'
           icon
           iconPlace='right'
@@ -199,7 +187,7 @@ export const RegisterScreen = () => {
           secureTextEntry={true}
           onChangeText={(val) => handleChange(val, 'password')}
           keyboardType='default'
-          editable={loading ? false : true}
+          editable={true}
           icon
           iconPlace='right'
           renderRightIcon={() => (
@@ -222,8 +210,6 @@ export const RegisterScreen = () => {
           activeOpacity={0.8} 
           btnStyle={styles.buttonWithText()} 
           title='SIGN UP' 
-          disabled={loading} 
-          loading={loading}
           onPress={handleSubmit} 
         />
       </View>

@@ -50,6 +50,7 @@ import { Video } from './image/svgIcons/IcVideo.js';
 import { Error } from './image/svgIcons/IcError.js';
 import { Moon } from './image/svgIcons/IcMoon.js';
 import { LocationPin } from './image/svgIcons/IcLocation.js';
+import { Logout } from './image/svgIcons/IcLogout.js';
 
 export const IcBackArrow = props => <BackArrow {...props} />;
 export const IcCheck = props => <Check {...props} />;
@@ -99,4 +100,5 @@ export const IcSync = props => <Sync {...props} />;
 export const IcVideo = props => <Video {...props} />;
 export const IcError = props => <Error {...props} />;
 export const IcMoon = props => <Moon {...props} />;
-export const IcLocationPin = props => <LocationPin {...props} />;
+export const IcLocationPin = props => <LocationPin {...props} />; 
+export const IcLogout = props => <Logout {...props} />; 

@@ -1,6 +1,7 @@
 export const color = {
   primary:  'rgb(249,249,249)',
   secondary: 'rgb(219,48,34)',
+  secondaryTransparent: 'rgba(219 ,48 ,34 , 0.4)',
   white: 'rgb(255, 255, 255)',
   darkGray: 'rgb(155,155,155)',
   borderColor: 'rgba(155,155,155, 0.2)',

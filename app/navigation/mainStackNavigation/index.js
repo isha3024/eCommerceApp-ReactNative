@@ -4,16 +4,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AddNewAddressScreen, AddressScreen, BrandScreen, CameraScreen, CaptureImageScreen, CheckoutScreen, DemoScreen, FilterScreen, ImagesScreen, MainProductScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
+import { useSelector } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
 
 export const MainStackNavigation = () => {
 
+  const isUserRegistered = useSelector(state => state.authUser.isUserRegistered);
+  console.log('user: ', isUserRegistered)
   const [showSplashScreen, setHideSplashScreen] = useState(true);
 
   useEffect(() => {
-    // localStorageValueGet();
     setTimeout(() => {
       setHideSplashScreen(false);
     }, 1000);
@@ -31,21 +33,24 @@ export const MainStackNavigation = () => {
             }}
           />
         ) : null}
+        {
+          isUserRegistered === false 
+            ? (<Stack.Screen
+              name="authStackNavigation"
+              component={AuthStackNavigation}
+              options={{
+                headerShown: false,
+              }}
+            />)
+            : (<Stack.Screen
+              name="bottomStackNavigation"
+              component={BottomStackNavigation}
+              options={{
+                headerShown: false,
+              }}
+            />)
+        }
         <Stack.Screen
-            name="authStackNavigation"
-            component={AuthStackNavigation}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="bottomStackNavigation"
-            component={BottomStackNavigation}
-            options={{
-              headerShown: false,
-            }}
-          />
-         <Stack.Screen
           name="cameraScreen"
           component={CameraScreen}
           options={{
