@@ -38,11 +38,10 @@ export const ProductCardMain = ({
   deccreaseQuantity,
   cartOptions,
   cartOptionPress,
-  isFavorite,
+  isProductFavorite,
   onAddToFavorite
 }) => {
-  const discount = Math.floor(((originalPrice - sellingPrice)/originalPrice) * 100)
-
+  const discount = Math.floor(((originalPrice - sellingPrice)/originalPrice) * 100);
 
   if (productHorizontal) {
     return (
@@ -134,7 +133,7 @@ export const ProductCardMain = ({
           addToFavoriteIcon && (
             <TouchableOpacity activeOpacity={0.9} style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
               {
-                isFavorite ?
+                isProductFavorite ?
                   (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
                   : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
               }
@@ -236,7 +235,7 @@ export const ProductCardMain = ({
           addToFavoriteIcon && (
             <TouchableOpacity activeOpacity={0.6} style={[styles.addToFavoriteBtn(), flotingBtnStyle]} onPress={onAddToFavorite}>
               {
-                isFavorite ?
+                isProductFavorite ?
                   (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
                   : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
               }

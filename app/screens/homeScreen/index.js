@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { View, ImageBackground, TouchableOpacity, FlatList, StatusBar, BackHandler, Alert } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { View, ImageBackground, TouchableOpacity, FlatList, BackHandler, Alert, ToastAndroid, StatusBar } from 'react-native'
 import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { color, IcBackArrow, images, size } from '../../theme'
-import * as styles from './styles'
 import { useDispatch, useSelector } from 'react-redux'
-import { loadProducts } from '../../redux'
+import { loadProducts, toggleFavorite } from '../../redux'
+import * as styles from './styles'
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
@@ -16,11 +16,9 @@ export const HomeScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const productList = useSelector(state => state.product.products);
-  // console.log('products: ', productList)
-
-  const [products, setProducts] = useState([])
-  const [showLoader, setShowLoader] = useState(false)
+  const productList = useSelector((state) => state.product.products); 
+  
+  const [products, setProducts] = useState([]);
   const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
@@ -35,27 +33,36 @@ export const HomeScreen = () => {
   };
 
   const showOnlyNewProducts = () => {
-    const newProducts = productList.filter(product => product.isProductNew === true);
+    const newProducts = productList.filter(product => product.isProductNew);
     setProducts(newProducts)
   }
 
   const handleFavoriteBtn = (item) => {
-    const newProductList = products.map((product) => {
-      if (product.id === item.id) {
-        return { ...product, isFavorite: !product.isFavorite };
-      }
-      return product;
-    });
-    setProducts(newProductList)
-  }
+    dispatch(toggleFavorite(item.id));
+  };
 
-  useFocusEffect(
-    useCallback(() => {
-      StatusBar.setBackgroundColor(color.transparent);
-      StatusBar.setTranslucent(true);
-      StatusBar.setBarStyle('dark-content')
-    },[StatusBar])
-  );
+  const renderProducts = ({ item }) => {
+    return (
+      <ProductCardMain
+        onProductPress={() => {
+          setSelectedProductId(item.id);
+          setSizeBottomSheetVisible(true);
+        }}
+        customProductStyle={styles.productCardHome()}
+        productImage={item?.images}
+        brandName={item?.brand}
+        productTitle={item?.name}
+        originalPrice={item?.originalPrice}
+        ratings={item?.ratings}
+        ratingsCounts={item?.rating_count}
+        newProduct={item?.isProductNew}
+        addToFavoriteIcon
+        onAddToFavorite={() => handleFavoriteBtn(item)}
+        isProductFavorite={item?.isProductFavorite ||item?.isFavorite}
+        flotingBtnStyle={styles.flotingBtnStyle()}
+      />
+    )
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -78,16 +85,15 @@ export const HomeScreen = () => {
     })
   )
 
-  useEffect(() => {
-    setShowLoader(true)
-    setTimeout(() => {
-      setShowLoader(false)
-    }, 1000)
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBackgroundColor(color.transparent)
+    },[])
+  )
 
   useEffect(() => {
     showOnlyNewProducts()
-  },[])
+  },[productList])
 
   useEffect(() => {
     dispatch(loadProducts())
@@ -95,9 +101,8 @@ export const HomeScreen = () => {
 
 
   return (
-    <Screen withScroll loading={showLoader}>
-        <StatusBar backgroundColor={color.transparent} translucent={true} />
-        <View style={styles.topView()}>
+    <Screen withScroll bgColor={color.transparent} translucent={true}>
+      <View style={styles.topView()}>
           <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
             <LinearGradient
               colors={['rgba(0, 0, 0, .7)', 'rgba(255, 255, 255, 0)']}
@@ -130,29 +135,7 @@ export const HomeScreen = () => {
             horizontal
             contentContainerStyle={{ paddingBottom: size.moderateScale(80) }}
             data={products}
-            renderItem={(item) => {
-              return (
-                <ProductCardMain
-                  onProductPress={() => {
-                    setSelectedProductId(item?.id);
-                    setSizeBottomSheetVisible(true);
-                  }}
-                  customProductStyle={styles.productCardHome()}
-                  productImage={item.item?.images}
-                  brandName={item.item?.brand}
-                  productTitle={item.item?.name}
-                  originalPrice={item.item?.originalPrice}
-                  sellingPrice={item.item?.sellingPrice}
-                  ratings={item.item?.ratings}
-                  ratingsCounts={item.item?.rating_count}
-                  newProduct={item.item?.isProductNew}
-                  addToFavoriteIcon
-                  onAddToFavorite={() => handleFavoriteBtn(item.item)}
-                  isFavorite={item.item?.isFavorite}
-                  flotingBtnStyle={styles.flotingBtnStyle()}
-                />
-              )
-            }}
+            renderItem={renderProducts}
             keyExtractor={(item, index) => item + index}
           />
         </View>
@@ -177,7 +160,7 @@ export const HomeScreen = () => {
           <Text style={styles.sizeInfoText()}>Size info</Text>
           <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        <Button activeOpacity={0.8} title='ADD TO FAVORITE' onPress={handleFavoriteBtn} btnStyle={styles.button()} />
+        <Button activeOpacity={0.8} title='ADD TO FAVORITE' onPress={() => null} btnStyle={styles.button()} />
       </BottomSheetContainer>
     </Screen>
   )

@@ -77,6 +77,19 @@ export const filterItemText = () => ({
   color: color.mostlyBlack
 })
 
+export const favProductsEmptyView = () => ({
+  flex: 1,
+  justifyContent: 'center',
+  marginHorizontal: 'auto',
+  gap: size.moderateScale(20)
+})
+
+export const emptyText = () => ({
+  fontSize: fontSize.middleSmallMedium,
+  fontFamily: fonts.metropolisSemiBold,
+  color: color.secondary,
+})
+
 export const bottomContainer = (showGrid) => ({
   flex: 1,
   paddingTop: size.moderateScale(16),

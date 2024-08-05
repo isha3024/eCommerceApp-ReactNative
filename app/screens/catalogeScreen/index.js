@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react' 
-import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ScrollView, Alert, LogBox, ToastAndroid } from 'react-native'
-import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, SortBy, Text } from '../../components'
+import React, { useCallback, useEffect, useRef, useState } from 'react' 
+import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ScrollView, Alert, LogBox, ToastAndroid } from 'react-native'
+import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
-import { addToFavorite, loadProducts, productAddToFavorite } from '../../redux'
+import { loadProducts, toggleFavorite } from '../../redux'
 import * as styles from './styles'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -70,12 +70,11 @@ export const CatalogeScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch()
-  const products = useSelector(state => state.user.products);
-  const wishlist = useSelector(state => state.user);
+  const productList = useSelector(state => state.product.products);
 
-  const [showProductList, setShowProductList] = useState(products);
+  const [showProductList, setShowProductList] = useState([]);
   const [isSheetVisible, setSheetVisible] = useState(false);
-  const [isSelected, setIsSelected] = useState(sortProductType[3]);
+  const [sortOptionName, setSortOptionName] = useState(null)
   const [isSortOptionSelected, setIsSortOptionSelected] = useState(sortProductType[3])
   const [showGrid, setShowGrid] = useState(true);
   const [title, showTitle] = useState(false);
@@ -100,7 +99,7 @@ export const CatalogeScreen = () => {
 
   /**sorting the product based on selection */
   const sortProducts = (sortOption) => {
-    let sortedList = [...products];
+    let sortedList = [...showProductList];
     // console.log('list: ', sortedList);
     switch (sortOption.id) {
       case 3: 
@@ -120,12 +119,10 @@ export const CatalogeScreen = () => {
 
   //handling the sort option selected but not working as expected
   const handleSortOptionChange = (sortOption) => {
-    setIsSelected(sortOption);
+    setSortOptionName(sortOption.name);
     setIsSortOptionSelected(sortOption);
     sortProducts(sortOption);
-    setTimeout(() => {
-      setSheetVisible(false);
-    }, 300)
+    setSheetVisible(false);
   }
 
   //selecting the user selected size option and when the user selected the size then only navigate to mainProductScreen
@@ -162,6 +159,7 @@ export const CatalogeScreen = () => {
   const handleOpenPress = () => {
     setSheetVisible(true);
   }
+
   const handleClosePress = () => {
     setSheetVisible(false);
   }
@@ -171,13 +169,11 @@ export const CatalogeScreen = () => {
     setSizeSheetVisible(false);
   }
 
-  const handleAddToFavorite = async (item) => {
-    // console.log(item)
-    dispatch(addToFavorite(item))
+  const handleFavoriteBtn = (item) => {
+    dispatch(toggleFavorite(item.id));
   };
   
   const renderProducts = ({item}) => {
-    const isWishlisted = false
     return (
         <ProductCardMain 
           onProductPress={() => {
@@ -196,18 +192,29 @@ export const CatalogeScreen = () => {
           newProduct={showGrid ? false : item?.isProductNew}
           productImage={item?.images}
           topRightIcon={false}
-          addToFavoriteIcon={true}
-          onAddToFavorite={() => handleAddToFavorite(item)}
-          isFavorite={isWishlisted}
+          addToFavoriteIcon
+          onAddToFavorite={() => handleFavoriteBtn(item)}
+          isProductFavorite={item?.isProductFavorite ||item?.isFavorite}
           flotingBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
           customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
         />
       )
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      setShowProductList(productList)
+    },[productList])
+  )
+
   useEffect(() => {
     dispatch(loadProducts())
   },[dispatch])
+
+  useEffect(() => {
+    setIsSortOptionSelected(sortProductType[3])
+    setSortOptionName(sortProductType[3].name)
+  },[])
 
   return (
       <Screen bgColor={color.white} translucent={true}>
@@ -253,7 +260,7 @@ export const CatalogeScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity onPress={handleOpenPress} style={styles.filterItem()}>
                 <IcSortIcon />
-                <Text style={styles.filterItemText()}>{isSelected ? isSelected.name : 'Sort'}</Text>
+                <Text style={styles.filterItemText()}>{sortOptionName ?? 'Sort'}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={toggleLayout} style={styles.filterIcon()}>
                 {

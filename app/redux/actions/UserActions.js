@@ -11,10 +11,10 @@ export const loadProducts = () => {
   }
 }
 
-// export const addToFavorite = (item) => {
-//   return {
-//     type: actions.ADD_TO_FAVORITE,
-//     payload: item
-//   }
-// }
+export const toggleFavorite = (productId) => {
+  return {
+    type: actions.TOGGLE_FAVORITE,
+    payload: productId
+  }
+}
 

@@ -26,6 +26,4 @@ export const store = configureStore({
     }),
 });
 
-console.log('store: ', store.getState())
-
 export const persistor = persistStore(store);
