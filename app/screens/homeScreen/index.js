@@ -8,7 +8,6 @@ import { color, IcBackArrow, images, size } from '../../theme'
 import * as styles from './styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadProducts } from '../../redux'
-// import { categoryList } from '../../redux'
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
@@ -17,14 +16,14 @@ export const HomeScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const productList = useSelector(state => state.user);
+  const productList = useSelector(state => state.product.products);
+  // console.log('products: ', productList)
 
-  const [products, setProducts] = useState({})
+  const [products, setProducts] = useState([])
   const [showLoader, setShowLoader] = useState(false)
   const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
-
 
   const handleClosePressSizeSheet = () => {
     setUserSizeOption(false)
@@ -35,39 +34,19 @@ export const HomeScreen = () => {
     size === userSizeOption ? setUserSizeOption(false) : setUserSizeOption(size)
   };
 
-  const handleFavoriteBtn = () => {
-    if (!userSizeOption) {
-      Alert.alert(
-        '',
-        'Please select size',
-        [
-          {
-            text: 'Cancel',
-            onPress: () => null,
-            style: 'cancel'
-          },
-          {
-            text: 'OK',
-            onPress: () => null,
-          }
-        ]
-      )
-    }else {
-      navigation.navigate('favoriteStackNavigation', { selectedSize: userSizeOption, selectedId: selectedProductId })
-      setUserSizeOption(false)
-      setSizeBottomSheetVisible(false);
-    }
+  const showOnlyNewProducts = () => {
+    const newProducts = productList.filter(product => product.isProductNew === true);
+    setProducts(newProducts)
   }
 
-  const getProductList = async () => {
-    try {
-      const productsNew = await dispatch(loadProducts());
-      // console.log('productsNew:: ', productsNew);
-      setProducts(productsNew);
-    }
-    catch(error) {
-      console.log('error:: ', error)
-    }
+  const handleFavoriteBtn = (item) => {
+    const newProductList = products.map((product) => {
+      if (product.id === item.id) {
+        return { ...product, isFavorite: !product.isFavorite };
+      }
+      return product;
+    });
+    setProducts(newProductList)
   }
 
   useFocusEffect(
@@ -75,7 +54,7 @@ export const HomeScreen = () => {
       StatusBar.setBackgroundColor(color.transparent);
       StatusBar.setTranslucent(true);
       StatusBar.setBarStyle('dark-content')
-    },[])
+    },[StatusBar])
   );
 
   useFocusEffect(
@@ -99,12 +78,6 @@ export const HomeScreen = () => {
     })
   )
 
-  useFocusEffect(
-    useCallback(() => {
-      setSizeBottomSheetVisible(false)
-    }, [])
-  )
-
   useEffect(() => {
     setShowLoader(true)
     setTimeout(() => {
@@ -113,8 +86,12 @@ export const HomeScreen = () => {
   }, [])
 
   useEffect(() => {
-    getProductList()
+    showOnlyNewProducts()
   },[])
+
+  useEffect(() => {
+    dispatch(loadProducts())
+  },[dispatch])
 
 
   return (
@@ -157,19 +134,21 @@ export const HomeScreen = () => {
               return (
                 <ProductCardMain
                   onProductPress={() => {
-                    setSelectedProductId(item.id);
+                    setSelectedProductId(item?.id);
                     setSizeBottomSheetVisible(true);
                   }}
                   customProductStyle={styles.productCardHome()}
-                  productImage={item.item.images}
-                  brandName={item.item.brand}
-                  productTitle={item.item.name}
+                  productImage={item.item?.images}
+                  brandName={item.item?.brand}
+                  productTitle={item.item?.name}
                   originalPrice={item.item?.originalPrice}
                   sellingPrice={item.item?.sellingPrice}
-                  ratings={item.item.rating}
-                  ratingsCounts={item.item.rating_count}
+                  ratings={item.item?.ratings}
+                  ratingsCounts={item.item?.rating_count}
                   newProduct={item.item?.isProductNew}
                   addToFavoriteIcon
+                  onAddToFavorite={() => handleFavoriteBtn(item.item)}
+                  isFavorite={item.item?.isFavorite}
                   flotingBtnStyle={styles.flotingBtnStyle()}
                 />
               )

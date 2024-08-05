@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react' 
-import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ScrollView, Alert } from 'react-native'
+import { View, StatusBar, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ScrollView, Alert, LogBox, ToastAndroid } from 'react-native'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, SortBy, Text } from '../../components'
 import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 
-import * as styles from './styles'
-import * as data from '../../json'
 import { useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToFavorite, loadProducts, productAddToFavorite } from '../../redux'
+import * as styles from './styles'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -66,36 +67,26 @@ const sortProductType = [
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
 export const CatalogeScreen = () => {
+
   const navigation = useNavigation();
-  //product data json
-  const products = data.productList;
+  const dispatch = useDispatch()
+  const products = useSelector(state => state.user.products);
+  const wishlist = useSelector(state => state.user);
 
-  //on screen load show the products
   const [showProductList, setShowProductList] = useState(products);
-
-  //sort options bottom sheet useState
   const [isSheetVisible, setSheetVisible] = useState(false);
-  
-  //sort option selected useState
   const [isSelected, setIsSelected] = useState(sortProductType[3]);
   const [isSortOptionSelected, setIsSortOptionSelected] = useState(sortProductType[3])
-
-  //toggling the product in Grid/List
   const [showGrid, setShowGrid] = useState(true);
-
-  //toggling to show the header title and main category title
   const [title, showTitle] = useState(false);
-
-  //toggling the size bottom sheet visibility
   const [isSizeSheetVisible, setSizeSheetVisible] = useState(false);
-
-  //showing the user selected size option
   const [userSizeOption, setUserSizeOption] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null)
+  
+  LogBox.ignoreLogs([
+    'Tried to modify key `reduceMotion` of an object which has been already passed to a worklet'
+  ]);
 
-  //selected product Id
-  const [selectedProductId, setSelectedProductId] = useState(null);
-
-  //toggling the layout -- grid / list and headerTitle / mainTitle 
   const toggleLayout = () => {
     LayoutAnimation.configureNext({
       duration: 400,
@@ -113,7 +104,8 @@ export const CatalogeScreen = () => {
     // console.log('list: ', sortedList);
     switch (sortOption.id) {
       case 3: 
-        sortedList.sort((a, b) => a.ratings - b.ratings);
+        sortedList.sort((a, b) => b.ratings - a.ratings);
+        break;
       case 4:
         sortedList.sort((a, b) => a.originalPrice - b.originalPrice);
         break;
@@ -179,8 +171,13 @@ export const CatalogeScreen = () => {
     setSizeSheetVisible(false);
   }
 
-  //rendering the products using the renderItem function of FlatLists
+  const handleAddToFavorite = async (item) => {
+    // console.log(item)
+    dispatch(addToFavorite(item))
+  };
+  
   const renderProducts = ({item}) => {
+    const isWishlisted = false
     return (
         <ProductCardMain 
           onProductPress={() => {
@@ -200,11 +197,17 @@ export const CatalogeScreen = () => {
           productImage={item?.images}
           topRightIcon={false}
           addToFavoriteIcon={true}
+          onAddToFavorite={() => handleAddToFavorite(item)}
+          isFavorite={isWishlisted}
           flotingBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
           customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
         />
       )
   }
+
+  useEffect(() => {
+    dispatch(loadProducts())
+  },[dispatch])
 
   return (
       <Screen bgColor={color.white} translucent={true}>

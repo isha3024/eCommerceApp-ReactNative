@@ -96,7 +96,6 @@ export const RegisterScreen = () => {
         email: inputField.email,
         password: inputField.password
       }
-      console.log('data: ', data)
       dispatch(registerUser(data))
     }
 }

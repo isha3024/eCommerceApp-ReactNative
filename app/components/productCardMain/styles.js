@@ -43,6 +43,7 @@ export const imageHorizontal = () => ({
   width: '100%',
   borderTopLeftRadius: size.moderateScale(8),
   borderBottomLeftRadius: size.moderateScale(8),
+  
 })
 
 export const addToFavoriteBtn = () => ({

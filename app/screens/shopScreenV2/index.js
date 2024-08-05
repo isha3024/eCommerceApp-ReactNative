@@ -12,9 +12,8 @@ const Tab = createMaterialTopTabNavigator();
 export const ShopScreenV2 = () => {
   const navigation = useNavigation();
   return (
-    <View style={styles.mainView()}>
+    <Screen style={styles.mainView()} bgColor={color.white}>
       <View style={styles.topView()}>
-        <StatusBar translucent={true} backgroundColor={color.white} barStyle={'dark-content'} />
         <Header
           headerStyle={styles.header()}
           leftIconPress={() => navigation.goBack()}
@@ -53,6 +52,6 @@ export const ShopScreenV2 = () => {
           tabBarLabel: 'Kids'
         }} />
      </Tab.Navigator>
-    </View>
+    </Screen>
   )
 }

@@ -4,8 +4,8 @@ import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } f
 import { IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color } from '../../theme'
 
 import * as styles from './styles'
-import * as data from '../../json'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -78,11 +78,15 @@ export const FavoriteScreen = ({route}) => {
   // }
   // console.log('selectedSize: ', selectedSize)
   const navigation = useNavigation();
-  //product data json
-  const products = data.productList;
+
+  const favProducts = useSelector(state => state.user.products);
+
+  const favProductsList = favProducts.filter((product) => product.isFavorite)
+  console.log(favProductsList)
+  
 
   //on screen load show the products
-  const [showProductList, setShowProductList] = useState(products);
+  const [showProductList, setShowProductList] = useState(favProducts);
 
   //sort options bottom sheet useState
   const [isSheetVisible, setSheetVisible] = useState(false);
@@ -108,7 +112,7 @@ export const FavoriteScreen = ({route}) => {
   // }, []);
 
   useEffect(() => {
-    setShowProductList(products)
+    setShowProductList(favProducts)
   },[])
 
   //toggling the layout -- grid / list and headerTitle / mainTitle 
@@ -125,11 +129,12 @@ export const FavoriteScreen = ({route}) => {
 
   /**sorting the product based on selection */
   const sortProducts = (sortOption) => {
-    let sortedList = [...products];
+    let sortedList = [...favProducts];
     // console.log('list: ', sortedList);
     switch (sortOption.id) {
       case 3: 
         sortedList.sort((a, b) => a.ratings - b.ratings);
+        break;
       case 4:
         sortedList.sort((a, b) => a.originalPrice - b.originalPrice);
         break;

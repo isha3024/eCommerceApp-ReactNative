@@ -1,7 +1,7 @@
 import * as actions from '../Types'
 
 const initialState = {
-  userInfo: {},
+  userInfo: null,
   isUserRegistered: false
 }
 

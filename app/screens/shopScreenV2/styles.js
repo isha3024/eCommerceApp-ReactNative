@@ -13,5 +13,5 @@ export const topView = () => ({
 
 export const header = () => ({
   backgroundColor: color.white,
-  paddingHorizontal: size.moderateScale(16)
+  paddingHorizontal: size.moderateScale(16),
 })

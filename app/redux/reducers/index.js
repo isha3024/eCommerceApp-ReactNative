@@ -2,7 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { authReducer } from './AuthReducer';
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REHYDRATE, REGISTER } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { userReducer } from './UserReducers';
+import { productReducer } from './UserReducers';
 
 const persistConfig = {
   key: 'root',
@@ -11,7 +11,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   authUser: authReducer,
-  user: userReducer,
+  product: productReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -25,5 +25,7 @@ export const store = configureStore({
       },
     }),
 });
+
+console.log('store: ', store.getState())
 
 export const persistor = persistStore(store);

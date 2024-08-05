@@ -17,7 +17,9 @@ export const productList = [
     "productColor": "Black",
     "mainProductImageOne": "images.imgMainProductImageOne1",
     "mainProductImageTwo": "images.imgMainProductImageTwo1",
-    "description": "Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim."
+    "description": "Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.",
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 2,
@@ -36,7 +38,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne2",
     "mainProductImageTwo": "images.imgMainProductImageTwo2",
     "description": "Casual shirt made of breathable cotton with a comfortable fit, perfect for everyday wear.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 3,
@@ -55,7 +58,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne3",
     "mainProductImageTwo": "images.imgMainProductImageTwo3",
     "description": "Lightweight summer dress with floral print, perfect for sunny days. Features a v-neckline and adjustable straps.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 4,
@@ -74,7 +78,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne4",
     "mainProductImageTwo": "images.imgMainProductImageTwo4",
     "description": "Classic denim jacket with button-front closure and two chest pockets. Made from durable denim fabric.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 5,
@@ -93,7 +98,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne5",
     "mainProductImageTwo": "images.imgMainProductImageTwo5",
     "description": "Sturdy leather boots with a lace-up front and iconic yellow stitching. Built for durability and style.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 6,
@@ -112,7 +118,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne6",
     "mainProductImageTwo": "images.imgMainProductImageTwo6",
     "description": "Comfortable and warm sweater made from soft knit fabric. Ideal for layering during colder months.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 7,
@@ -131,7 +138,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne7",
     "mainProductImageTwo": "images.imgMainProductImageTwo7",
     "description": "Comfortable sneakers with cushioned sole and breathable mesh upper. Perfect for both athletic and casual wear.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 8,
@@ -150,13 +158,14 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne8",
     "mainProductImageTwo": "images.imgMainProductImageTwo8",
     "description": "Elegant blazer with a tailored fit, ideal for both professional and casual settings. Made from high-quality fabric.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 9,
     "name": "Trousers",
     "brand": "H&M",
-    "images": "images.productImage9",
+    "images": images.productImage9,
     "ratings": 3,
     "rating_count": 18,
     "originalPrice": 39.99,
@@ -169,7 +178,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne9",
     "mainProductImageTwo": "images.imgMainProductImageTwo9",
     "description": "Comfortable trousers with a relaxed fit and adjustable waistband. Made from durable fabric suitable for everyday wear.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 10,
@@ -188,13 +198,14 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne10",
     "mainProductImageTwo": "images.imgMainProductImageTwo10",
     "description": "Soft and cozy cardigan with button-front closure and ribbed hem. Perfect for layering during cooler weather.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 11,
     "name": "Polo Shirt",
     "brand": "Ralph Lauren",
-    "images": "images.productImage11",
+    "images": images.productImage11,
     "ratings": 5,
     "rating_count": 14,
     "originalPrice": 49.99,
@@ -207,7 +218,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne11",
     "mainProductImageTwo": "images.imgMainProductImageTwo11",
     "description": "Classic polo shirt with a comfortable fit and embroidered logo. Made from soft cotton fabric.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 12,
@@ -226,7 +238,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne12",
     "mainProductImageTwo": "images.imgMainProductImageTwo12",
     "description": "Lightweight running shorts with moisture-wicking fabric and an adjustable waistband for a secure fit.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 13,
@@ -245,7 +258,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne13",
     "mainProductImageTwo": "images.imgMainProductImageTwo13",
     "description": "Classic trench coat with double-breasted front and belted waist. Made from high-quality, weather-resistant fabric.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 14,
@@ -264,7 +278,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne14",
     "mainProductImageTwo": "images.imgMainProductImageTwo14",
     "description": "Elegant leather belt with a polished buckle. Versatile accessory for both casual and formal outfits.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   },
   {
     "id": 15,
@@ -283,7 +298,8 @@ export const productList = [
     "mainProductImageOne": "images.imgMainProductImageOne15",
     "mainProductImageTwo": "images.imgMainProductImageTwo15",
     "description": "Stylish baseball cap with adjustable strap and embroidered logo. Perfect for casual wear and outdoor activities.",
-    "stocks": 20
+    "stocks": 20,
+    "isFavorite": false
   }
 ]
 
