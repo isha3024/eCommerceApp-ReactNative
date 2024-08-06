@@ -1,46 +1,46 @@
-import React, { useRef, useState } from 'react'
-import { View, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native'
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { View, ScrollView, Image, TouchableOpacity, FlatList, ToastAndroid, Alert } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 
-import * as productData from '../../json';
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, StarRatings, Text } from '../../components';
 import { IcBackArrow, IcFilledHeart, IcHeart, IcShare, color, size } from '../../theme';
+import { useMainContext } from '../../contexts/MainContext';
+import { addToCart, toggleFavorite } from '../../redux';
 import * as styles from './styles'
-import { useNavigation, useScrollToTop } from '@react-navigation/native';
 
 
-const productDetail = productData.productList;
+// const productDetail = productData.productList;
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 const colorsList = ['#020202', '#F6F6F6', '#B82222', '#BEA9A9', '#E2BB8D', '#151867'];
 
 export const MainProductScreen = ({ route }) => {
 
+  const navigation = useNavigation()
+  const { cartProductList, setCartProductList } = useMainContext();
   const productId = route.params.productId;
   const selectedSize = route.params.selectedSize;
-  const selectedProduct = productDetail.find(product => product.id === productId);
+  const productList = useSelector((state) => state.product.products); 
+  const dispatch = useDispatch();
+  const selectedProduct = productList.find(product => product.id === productId);
+  const favoriteProduct = selectedProduct.isFavorite;
 
-  const navigation = useNavigation()
-  const [filledHeart, setFilledHeart] = useState(false);
   const [isSizeBottomSheetVisible, setIsSizeBottomSheetVisible] = useState(false);
   const [isColorBottomSheetVisible, setIsColorBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(selectedSize);
-  const [selectColors, setSelectColors] = useState([]);
+  const [userColorSelected, setUserColorSelected] = useState(null)
 
 
   const onAddToFavorite = () => {
-    if (filledHeart) {
-      setFilledHeart(false)
-    } else {
-      setFilledHeart(true)
-    }
+    dispatch(toggleFavorite(selectedProduct.id));
+    const message = selectedProduct.isFavorite
+    ? `${selectedProduct.name} removed from favorites`
+    : `${selectedProduct.name} added to favorites`;
+    ToastAndroid.show(message, ToastAndroid.SHORT)
   }
 
   const toggleColors = (color) => {
-    if (selectColors.includes(color)) {
-      setSelectColors(selectColors.filter(col => col !== color));
-    } else {
-      setSelectColors([...selectColors, color]);
-    }
+    setUserColorSelected(color)
   }
 
   const handleSizeDropdownPress = () => {
@@ -63,26 +63,34 @@ export const MainProductScreen = ({ route }) => {
     setUserSizeOption(size);
   }
 
-  const handleAddToCartBtn = () => {
-    if (!userSizeOption) {
+  const handleAddToCartBtn = (item) => {
+    if (userColorSelected === null) {
       Alert.alert(
-        '',
-        'Please select size',
-        [
-          {
-            text: 'OK',
-            onPress: () => null,
-          }
-        ]
-      )
-      setIsSizeBottomSheetVisible(false)
-    }else {
-      navigation.navigate('cartStackNavigation', { selectedSize: userSizeOption, selectedId: selectedProductId })
-      setUserSizeOption(false)
-      setIsSizeBottomSheetVisible(true);
+        'Error',
+        'Please select color',
+        [{ text: 'OK', onPress: () => null }]
+      );
+      return;
     }
-  }
 
+    const productExists = cartProductList.some(cartItem => {
+      return cartItem.id === item.id 
+      && cartItem.color === userColorSelected
+      && cartItem.size === userSizeOption
+    });
+
+    if(productExists){
+      ToastAndroid.show('Product already exists', ToastAndroid.SHORT)
+      return
+    }
+    
+    setCartProductList((prevList) => {
+      return [...prevList, { ...item, productColor: userColorSelected, size: userSizeOption}]
+    });
+    
+    ToastAndroid.show(`${item.name} added to cart`, ToastAndroid.SHORT);
+  };
+  
 
   const handleRatingsReviews = () => {
     navigation.navigate('ratingsReviewsScreen', { productReview: selectedProduct.ratings })
@@ -112,21 +120,21 @@ export const MainProductScreen = ({ route }) => {
             horizontal={true}
             alwaysBounceHorizontal={true}
             contentContainerStyle={styles.scrollImageView()}>
-            <Image source={selectedProduct?.mainProductImageOne} />
-            <Image source={selectedProduct?.mainProductImageTwo} />
+            <Image style={styles.mainProductImage()} source={selectedProduct?.mainProductImageOne} />
+            <Image style={styles.mainProductImage()} source={selectedProduct?.mainProductImageTwo} />
           </ScrollView>
           <View style={styles.productOptions()}>
             <TouchableOpacity onPress={handleSizeDropdownPress} activeOpacity={0.5} style={styles.productDropdown(userSizeOption)}>
               <Text style={styles.productOptionText()}>Size</Text>
               <IcBackArrow style={styles.dropDownArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleColorDropdownPress} activeOpacity={0.5} style={styles.productDropdown()}>
+            <TouchableOpacity onPress={handleColorDropdownPress} activeOpacity={0.5} style={styles.productDropdown(userColorSelected)}>
               <Text style={styles.productOptionText()}>Color</Text>
               <IcBackArrow style={styles.dropDownArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
             </TouchableOpacity>
             <TouchableOpacity style={[styles.addToFavorite()]} onPress={onAddToFavorite}>
               {
-                filledHeart ?
+                favoriteProduct ?
                   (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
                   : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
               }
@@ -165,20 +173,20 @@ export const MainProductScreen = ({ route }) => {
             <FlatList
               horizontal
               contentContainerStyle={{ paddingBottom: size.moderateScale(80) }}
-              data={productDetail}
-              renderItem={(item) => {
+              data={productList}
+              renderItem={({item}) => {
                 return (
                   <ProductCardMain
-                    onProductPress={() => navigation.navigate('mainProductScreen', { productId: item.item.id })}
+                    onProductPress={() => navigation.navigate('mainProductScreen', { productId: item.id })}
                     customProductStyle={styles.productCardHome()}
-                    productImage={item.item.images}
-                    brandName={item.item.brand}
-                    productTitle={item.item.name}
-                    originalPrice={item.item?.originalPrice}
-                    sellingPrice={item.item?.sellingPrice}
-                    ratings={item.item.ratings}
-                    ratingsCounts={item.item.rating_count}
-                    newProduct={item.item?.isProductNew}
+                    productImage={item?.images}
+                    brandName={item?.brand}
+                    productTitle={item?.name}
+                    originalPrice={item?.originalPrice}
+                    sellingPrice={item?.sellingPrice}
+                    ratings={item.ratings}
+                    ratingsCounts={item.rating_count}
+                    newProduct={item?.isProductNew}
                   />
                 )
               }}
@@ -190,12 +198,12 @@ export const MainProductScreen = ({ route }) => {
         {/* Bottom Sheet Containers */}
       </Screen>
       <View style={styles.bottomView()}>
-        <Button title='ADD TO CART' onPress={() => navigation.navigate('cartStackNavigation')} />
+        <Button title='ADD TO CART' onPress={() => handleAddToCartBtn(selectedProduct)} />
       </View>
       <BottomSheetContainer
         isVisible={isSizeBottomSheetVisible}
         onClose={handleSizeDropdownPressClose}
-        customHeight={'40%'}>
+        customHeight={'34%'}>
         <Text style={styles.titleBottomSheet()}>Select Size</Text>
         <View style={styles.sizeContainer()}>
           {
@@ -213,25 +221,25 @@ export const MainProductScreen = ({ route }) => {
           <Text style={styles.sizeInfoText()}>Size info</Text>
           <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        <Button activeOpacity={0.8} title='ADD TO CART' onPress={handleAddToCartBtn} btnStyle={styles.button()} />
+        {/* <Button activeOpacity={0.8} title='ADD TO CART' onPress={handleAddToCartBtn} btnStyle={styles.button()} /> */}
       </BottomSheetContainer>
       <BottomSheetContainer
         isVisible={isColorBottomSheetVisible}
         onClose={handleColorDropdownPressClose}
-        customHeight={'30%'}>
+        customHeight={'20%'}>
         <Text style={styles.titleBottomSheet()}>Select Color</Text>
         <View style={styles.sizeContainer()}>
           {
             colorsList.map((color) => {
               return (
-                <TouchableOpacity onPress={() => toggleColors(color)} activeOpacity={0.7} style={[styles.colorItem(), selectColors.includes(color) && styles.colorItemActive()]} key={color}>
+                <TouchableOpacity onPress={() => toggleColors(color)} activeOpacity={0.7} style={[styles.colorItem(),  userColorSelected === color && styles.colorItemActive()]} key={color}>
                   <View style={styles.colors(color)}></View>
                 </TouchableOpacity>
               )
             })
           }
         </View>
-        <Button title='ADD TO CART' btnStyle={styles.button()} />
+        {/* <Button title='ADD TO CART' btnStyle={styles.button()} /> */}
       </BottomSheetContainer>
     </>
   )

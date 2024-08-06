@@ -2,71 +2,35 @@ import React, {createContext, useContext, useMemo, useState} from 'react';
 const context = createContext();
 
 export const MainContextProvider = props => {
-  const [screenState, setScreenState] = useState('number');
-  // console.log('🚀 ~ MainContextProvider ~ screenState:', screenState);
-  const [validateNumber, setValidateNumber] = useState(false);
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [userName, setUserName] = useState('');
-  // console.log('🚀 ~ MainContextProvider ~ mobileNumber:', mobileNumber);
-  const [name, setName] = useState([]);
-  const [otp, setOtp] = useState('');
-  const [playerId, setPlayerId] = useState('');
-  const [isRegistered, setIsRegistered] = useState(true);
-  const [id, setId] = useState([]);
 
+
+  const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState({});
   const [paymentCardSelected, setPaymentCardSelected] = useState({});
-  // console.log('paymentCardSelected:', paymentCardSelected);
+  const [cartProductList, setCartProductList] = useState([]);
+
+  console.log('addresses: ', addresses)
+
   const value = useMemo(() => {
     return {
-      screenState: screenState,
-      setScreenState: setScreenState,
-      validateNumber: validateNumber,
-      setValidateNumber: setValidateNumber,
-      mobileNumber: mobileNumber,
-      setMobileNumber: setMobileNumber,
-      userName: userName,
-      setUserName: setUserName,
-      otp: otp,
-      setOtp: setOtp,
-      name: name,
-      setName: setName,
-      playerId: playerId,
-      setPlayerId: setPlayerId,
-      id: id,
-      setId: setId,
-      isRegistered: isRegistered,
-      setIsRegistered: setIsRegistered,
-
+      addresses: addresses,
+      setAddresses: setAddresses,
       selectedAddress: selectedAddress,
       setSelectedAddress: setSelectedAddress,
       paymentCardSelected: paymentCardSelected,
-      setPaymentCardSelected: setPaymentCardSelected
+      setPaymentCardSelected: setPaymentCardSelected,
+      cartProductList: cartProductList,
+      setCartProductList: setCartProductList,
     }
   }, [
-    screenState,
-    validateNumber,
-    isRegistered,
-    setIsRegistered,
-    setValidateNumber,
-    setScreenState,
-    mobileNumber,
-    setMobileNumber,
-    userName,
-    setUserName,
-    otp,
-    setOtp,
-    setName,
-    name,
-    setPlayerId,
-    playerId,
-    id,
-    setId,
-
+    addresses,
+    setAddresses,
     selectedAddress,
     setSelectedAddress,
     paymentCardSelected,
-    setPaymentCardSelected
+    setPaymentCardSelected,
+    cartProductList,  
+    setCartProductList
   ]);
 
   return <context.Provider value={value}>{props.children}</context.Provider>;

@@ -4,58 +4,48 @@ import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Button, Header, InputField, Screen } from '../../components';
+import { useMainContext } from '../../contexts/MainContext';
 import { color, IcBackArrow, size } from '../../theme';
 import * as styles from './styles';
 
 export const AddNewAddressScreen = ({ route }) => {
+
   const navigation = useNavigation();
+  const { addresses, setAddresses } = useMainContext();
   
   // State initialization
-  const [name, setName] = useState('');
-  const [addressLineOne, setAddressLineOne] = useState('');
-  const [city, setCity] = useState('');
-  const [province, setProvince] = useState('');
-  const [zipCode, setZipCode] = useState('');
-  const [country, setCountry] = useState('');
-  
-  // Fetch and set previous address from route params
+  const [address, setAddress] = useState({
+    name: '',
+    addressLineOne: '',
+    city: '',
+    province: '',
+    zipCode: '',
+    country: ''
+  }); 
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleSave = () => {
+    if (isEditing) {
+      // Update the existing address
+      setAddresses(prevAddresses =>
+        prevAddresses.map(addr =>
+          addr.id === address.id ? address : addr
+        )
+      );
+    } else {
+      // Add a new address
+      setAddresses(prevAddresses => [...prevAddresses, { ...address, id: prevAddresses.length + 1 }]);
+    }
+    navigation.goBack();
+  };
+
+
   useEffect(() => {
-    if (route.params?.address) {
-      const address = route.params.address;
-      setName(address.name ?? '');
-      setAddressLineOne(address.address ?? '');
-      setCity(address.city ?? '');
-      setProvince(address.province ?? '');
-      setZipCode(address.zipCode ?? '');
-      setCountry(address.country ?? '');
-      console.log('Address from route params:', address);
+    if (route.params?.editAddress) {
+      setAddress(route.params.editAddress);
+      setIsEditing(true);
     }
   }, [route.params]);
-
-  // Log updated newAddress
-  useEffect(() => {
-    console.log('New Address:', { name, addressLineOne, city, province, zipCode, country });
-  }, [name, addressLineOne, city, province, zipCode, country]);
-
-  const addNewAddress = () => {
-    if (name && addressLineOne && city && province && zipCode && country) {
-      const newAddress = {
-        name,
-        addressLineOne,
-        city,
-        province,
-        zipCode,
-        country,
-      };
-      navigation.navigate('addressScreen', {newAddress: newAddress});
-    } else {
-      Alert.alert(
-        'All fields are required',
-        'Please fill in all fields to add a new address',
-        [{ text: 'Ok', onPress: () => null }]
-      );
-    }
-  };
 
   return (
     <Screen bgColor={color.primary} translucent={true} style={styles.mainView()}>
@@ -64,7 +54,7 @@ export const AddNewAddressScreen = ({ route }) => {
           <Header 
             headerStyle={styles.header()}
             title
-            headerTitle='Adding Shipping Address'
+            headerTitle={isEditing ? 'Edit Address' : 'Add Shipping Address'}
             headerLeftIcon
             leftIcon={() => (<IcBackArrow />)}
             leftIconPress={() => navigation.goBack()}
@@ -74,32 +64,32 @@ export const AddNewAddressScreen = ({ route }) => {
           <InputField 
             placeholder='Full name'
             label='Full name'
-            value={name}
-            onChangeText={text => setName(text)}
+            value={address.name}
+            onChangeText={text => setAddress(prev => ({ ...prev, name: text }))}
             autoCapitalize='words'
             keyboardType='default'
           />
           <InputField 
             placeholder='Address'
             label='Address'
-            value={addressLineOne}
-            onChangeText={val => setAddressLineOne(val)}
+            value={address.addressLineOne}
+            onChangeText={text => setAddress(prev => ({ ...prev, addressLineOne: text }))}
             autoCapitalize='sentences'
             keyboardType='default'
           />
           <InputField 
             placeholder='City'
             label='City'
-            value={city}
-            onChangeText={val => setCity(val)}
+            value={address.city}
+            onChangeText={text => setAddress(prev => ({ ...prev, city: text }))}
             autoCapitalize='words'
             keyboardType='default'
           />
           <InputField 
             placeholder='State/Province/Region'
             label='State/Province/Region'
-            value={province}
-            onChangeText={val => setProvince(val)}
+            value={address.province}
+            onChangeText={text => setAddress(prev => ({ ...prev, province: text }))}
             autoCapitalize='words'
             keyboardType='default'
           />
@@ -107,16 +97,16 @@ export const AddNewAddressScreen = ({ route }) => {
             placeholder='Zip Code (Postal Code)'
             label='Zip Code (Postal Code)'
             maxLength={6}
-            value={zipCode}
-            onChangeText={val => setZipCode(val)}
+            value={address.zipCode}
+            onChangeText={text => setAddress(prev => ({ ...prev, zipCode: text }))}
             autoCapitalize='none'
             keyboardType='numeric'
           />
           <InputField 
             placeholder='Country'
             label='Country'
-            value={country}
-            onChangeText={val => setCountry(val)}
+            value={address.country}
+            onChangeText={text => setAddress(prev => ({ ...prev, country: text }))}
             autoCapitalize='words'
             keyboardType='default'
             icon
@@ -126,9 +116,9 @@ export const AddNewAddressScreen = ({ route }) => {
             )}
           />
           <Button 
-            title='SAVE ADDRESS'
+            title={isEditing ? "Update Address" : "Add Address"}
             btnStyle={styles.button()}
-            onPress={addNewAddress}
+            onPress={handleSave}
           />
         </View>
       </KeyboardAwareScrollView>

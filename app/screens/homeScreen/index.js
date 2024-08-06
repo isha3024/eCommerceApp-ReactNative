@@ -39,6 +39,10 @@ export const HomeScreen = () => {
 
   const handleFavoriteBtn = (item) => {
     dispatch(toggleFavorite(item.id));
+    const message = item.isFavorite
+    ? `${item.name} removed from favorites`
+    : `${item.name} added to favorites`;
+    ToastAndroid.show(message, ToastAndroid.SHORT)
   };
 
   const renderProducts = ({ item }) => {

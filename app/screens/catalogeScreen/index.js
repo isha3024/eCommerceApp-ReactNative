@@ -66,7 +66,7 @@ const sortProductType = [
 //product sizes available
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
-export const CatalogeScreen = () => {
+export const CatalogeScreen = ({route}) => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch()
@@ -76,6 +76,7 @@ export const CatalogeScreen = () => {
   const [isSheetVisible, setSheetVisible] = useState(false);
   const [sortOptionName, setSortOptionName] = useState(null)
   const [isSortOptionSelected, setIsSortOptionSelected] = useState(sortProductType[3])
+  const [filters, setFilters] = useState(null)
   const [showGrid, setShowGrid] = useState(true);
   const [title, showTitle] = useState(false);
   const [isSizeSheetVisible, setSizeSheetVisible] = useState(false);
@@ -117,7 +118,6 @@ export const CatalogeScreen = () => {
     setShowProductList(sortedList);
   };
 
-  //handling the sort option selected but not working as expected
   const handleSortOptionChange = (sortOption) => {
     setSortOptionName(sortOption.name);
     setIsSortOptionSelected(sortOption);
@@ -171,7 +171,56 @@ export const CatalogeScreen = () => {
 
   const handleFavoriteBtn = (item) => {
     dispatch(toggleFavorite(item.id));
+    const message = item.isFavorite
+    ? `${item.name} removed from favorites`
+    : `${item.name} added to favorites`;
+    ToastAndroid.show(message, ToastAndroid.SHORT)
   };
+
+
+  const filterProducts = () => {
+    if(filters !== null) {
+      let filteredProducts = productList;
+
+      //filter by category
+      if(filters.category && filters.category.length > 0) {
+        filteredProducts = filteredProducts.filter((product) => {
+         return product.categories && product.categories.some(category => filters.category.includes(category))
+        })
+      }
+
+      // filter by size
+      if (filters.size && filters.size.length > 0) {
+        filteredProducts = filteredProducts.filter((product) => {
+          return product.availableSizes && product.availableSizes.some(availableSize => filters.size.includes(availableSize))
+        });
+      }
+
+      //filter by price
+      const isPriceWithinRange = (originalPrice, priceRange) => {
+        const [minPrice, maxPrice] = priceRange;
+        return originalPrice >= minPrice && originalPrice <= maxPrice;
+      };
+      if (filters.priceRange) {
+        filteredProducts = filteredProducts.filter(product => {
+          return isPriceWithinRange(product.originalPrice, filters.priceRange)
+        });
+      }
+
+      //filter by color
+      if (filters.colors && filters.colors.length > 0) {
+        filteredProducts = filteredProducts.filter(product =>{
+          console.log(product.availableColors, filters.colors)
+          return product.availableColors && product.availableColors.some(availableColor => filters.colors.includes(availableColor))
+        })
+          
+      }
+      setShowProductList(filteredProducts)
+    }
+    else {
+      setShowProductList(productList)
+    }
+  }
   
   const renderProducts = ({item}) => {
     return (
@@ -186,9 +235,9 @@ export const CatalogeScreen = () => {
           showRatings={true}
           ratings={item?.ratings}
           ratingsCounts={item?.rating_count}
-          showDiscount={showGrid ? false : true}
+          showDiscount={showGrid ? false : item?.discount}
           originalPrice={item?.originalPrice}
-          sellingPrice={item?.sellingPrice}
+          sellingPrice={item?.saleProductPrice}
           newProduct={showGrid ? false : item?.isProductNew}
           productImage={item?.images}
           topRightIcon={false}
@@ -207,14 +256,28 @@ export const CatalogeScreen = () => {
     },[productList])
   )
 
+  useFocusEffect(
+    useCallback(() => {
+      filterProducts()
+    },[filters])
+  )
+
   useEffect(() => {
     dispatch(loadProducts())
   },[dispatch])
+
 
   useEffect(() => {
     setIsSortOptionSelected(sortProductType[3])
     setSortOptionName(sortProductType[3].name)
   },[])
+
+  useEffect(() => {
+    if (route.params && route.params.appliedFilters) {
+      const filters = route.params.appliedFilters;
+      setFilters(filters)
+    }
+  }, [route.params]);
 
   return (
       <Screen bgColor={color.white} translucent={true}>

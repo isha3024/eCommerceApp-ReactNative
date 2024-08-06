@@ -19,11 +19,31 @@ export const middleView = () => ({
   flex: 1,
 }) 
 
+export const noAddressAddedView = () => ({
+  height: size.deviceHeight,
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: size.moderateScale(10)
+  // backgroundColor: color.darkGray
+}) 
+
+export const noAddressAddedText = () => ({
+  fontFamily: fonts.metropolisMedium,
+  fontSize: fontSize.middleSmallMedium,
+  color: color.mostlyBlack
+}) 
+
+export const noAddressBtn = () => ({
+  paddingHorizontal: size.moderateScale(10),
+  paddingVertical: size.moderateScale(10),
+  height: size.moderateScale(35)
+}) 
+
 export const addressCardList = () => ({
   flex: 1,
   gap: size.moderateScale(24),
   paddingVertical: size.moderateScale(35),
-}) 
+})
 
 export const addressCard = () => ({
   paddingVertical: size.moderateScale(18),

@@ -7,12 +7,14 @@ import { color, IcBackArrow, IcLogout, images, size } from '../../theme';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../redux';
+import { useMainContext } from '../../contexts/MainContext';
 
 export const ProfileScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const userInfo = useSelector(state => state.authUser.userInfo);
+  const { addresses } = useMainContext();
   // console.log('user: ', userInfo)
 
   const handleLogout = () => {
@@ -60,7 +62,7 @@ export const ProfileScreen = () => {
           <TouchableOpacity onPress={() => navigation.navigate('addressScreen')} activeOpacity={0.6} style={styles.profileOptionItem()}>
             <View>
               <Text style={styles.profileOptionTitle()}>Shipping Address</Text>
-              <Text style={styles.message()}>3 addresses</Text>
+              <Text style={styles.message()}>{addresses.length === undefined ? 'No Addresses' : addresses.length == 1 ? addresses.length + ' address' : addresses.length + ' addresses'}</Text>
             </View>
             <IcBackArrow fill={color.darkGray} width={size.moderateScale(8)} height={size.moderateScale(12)} style={styles.forwardArrow()} />
           </TouchableOpacity>

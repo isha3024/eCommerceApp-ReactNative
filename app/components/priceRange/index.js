@@ -9,14 +9,12 @@ import { color, fonts, fontSize } from "../../theme"
 
 
 
-const PriceRange = ({lowPrice, highPrice, minValue, maxValue}) => {
+export const PriceRange = ({setLow, setHigh, low, high, minValue, maxValue}) => {
 
   const [rangeDisabled, setRangeDisabled] = useState(false)
-  const [low, setLow] = useState(lowPrice)
-  const [high, setHigh] = useState(highPrice)
+  
   const [min, setMin] = useState(minValue)
   const [max, setMax] = useState(maxValue)
-  console.log('lowPrice: ', low, ' highPrice:', high);
 
   const renderThumb = useCallback(name => <Thumb name={name} />, [])
   const renderRail = useCallback(() => <Rail />, [])
@@ -46,8 +44,6 @@ const PriceRange = ({lowPrice, highPrice, minValue, maxValue}) => {
     </View>
   )
 }
-
-export default PriceRange
 
 const styles = StyleSheet.create({
   slider: {

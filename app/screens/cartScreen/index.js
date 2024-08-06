@@ -6,12 +6,15 @@ import * as data from '../../json'
 import { color, IcChevronRight, IcClose, IcSearch, size } from '../../theme'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import * as styles from './styles'
+import { useMainContext } from '../../contexts/MainContext'
 
 export const CartScreen = () => {
 
   const navigation = useNavigation();
-
-  const [orderedProducts, setOrderedProducts] = useState(data.orderedProducts);
+  const { cartProductList, setCartProductList } = useMainContext();
+  console.log('cartProductList: ',cartProductList)
+ 
+  const [orderedProducts, setOrderedProducts] = useState(cartProductList);
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
   const [showCartOptions, setShowCartOptions] = useState({});
   const [selectedPromoCode, setSelectedPromoCode] = useState({});
@@ -116,24 +119,29 @@ export const CartScreen = () => {
     setFilteredPromoCodes(filteredCodes);
   }
 
+  // useEffect(() => {
+  //   setOrderedProducts(cartProductList);
+  // }, [cartProductList]);
+
   const renderProducts = ({item}) => {
     
     return (
       <>
       <ProductCardMain
         productHorizontal
-        productTitle={item.productName}
-        productImage={item.productImage}
-        originalPrice={item.productPrice}
-        productColor={item.productColorSelected}
+        productTitle={item?.name}
+        productImage={item?.images}
+        originalPrice={item?.originalPrice}
+        productColor={item?.productColor}
         productSize={item.productSizeSelected}
         showRatings={false}
         showRatingHorizontal={false}
-        selectQuantity={item.productQuantity}
-        increaseQuantity={() => increaseQuantity(item.id)}
-        deccreaseQuantity={() => decreaseQuantity(item.id)}
-        cartOptions={true}
-        cartOptionPress={() => showCartOptionsOfProduct(item.id)}
+        productQuantitySelection={true}
+        selectQuantity={item?.productQuantity}
+        // increaseQuantity={() => increaseQuantity(item.id)}
+        // deccreaseQuantity={() => decreaseQuantity(item.id)}
+        // cartOptions={true}
+        // cartOptionPress={() => showCartOptionsOfProduct(item.id)}
       />
       {
         showCartOptions[item.id] && (
@@ -167,7 +175,7 @@ export const CartScreen = () => {
         <View style={styles.orderedProducts()}>
           <FlatList 
             ListHeaderComponent={<View />}
-            data={orderedProducts}
+            data={cartProductList}
             renderItem={renderProducts}
             style={styles.flatList()}
             keyExtractor={(item) => item.id.toString()}

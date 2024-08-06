@@ -34,6 +34,11 @@ export const scrollImageView = () => ({
   gap: size.moderateScale(4)
 })
 
+export const mainProductImage = () => ({
+  width: size.deviceWidth - 70,
+  height: size.deviceHeight - 400,
+})
+
 export const productOptions = () => ({
   flexDirection: 'row',
   alignItems: 'center',

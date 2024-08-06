@@ -1,28 +1,33 @@
-import React, { useCallback, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StatusBar, View, TouchableOpacity } from 'react-native'
-import { Button, Header, Screen, Text } from '../../components'
-import { IcBackArrow, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
-import PriceRange from '../../components/priceRange'
+import { IcBackArrow, color, size } from '../../theme'
+import { Button, Header, PriceRange, Screen, Text } from '../../components'
 // import PriceRange from '../../components/priceRange'
 
 const colorsList = ['#020202', '#F6F6F6', '#B82222', '#BEA9A9', '#E2BB8D', '#151867'];
-
 const sizeList = ['XS', 'S', 'M', "L", 'XL']
-
-
 const category = ['All', 'Women', 'Men', 'Boys', 'Girls']
 
 export const FilterScreen = () => {
-  
+
   const navigation = useNavigation();
+  const MIN_DEFAULT = 10;
+  const MAX_DEFAULT = 500;
+
   const [selectColors, setSelectColors] = useState([]);
   const [selectSize, setSelectSize] = useState([]);
   const [selectCategory, setSelectCategory] = useState([]);
-  const MIN_DEFAULT = 10;
-  const MAX_DEFAULT = 500;
+  const [low, setLow] = useState(0);
+  const [high, setHigh] = useState(500);
+  const [appliedFilters, setAppliedFilters] = useState({
+    colors: null,
+    size: null,
+    category: null,
+    priceRange: null,
+  })
   const [minValue, setMinValue] = useState(MIN_DEFAULT);
   const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
 
@@ -40,7 +45,7 @@ export const FilterScreen = () => {
         ? prevSizes.filter(s => s !== size)
         : [...prevSizes, size]
     );
-  } 
+  }
 
   const toggleCategory = (cat) => {
     setSelectCategory((prevCategories) =>
@@ -48,52 +53,53 @@ export const FilterScreen = () => {
         ? prevCategories.filter(c => c !== cat)
         : [...prevCategories, cat]
     );
-  } 
-
-  const applyFilters = () => {
-    setTimeout(() => {
-      navigation.navigate('catalogeScreen');
-    },300)
   }
- 
+
   const discardFilters = () => {
     setSelectColors([]);
     setSelectSize([]);
     setSelectCategory([]);
     setMinValue(MIN_DEFAULT);
     setMaxValue(MAX_DEFAULT);
-    setTimeout(() => {
-      navigation.goBack()
-    },300)
+    navigation.goBack()
   }
 
-  const handlePriceChange = useCallback((range) => {
-    setMinValue(range.min);
-    setMaxValue(range.max);
-  },[minValue, maxValue])
-  
-  
+  const applyFilters = () => {
+    const filters = {
+      colors: selectColors,
+      size: selectSize,
+      category: selectCategory,
+      priceRange: [minValue, maxValue],
+    };
+    setAppliedFilters(filters)
+    navigation.navigate('catalogeScreen', {appliedFilters: filters})
+  }
+
+  useEffect(() => {
+    console.log('applyFilters', appliedFilters)
+  }, [appliedFilters])
+
   return (
     <>
-        <StatusBar translucent={true} />
-        <Header
-          headerStyle={styles.header()}
-          title
-          headerTitle='Filters'
-          leftIconPress={() => navigation.goBack()}
-          headerLeftIcon
-          leftIcon={() => {
-            return (<IcBackArrow />)
-          }}
-        />
+      <StatusBar translucent={true} />
+      <Header
+        headerStyle={styles.header()}
+        title
+        headerTitle='Filters'
+        leftIconPress={() => navigation.goBack()}
+        headerLeftIcon
+        leftIcon={() => {
+          return (<IcBackArrow />)
+        }}
+      />
       <Screen scrollStyle={styles.mainScrollView()} bgColor={color.white} withScroll>
         <View style={styles.mainView()}>
           <View style={styles.filterItem()}>
             <Text style={styles.filterItemText()}>Price range</Text>
             <View style={styles.innerFilterItem()}>
-            <View style={styles.sliderContainer()}>
-              <PriceRange lowPrice={0} highPrice={500} minValue={0} maxValue={500} />
-            </View>
+              <View style={styles.sliderContainer()}>
+                <PriceRange low={low} setLow={setLow} setHigh={setHigh} high={high} minValue={0} maxValue={500} />
+              </View>
             </View>
           </View>
           <View style={styles.filterItem()}>
@@ -134,7 +140,7 @@ export const FilterScreen = () => {
                       <Text style={[styles.categoryText(), selectCategory.includes(item) && styles.categoryTextActive()]}>{item}</Text>
                     </TouchableOpacity>
                   )
-                }) 
+                })
               }
             </View>
           </View>
@@ -149,7 +155,7 @@ export const FilterScreen = () => {
       </Screen>
       <View style={styles.bottomView()}>
         <Button title='Discard' onPress={() => discardFilters()} border btnStyle={styles.button()} />
-        <Button title='Apply'  onPress={() => applyFilters()} btnStyle={styles.button()} />
+        <Button title='Apply' onPress={applyFilters} btnStyle={styles.button()} />
       </View>
     </>
   )

@@ -1,14 +1,17 @@
+import React, { useState } from 'react'
 import { View, TouchableOpacity, StatusBar, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { Header, Screen, Text } from '../../components'
-
-import * as styles from './styles'
-import { IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcSearch, color, size } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
+
+import { Header, Screen, Text } from '../../components'
+import { IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcSearch, color, size } from '../../theme'
+import * as styles from './styles'
 
 const brands = ['adidas', 'adidas Originals', 'Blend', 'Boutique Moschino', 'Champion', 'Diesel', 'Jack & Jones', 'Naf Naf', 'Red Valentino', 's.Oliver'];
 
-export const BrandScreen = () => {
+export const BrandScreen = ({route}) => {
+  const navigation = useNavigation();
+
+
   const [searchValue, setSearchValue] = useState('');
   const [showSearchedBrands, setshowSearchedBrands] = useState(brands);
   const [selectBrands, setSelectBrands] = useState([]);
@@ -33,8 +36,15 @@ export const BrandScreen = () => {
     }
   }
 
+  const handleNavigation = () => {
+    if(selectBrands.length >= 1){
+      return navigation.navigate('filterScreen', {selectedBrands: selectBrands})
+    }
+    else {
+      return navigation.navigate('filterScreen', {selectedBrands: 'No brands selected'})
+    }
+  }
 
-  const navigation = useNavigation();
   return (
     <Screen bgColor={color.white} withScroll>
       <StatusBar translucent={true} />
@@ -42,7 +52,7 @@ export const BrandScreen = () => {
           headerStyle={styles.header()}
           title
           headerTitle='Brand'
-          leftIconPress={() => navigation.goBack()}
+          leftIconPress={handleNavigation}
           headerLeftIcon
           leftIcon={() => {
             return (<IcBackArrow />)

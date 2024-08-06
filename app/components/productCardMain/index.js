@@ -33,6 +33,7 @@ export const ProductCardMain = ({
   isProductSold,
   removeFromListIconPress,
   productUnits,
+  productQuantitySelection,
   selectQuantity,
   increaseQuantity,
   deccreaseQuantity,
@@ -101,7 +102,7 @@ export const ProductCardMain = ({
                 )
               }
               {
-                selectQuantity && (
+                productQuantitySelection && (
                   <View style={styles.selectQuantity()}>
                     <TouchableOpacity onPress={deccreaseQuantity} activeOpacity={0.8} style={styles.circle()}>
                       <IcMinus />
