@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation } from 'react-native'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import { useSelector } from 'react-redux'
+import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ToastAndroid } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 import { IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color } from '../../theme'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import * as styles from './styles'
+import { useMainContext } from '../../contexts/MainContext'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -75,14 +76,14 @@ const sortProductType = [
 export const FavoriteScreen = () => {
 
   const navigation = useNavigation();
-  const productList = useSelector((state) => state.product.products);
-
+  // const productList = useSelector((state) => state.product.products);
+  const { allProducts, setAllProducts } = useMainContext();
 
   const [showProductList, setShowProductList] = useState([]);
   const [isSheetVisible, setSheetVisible] = useState(false);
   const [isSortOptionSelected, setIsSortOptionSelected] = useState(null);
   const [sortOptionName, setSortOptionName] = useState(null)
-  const [showGrid, setShowGrid] = useState(true);
+  const [showGrid, setShowGrid] = useState(false);
   const [title, showTitle] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -134,13 +135,24 @@ export const FavoriteScreen = () => {
     setSheetVisible(false);
   }
 
-  const showOnlyFavoriteProducts = () => {
-    const favProducts = productList.filter((fav) => fav.isFavorite === true);
-    setShowProductList(favProducts)
-  }
+  const handleProductRemove = async (item) => { 
+    
+    const removeProduct = showProductList.filter(product => product.id !== item.id);
+    setShowProductList(removeProduct);
+    
+    const removeProductFromFav = allProducts.map((product) => {
+      if (product.id === item.id) {
+        product.isFavorite = !product.isFavorite
+      }
+      return product
+    })
+    setAllProducts(removeProductFromFav)
 
-  const handleProductRemove = (id) => {
-    setShowProductList(showProductList.filter(product => product.id !== id));
+    try {
+      await AsyncStorage.setItem('allProducts', JSON.stringify(removeProductFromFav));
+    } catch (error) {
+      console.error('Failed to save the updated products to AsyncStorage:', error);
+    }
   }
 
   const renderProducts = ({ item }) => {
@@ -150,15 +162,13 @@ export const FavoriteScreen = () => {
         productHorizontal={showGrid ? true : false}
         productTitle={item?.name}
         brandName={item?.brand}
-        productColor='Orange'
-        productSize='L'
         showRatings={true}
         showRatingHorizontal={true}
         ratings={item?.ratings}
         showDiscount={showGrid ? false : true}
         ratingsCounts={item?.rating_count}
         originalPrice={item?.originalPrice}
-        sellingPrice={item?.sellingPrice}
+        sellingPrice={item?.saleProductPrice}
         newProduct={showGrid ? false : item?.isProductNew}
         isProductSold={item?.isProductSold}
         productImage={item?.images}
@@ -169,19 +179,20 @@ export const FavoriteScreen = () => {
         addToCartBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
         customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
         closeIconStyle={showGrid ? styles.closeIconList() : styles.closeIconGrid()}
-        removeFromListIconPress={() => handleProductRemove(item.id)}
+        removeFromListIconPress={() => handleProductRemove(item)}
       />
     )
   }
 
   useEffect(() => {
-    showOnlyFavoriteProducts()
-  }, [productList])
-
-  useEffect(() => {
     setIsSortOptionSelected(sortProductType[3])
     setSortOptionName(sortProductType[3].name)
   }, [])
+
+  useEffect(() => {
+    const showFavoriteProducts = allProducts.filter((product) => product.isFavorite === true);
+    setShowProductList(showFavoriteProducts);
+  },[allProducts])
 
 
   return (

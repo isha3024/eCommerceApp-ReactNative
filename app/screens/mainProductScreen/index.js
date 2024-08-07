@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, StarRatings, Text } from '../../components';
 import { IcBackArrow, IcFilledHeart, IcHeart, IcShare, color, size } from '../../theme';
 import { useMainContext } from '../../contexts/MainContext';
-import { addToCart, toggleFavorite } from '../../redux';
 import * as styles from './styles'
 
 
@@ -20,9 +19,8 @@ export const MainProductScreen = ({ route }) => {
   const { cartProductList, setCartProductList } = useMainContext();
   const productId = route.params.productId;
   const selectedSize = route.params.selectedSize;
-  const productList = useSelector((state) => state.product.products); 
-  const dispatch = useDispatch();
-  const selectedProduct = productList.find(product => product.id === productId);
+  const { allProducts, setAllProducts } = useMainContext();
+  const selectedProduct = allProducts.find(product => product.id === productId);
   const favoriteProduct = selectedProduct.isFavorite;
 
   const [isSizeBottomSheetVisible, setIsSizeBottomSheetVisible] = useState(false);
@@ -32,7 +30,21 @@ export const MainProductScreen = ({ route }) => {
 
 
   const onAddToFavorite = () => {
-    dispatch(toggleFavorite(selectedProduct.id));
+    if (favoriteProduct) {
+      setAllProducts(allProducts.map((product) => {
+        if (product.id === productId) {
+          return { ...product, isFavorite: false }
+        }
+        return product
+      }))
+    } else {
+      setAllProducts(allProducts.map((product) => {
+        if (product.id === productId) {
+          return { ...product, isFavorite: true }
+        }
+        return product
+      }))
+    }
     const message = selectedProduct.isFavorite
     ? `${selectedProduct.name} removed from favorites`
     : `${selectedProduct.name} added to favorites`;
@@ -173,7 +185,7 @@ export const MainProductScreen = ({ route }) => {
             <FlatList
               horizontal
               contentContainerStyle={{ paddingBottom: size.moderateScale(80) }}
-              data={productList}
+              data={allProducts}
               renderItem={({item}) => {
                 return (
                   <ProductCardMain

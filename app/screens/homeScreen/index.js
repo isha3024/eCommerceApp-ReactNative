@@ -1,23 +1,22 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { View, ImageBackground, TouchableOpacity, FlatList, BackHandler, Alert, ToastAndroid, StatusBar } from 'react-native'
-import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
+import { useMainContext } from '../../contexts/MainContext'
+import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
 import { color, IcBackArrow, images, size } from '../../theme'
-import { useDispatch, useSelector } from 'react-redux'
-import { loadProducts, toggleFavorite } from '../../redux'
 import * as styles from './styles'
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
-
 export const HomeScreen = () => {
 
   const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const productList = useSelector((state) => state.product.products); 
-  
+  const {loading, setLoading} = useMainContext()
+  const { allProducts, setAllProducts } = useMainContext();
+
   const [products, setProducts] = useState([]);
   const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(false);
@@ -32,26 +31,60 @@ export const HomeScreen = () => {
     size === userSizeOption ? setUserSizeOption(false) : setUserSizeOption(size)
   };
 
-  const showOnlyNewProducts = () => {
-    const newProducts = productList.filter(product => product.isProductNew);
-    setProducts(newProducts)
-  }
+  const handleFavoriteBtn = async (item) => {
+    const updatedProducts = products.map((product) => {
+      if (product.id === item.id) {
+        return {
+          ...product,
+          isFavorite: !product.isFavorite,
+        }
+      }
+      return product
+    })
+    setProducts(updatedProducts);
 
-  const handleFavoriteBtn = (item) => {
-    dispatch(toggleFavorite(item.id));
-    const message = item.isFavorite
-    ? `${item.name} removed from favorites`
-    : `${item.name} added to favorites`;
+    const updateAllProducts = allProducts.map((product) => {
+      if(product.id === item.id) {
+        return {
+          ...product,
+          isFavorite: !product.isFavorite
+        }
+      }
+      return product;
+    })
+    setAllProducts(updateAllProducts)
+
+    try {
+      await AsyncStorage.setItem('allProducts', JSON.stringify(updateAllProducts));
+    } catch (error) {
+      console.error('Failed to save the updated products to AsyncStorage:', error);
+    }
+
+    const message = item.isFavorite 
+    ? `${item.name} removed from favs`
+    : `${item.name} added to favs` 
     ToastAndroid.show(message, ToastAndroid.SHORT)
   };
+
+  const handleProductPress = (item) => {
+    setSelectedProductId(item.id)
+    setSizeBottomSheetVisible(true);
+  }
+
+  const handleMainProductScreen = () => {
+    if(userSizeOption === false) {
+      ToastAndroid.show('Please Select Size', ToastAndroid.SHORT)
+      return
+    }
+    navigation.navigate('mainProductScreen', {selectedSize: userSizeOption, productId: selectedProductId})
+    setUserSizeOption(false)
+    setSizeBottomSheetVisible(false);
+  }
 
   const renderProducts = ({ item }) => {
     return (
       <ProductCardMain
-        onProductPress={() => {
-          setSelectedProductId(item.id);
-          setSizeBottomSheetVisible(true);
-        }}
+        onProductPress={() => handleProductPress(item)}
         customProductStyle={styles.productCardHome()}
         productImage={item?.images}
         brandName={item?.brand}
@@ -62,7 +95,7 @@ export const HomeScreen = () => {
         newProduct={item?.isProductNew}
         addToFavoriteIcon
         onAddToFavorite={() => handleFavoriteBtn(item)}
-        isProductFavorite={item?.isProductFavorite ||item?.isFavorite}
+        isProductFavorite={item?.isFavorite}
         flotingBtnStyle={styles.flotingBtnStyle()}
       />
     )
@@ -92,20 +125,17 @@ export const HomeScreen = () => {
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBackgroundColor(color.transparent)
-    },[])
+    },[allProducts])
   )
 
   useEffect(() => {
-    showOnlyNewProducts()
-  },[productList])
-
-  useEffect(() => {
-    dispatch(loadProducts())
-  },[dispatch])
+    const newProducts = allProducts.filter(product => product.isProductNew);
+    setProducts(newProducts);
+  }, [allProducts]);
 
 
   return (
-    <Screen withScroll bgColor={color.transparent} translucent={true}>
+    <Screen withScroll bgColor={color.transparent} translucent={true} loading={loading}>
       <View style={styles.topView()}>
           <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
             <LinearGradient
@@ -164,7 +194,7 @@ export const HomeScreen = () => {
           <Text style={styles.sizeInfoText()}>Size info</Text>
           <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        <Button activeOpacity={0.8} title='ADD TO FAVORITE' onPress={() => null} btnStyle={styles.button()} />
+        <Button activeOpacity={0.8} title='ADD TO CART' onPress={() => handleMainProductScreen()} btnStyle={styles.button()} />
       </BottomSheetContainer>
     </Screen>
   )

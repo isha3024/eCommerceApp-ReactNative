@@ -30,6 +30,7 @@ export const brandContainer = () => ({
   marginTop: size.moderateScale(24),
   paddingHorizontal: size.moderateScale(16)
 })
+
 export const brandList = () => ({
   marginBottom: size.moderateScale(32),
   flexDirection: 'row',
@@ -41,6 +42,7 @@ export const brandName = () => ({
   fontFamily: fonts.metropolisRegular,
   color: color.mostlyBlack,
 })
+
 export const selectedBrandName = () => ({
   color: color.secondary,
   fontFamily: fonts.metropolisSemiBold,

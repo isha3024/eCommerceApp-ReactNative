@@ -134,9 +134,9 @@ export const ProductCardMain = ({
           addToFavoriteIcon && (
             <TouchableOpacity activeOpacity={0.9} style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
               {
-                isProductFavorite ?
-                  (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-                  : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+                isProductFavorite 
+                ? (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+                : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
               }
             </TouchableOpacity>
           )
@@ -151,7 +151,7 @@ export const ProductCardMain = ({
         {
           topRightIcon && (
             <TouchableOpacity onPress={removeFromListIconPress} style={[styles.closeIconHorizontal(), closeIconStyle]}>
-              <IcClose width={size.moderateScale(15)} height={size.moderateScale(15)} fill={color.darkGray} />
+              <IcClose width={size.moderateScale(15)} height={size.moderateScale(15)} fill={color.mostlyBlack} />
             </TouchableOpacity>
           )
         }
@@ -227,8 +227,8 @@ export const ProductCardMain = ({
         </TouchableOpacity>
         {
           topRightIcon && (
-            <TouchableOpacity style={[styles.closeIcon(), closeIconStyle]}>
-              <IcClose width={size.moderateScale(15)} height={size.moderateScale(15)} fill={color.darkGray} />
+            <TouchableOpacity onPress={removeFromListIconPress} style={[styles.closeIcon(), closeIconStyle]}>
+              <IcClose width={size.moderateScale(15)} height={size.moderateScale(15)} fill={color.mostlyBlack} />
             </TouchableOpacity>
           )
         }

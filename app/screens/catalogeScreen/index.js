@@ -7,6 +7,8 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadProducts, toggleFavorite } from '../../redux'
 import * as styles from './styles'
+import { useMainContext } from '../../contexts/MainContext'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -69,8 +71,8 @@ const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 export const CatalogeScreen = ({route}) => {
 
   const navigation = useNavigation();
-  const dispatch = useDispatch()
-  const productList = useSelector(state => state.product.products);
+  const { allProducts, setAllProducts } = useMainContext();
+  console.log('allProducts in catalog screen: ',allProducts)
 
   const [showProductList, setShowProductList] = useState([]);
   const [isSheetVisible, setSheetVisible] = useState(false);
@@ -169,18 +171,45 @@ export const CatalogeScreen = ({route}) => {
     setSizeSheetVisible(false);
   }
 
-  const handleFavoriteBtn = (item) => {
-    dispatch(toggleFavorite(item.id));
-    const message = item.isFavorite
-    ? `${item.name} removed from favorites`
-    : `${item.name} added to favorites`;
+  const handleFavoriteBtn = async (item) => {
+    const updatedProducts = showProductList.map((product) => {
+      if (product.id === item.id) {
+        return {
+          ...product,
+          isFavorite: !product.isFavorite,
+        }
+      }
+      return product
+    })
+    setShowProductList(updatedProducts);
+
+    const updateAllProducts = allProducts.map((product) => {
+      if (product.id === item.id) {
+        return {
+          ...product,
+          isFavorite: !product.isFavorite,
+        }
+      }
+      return product
+    })
+    setAllProducts(updateAllProducts)
+
+    try {
+      await AsyncStorage.setItem('allProducts', JSON.stringify(updateAllProducts));
+    } catch (error) {
+      console.error('Failed to save the updated products to AsyncStorage:', error);
+    }
+
+    const message = item.isFavorite 
+    ? `${item.name} removed from favs`
+    : `${item.name} added to favs` 
     ToastAndroid.show(message, ToastAndroid.SHORT)
   };
 
 
   const filterProducts = () => {
     if(filters !== null) {
-      let filteredProducts = productList;
+      let filteredProducts = allProducts;
 
       //filter by category
       if(filters.category && filters.category.length > 0) {
@@ -218,7 +247,7 @@ export const CatalogeScreen = ({route}) => {
       setShowProductList(filteredProducts)
     }
     else {
-      setShowProductList(productList)
+      setShowProductList(allProducts)
     }
   }
   
@@ -252,8 +281,8 @@ export const CatalogeScreen = ({route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      setShowProductList(productList)
-    },[productList])
+      setShowProductList(allProducts)
+    },[allProducts])
   )
 
   useFocusEffect(
@@ -261,11 +290,6 @@ export const CatalogeScreen = ({route}) => {
       filterProducts()
     },[filters])
   )
-
-  useEffect(() => {
-    dispatch(loadProducts())
-  },[dispatch])
-
 
   useEffect(() => {
     setIsSortOptionSelected(sortProductType[3])

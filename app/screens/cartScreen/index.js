@@ -93,23 +93,23 @@ export const CartScreen = () => {
     setOrderedProducts(updateCart);
   }
 
-  const addToFavorite = (id) => {
-    const updateCart = orderedProducts.map(cart => {
-      if (cart.id === id) {
-        Alert.alert(
-          'Product Added to Favorites',
-          'You have successfully added this product to your favorites',
-        )
-        return {
-          ...cart, 
-          isFavorite: !cart.isFavorite
-        }
-      }
-      return cart;
-    })
-    setOrderedProducts(updateCart);
-    setShowCartOptions({})
-  }
+  // const addToFavorite = (id) => {
+  //   const updateCart = orderedProducts.map(cart => {
+  //     if (cart.id === id) {
+  //       Alert.alert(
+  //         'Product Added to Favorites',
+  //         'You have successfully added this product to your favorites',
+  //       )
+  //       return {
+  //         ...cart, 
+  //         isFavorite: !cart.isFavorite
+  //       }
+  //     }
+  //     return cart;
+  //   })
+  //   setOrderedProducts(updateCart);
+  //   setShowCartOptions({})
+  // }
 
   const handleSearchCode = (value) => {
     setPromoCodeValue(value);
@@ -146,10 +146,10 @@ export const CartScreen = () => {
       {
         showCartOptions[item.id] && (
             <Animated.View style={styles.cartOptions()}>
-              <TouchableOpacity onPress={() => addToFavorite(item.id)} activeOpacity={0.6} style={[styles.cartOptionItem(), styles.cartOptionItemBorder()]}>
+              <TouchableOpacity activeOpacity={0.6} style={[styles.cartOptionItem(), styles.cartOptionItemBorder()]}>
                 <Text style={styles.cartOptionText()}>Add to favorites</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => removeFromCart(item.id)} activeOpacity={0.6} style={styles.cartOptionItem()}>
+              <TouchableOpacity activeOpacity={0.6} style={styles.cartOptionItem()}>
                 <Text style={styles.cartOptionText()}>Delete from list</Text>
               </TouchableOpacity>
             </Animated.View>
