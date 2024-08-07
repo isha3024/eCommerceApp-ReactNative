@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { LocalizationProvider } from './contexts';
@@ -11,6 +11,10 @@ import { persistor, store } from './redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 const App = () => {
+
+  LogBox.ignoreLogs([
+    'Tried to modify key `reduceMotion` of an object which has been already passed to a worklet'
+  ]);
 
   return (
     <Provider store={store}>

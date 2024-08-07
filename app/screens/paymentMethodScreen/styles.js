@@ -15,24 +15,48 @@ export const header = () => ({
 })
 
 export const middleView = () => ({
-  marginTop: size.moderateScale(25),
+  flex:1,
 })
 
+
 export const sectionTitle = () => ({
+  marginTop: size.moderateScale(20),
   fontFamily: fonts.metropolisSemiBold,
   fontSize: fontSize.littleMedium,
   color: color.mostlyBlack,
   marginHorizontal: size.moderateScale(16)
 })
 
+export const paymentCardView = () => ({
+  flex: 1
+})
+
+export const noPaymentCardView = () => ({
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: size.moderateScale(15)
+})
+
+export const noPaymentCardText = () => ({
+  fontFamily: fonts.metropolisMedium,
+  fontSize: fontSize.middleSmallMedium,
+  color: color.mostlyBlack,
+})
+
+export const noPaymentCardBtn = () => ({
+  paddingHorizontal: size.moderateScale(15),
+  paddingVertical: size.moderateScale(10),
+})
+
 export const paymentCardsList = () => ({
   marginTop: size.moderateScale(20),
-  marginBottom: size.moderateScale(50),
 })
 
 export const contentContainerStyle = () => ({
   gap: size.moderateScale(40),
   alignItems: 'center',
+  paddingBottom: size.moderateScale(200)
 })
 
 export const paymentCardWrapper = () => ({
@@ -47,7 +71,7 @@ export const image = (opacity) => ({
   overflow: 'hidden',
   elevation: size.moderateScale(5),
   backgroundColor: color.primary,
-  opacity: opacity ? 0.6 : 1,
+  opacity: opacity ? 1 : 0.6,
 })
 
 export const cardDetails = () => ({
@@ -59,7 +83,8 @@ export const cardDetails = () => ({
 export const cardNumber = () => ({
   fontFamily: fonts.metropolisMedium,
   fontSize: fontSize.middleSmallMedium,
-  color: color.white
+  color: color.white,
+  letterSpacing: size.moderateScale(5)
 })
 
 export const cardBottom = () => ({
@@ -105,19 +130,29 @@ export const bodyText = () => ({
 })
 
 export const bottomView = () => ({
-  alignItems: 'flex-end',
-  paddingHorizontal: size.moderateScale(16)
+  position: 'absolute',
+  bottom: 0,
+  width: '100%',
+  height: size.moderateScale(100),
 })
 
+export const linearGradient = () => ({
+  flex: 1,
+  width: '100%'
+});
+
 export const addNewCardBtn = () => ({
-  backgroundColor: color.mostlyBlack,
-  alignItems: 'center',
+  position: 'absolute',
+  bottom: size.moderateScale(20),
+  right: size.moderateScale(20),
   justifyContent: 'center',
+  alignItems: 'center',
   width: size.moderateScale(36),
   height: size.moderateScale(36),
-  borderRadius: size.moderateScale(20),
-  elevation: size.moderateScale(5)
+  backgroundColor: color.mostlyBlack,
+  borderRadius: size.moderateScale(18),
 })
+
 
 export const bottomSheetTitle = () => ({
   textAlign: 'center',
@@ -144,40 +179,4 @@ export const checkboxViewBottomSheet = () => ({
 
 export const button = () => ({
   marginHorizontal: size.moderateScale(16),
-})
-
-export const modalContainer = () => ({
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: color.customTransparent(0.7),
-})
-
-export const calendarContainer = () => ({
-  backgroundColor: color.white,
-  borderRadius: size.moderateScale(10),
-  padding: size.moderateScale(20),
-  alignItems: 'center',
-})
-export const closeButton = () => ({
-  marginTop: size.moderateScale(10),
-  padding: size.moderateScale(10),
-  backgroundColor: color.secondary,
-  borderRadius: size.moderateScale(5),
-})
-export const closeButtonText = () => ({
-  color: color.white,
-  fontWeight: 'bold',
-})
-
-export const inputBottomSheet = () => ({
-  borderRadius: size.moderateScale(8),
-  fontSize: fontSize.small,
-  backgroundColor: color.white,
-  color: color.mostlyBlack,
-  padding: size.moderateScale(20)
-})
-
-export const modalContentContainer = () => ({
- 
 })

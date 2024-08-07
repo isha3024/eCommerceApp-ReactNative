@@ -17,7 +17,7 @@ export const AddressScreen = ({route}) => {
 
   const navigation = useNavigation();
   const { addresses, setAddresses } = useMainContext();
-  const { selectedAddress, setSelectedAddress} = useMainContext()
+  const { setSelectedAddress } = useMainContext()
 
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0)
 
@@ -30,11 +30,19 @@ export const AddressScreen = ({route}) => {
   }, [route.params, setAddresses])
 
   const toggleCheckbox = (index) => {
+    console.log('index: ', index)
     if(selectedAddressIndex !== index){
       setSelectedAddressIndex(index)
       setSelectedAddress(addresses[index])
     }
   }
+
+  useEffect(() => {
+    if(addresses.length === 1){
+      setSelectedAddressIndex(0)
+      setSelectedAddress(addresses[0])
+    }
+  },[addresses])
 
   return (
     <View style={styles.mainView()}>

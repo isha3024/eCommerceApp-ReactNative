@@ -6,10 +6,12 @@ export const MainContextProvider = props => {
 
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState({});
+  const [paymentCardDetails, setPaymentCardDetails] = useState([]);
   const [paymentCardSelected, setPaymentCardSelected] = useState({});
   const [cartProductList, setCartProductList] = useState([]);
 
-  console.log('addresses: ', addresses)
+  console.log('paymentCardDetails: ', paymentCardDetails)
+  console.log('paymentCardSelected: ', paymentCardSelected)
 
   const value = useMemo(() => {
     return {
@@ -17,6 +19,8 @@ export const MainContextProvider = props => {
       setAddresses: setAddresses,
       selectedAddress: selectedAddress,
       setSelectedAddress: setSelectedAddress,
+      paymentCardDetails: paymentCardDetails,
+      setPaymentCardDetails: setPaymentCardDetails,
       paymentCardSelected: paymentCardSelected,
       setPaymentCardSelected: setPaymentCardSelected,
       cartProductList: cartProductList,
@@ -27,6 +31,8 @@ export const MainContextProvider = props => {
     setAddresses,
     selectedAddress,
     setSelectedAddress,
+    paymentCardDetails,
+    setPaymentCardDetails,
     paymentCardSelected,
     setPaymentCardSelected,
     cartProductList,  

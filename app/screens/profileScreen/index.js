@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Image, TouchableOpacity, View } from 'react-native';
 
 import * as styles from './styles';
@@ -15,7 +15,16 @@ export const ProfileScreen = () => {
   const dispatch = useDispatch()
   const userInfo = useSelector(state => state.authUser.userInfo);
   const { addresses } = useMainContext();
-  // console.log('user: ', userInfo)
+  const { paymentCardSelected } = useMainContext();
+  console.log('paymentCardSelected: ',Object.keys(paymentCardSelected).length)
+  console.log('paymentCardSelected cardNumber: ',paymentCardSelected.cardNumber)
+
+  let maskedNumber = ''
+  if(Object.keys(paymentCardSelected).length !== 0){
+    let slicedNumber = paymentCardSelected.cardNumber.slice(-2);
+    maskedNumber = '**'+slicedNumber;
+    console.log('maskedNumber: ',maskedNumber)
+  }
 
   const handleLogout = () => {
     Alert.alert(
@@ -69,7 +78,7 @@ export const ProfileScreen = () => {
           <TouchableOpacity onPress={() => navigation.navigate('paymentMethodScreen')} activeOpacity={0.6} style={styles.profileOptionItem()}>
             <View>
               <Text style={styles.profileOptionTitle()}>Payment Method</Text>
-              <Text style={styles.message()}>Visa **34</Text>
+              <Text style={styles.message()}>{Object.keys(paymentCardSelected).length === 0 ? 'No payment cards' : 'Visa '+maskedNumber}</Text>
             </View>
             <IcBackArrow fill={color.darkGray} width={size.moderateScale(8)} height={size.moderateScale(12)} style={styles.forwardArrow()} />
           </TouchableOpacity>

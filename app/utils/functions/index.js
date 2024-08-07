@@ -26,18 +26,8 @@ export const passwordValidation = val => {
   return passwordPattern.test(val);
 };
 export const formatCreditCardNumber = input => {
-  // Remove non-numeric characters
   const numericInput = input.replace(/(.{4})/g, '$1 ');
-
-  // Insert a space after every 4 digits
-  let formattedInput = '';
-  for (let i = 0; i < numericInput.length; i += 4) {
-    formattedInput += numericInput.slice(i, i + 4) + ' ';
-  }
-
-  // Trim any extra spaces
-  formattedInput = formattedInput.trim();
-
+  let formattedInput = numericInput.replace(numericInput,`**** **** **** ${numericInput.slice(-5)}`);
   return formattedInput;
 };
 export const invertColor = color => {
