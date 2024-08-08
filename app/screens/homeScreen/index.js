@@ -14,7 +14,6 @@ const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 export const HomeScreen = () => {
 
   const navigation = useNavigation();
-  const {loading, setLoading} = useMainContext()
   const { allProducts, setAllProducts } = useMainContext();
 
   const [products, setProducts] = useState([]);
@@ -125,8 +124,12 @@ export const HomeScreen = () => {
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBackgroundColor(color.transparent)
-    },[allProducts])
+    },[])
   )
+
+  useEffect(() => {
+    StatusBar.setBackgroundColor(color.transparent)
+  },[allProducts])
 
   useEffect(() => {
     const newProducts = allProducts.filter(product => product.isProductNew);
@@ -135,7 +138,7 @@ export const HomeScreen = () => {
 
 
   return (
-    <Screen withScroll bgColor={color.transparent} translucent={true} loading={loading}>
+    <Screen withScroll bgColor={color.transparent} translucent={true}>
       <View style={styles.topView()}>
           <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
             <LinearGradient

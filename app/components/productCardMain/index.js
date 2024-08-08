@@ -28,6 +28,7 @@ export const ProductCardMain = ({
   addToFavoriteIcon,
   addToCartBtnStyle,
   addToCartIcon,
+  addToCartPress,
   showRatings,
   showRatingHorizontal,
   isProductSold,
@@ -143,7 +144,7 @@ export const ProductCardMain = ({
         }
         {
           addToCartIcon && !isProductSold && (
-            <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtnHorizontal(), addToCartBtnStyle]} onPress={cartOptionPress}>
+            <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtnHorizontal(), addToCartBtnStyle]} onPress={addToCartPress}>
               <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)}/>
             </TouchableOpacity>
           )
@@ -245,7 +246,7 @@ export const ProductCardMain = ({
         }
         {
           addToCartIcon && !isProductSold && (
-            <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtn(), addToCartBtnStyle]} onPress={cartOptionPress}>
+            <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtn(), addToCartBtnStyle]} onPress={addToCartPress}>
               <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)}/>
             </TouchableOpacity>
           )

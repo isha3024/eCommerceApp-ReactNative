@@ -16,14 +16,11 @@ export const ProfileScreen = () => {
   const userInfo = useSelector(state => state.authUser.userInfo);
   const { addresses } = useMainContext();
   const { paymentCardSelected } = useMainContext();
-  console.log('paymentCardSelected: ',Object.keys(paymentCardSelected).length)
-  console.log('paymentCardSelected cardNumber: ',paymentCardSelected.cardNumber)
 
   let maskedNumber = ''
   if(Object.keys(paymentCardSelected).length !== 0){
     let slicedNumber = paymentCardSelected.cardNumber.slice(-2);
     maskedNumber = '**'+slicedNumber;
-    console.log('maskedNumber: ',maskedNumber)
   }
 
   const handleLogout = () => {

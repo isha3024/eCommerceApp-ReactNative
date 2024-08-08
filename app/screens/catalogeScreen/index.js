@@ -72,7 +72,6 @@ export const CatalogeScreen = ({route}) => {
 
   const navigation = useNavigation();
   const { allProducts, setAllProducts } = useMainContext();
-  console.log('allProducts in catalog screen: ',allProducts)
 
   const [showProductList, setShowProductList] = useState([]);
   const [isSheetVisible, setSheetVisible] = useState(false);
@@ -184,13 +183,13 @@ export const CatalogeScreen = ({route}) => {
     setShowProductList(updatedProducts);
 
     const updateAllProducts = allProducts.map((product) => {
-      if (product.id === item.id) {
+      if(product.id === item.id) {
         return {
           ...product,
-          isFavorite: !product.isFavorite,
+          isFavorite: !product.isFavorite
         }
       }
-      return product
+      return product;
     })
     setAllProducts(updateAllProducts)
 
@@ -205,7 +204,6 @@ export const CatalogeScreen = ({route}) => {
     : `${item.name} added to favs` 
     ToastAndroid.show(message, ToastAndroid.SHORT)
   };
-
 
   const filterProducts = () => {
     if(filters !== null) {

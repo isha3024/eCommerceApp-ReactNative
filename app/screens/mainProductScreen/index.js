@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
 import { View, ScrollView, Image, TouchableOpacity, FlatList, ToastAndroid, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 
@@ -7,11 +6,37 @@ import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, StarRati
 import { IcBackArrow, IcFilledHeart, IcHeart, IcShare, color, size } from '../../theme';
 import { useMainContext } from '../../contexts/MainContext';
 import * as styles from './styles'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 // const productDetail = productData.productList;
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
-const colorsList = ['#020202', '#F6F6F6', '#B82222', '#BEA9A9', '#E2BB8D', '#151867'];
+const colorsList = [
+  {
+    color: '#020202',
+    name: 'Black',
+  },
+  {
+    color: '#F6F6F6',
+    name: 'White',
+  },
+  {
+    color: '#B82222',
+    name: 'Red',
+  },
+  {
+    color: '#BEA9A9',
+    name: 'Gray',
+  },
+  {
+    color: '#E2BB8D',
+    name: 'Cream',
+  },
+  {
+    color: '#151867',
+    name: 'Blue',
+  }
+]
 
 export const MainProductScreen = ({ route }) => {
 
@@ -21,13 +46,14 @@ export const MainProductScreen = ({ route }) => {
   const selectedSize = route.params.selectedSize;
   const { allProducts, setAllProducts } = useMainContext();
   const selectedProduct = allProducts.find(product => product.id === productId);
+  console.log('selectedProduct: ',selectedProduct)
   const favoriteProduct = selectedProduct.isFavorite;
+  const soldOut = selectedProduct.isProductSold;
 
   const [isSizeBottomSheetVisible, setIsSizeBottomSheetVisible] = useState(false);
   const [isColorBottomSheetVisible, setIsColorBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(selectedSize);
-  const [userColorSelected, setUserColorSelected] = useState(null)
-
+  const [userColorSelected, setUserColorSelected] = useState('')
 
   const onAddToFavorite = () => {
     if (favoriteProduct) {
@@ -37,7 +63,8 @@ export const MainProductScreen = ({ route }) => {
         }
         return product
       }))
-    } else {
+    } 
+    else {
       setAllProducts(allProducts.map((product) => {
         if (product.id === productId) {
           return { ...product, isFavorite: true }
@@ -45,14 +72,17 @@ export const MainProductScreen = ({ route }) => {
         return product
       }))
     }
+
     const message = selectedProduct.isFavorite
     ? `${selectedProduct.name} removed from favorites`
     : `${selectedProduct.name} added to favorites`;
     ToastAndroid.show(message, ToastAndroid.SHORT)
+
   }
 
-  const toggleColors = (color) => {
-    setUserColorSelected(color)
+  const toggleColors = (colorName) => {
+    console.log('color: ', colorName)
+    setUserColorSelected(colorName)
   }
 
   const handleSizeDropdownPress = () => {
@@ -75,8 +105,8 @@ export const MainProductScreen = ({ route }) => {
     setUserSizeOption(size);
   }
 
-  const handleAddToCartBtn = (item) => {
-    if (userColorSelected === null) {
+  const handleAddToCartBtn = async (item) => {
+    if (userColorSelected === '') {
       Alert.alert(
         'Error',
         'Please select color',
@@ -95,12 +125,24 @@ export const MainProductScreen = ({ route }) => {
       ToastAndroid.show('Product already exists', ToastAndroid.SHORT)
       return
     }
+
+    const updatedCartList = [...cartProductList, {
+      ...item,
+      productColor: userColorSelected,
+      size: userSizeOption,
+      productQuantity: 1,
+      stocks: item.stocks - 1
+    }]
     
-    setCartProductList((prevList) => {
-      return [...prevList, { ...item, productColor: userColorSelected, size: userSizeOption}]
-    });
-    
-    ToastAndroid.show(`${item.name} added to cart`, ToastAndroid.SHORT);
+    setCartProductList(updatedCartList);
+
+    try {
+      await AsyncStorage.setItem('cartList', JSON.stringify(updatedCartList))
+      ToastAndroid.show(`${item.name} added to cart`, ToastAndroid.SHORT);
+    }
+    catch(error) {
+      console.log(error);
+    }
   };
   
 
@@ -207,11 +249,15 @@ export const MainProductScreen = ({ route }) => {
           </View>
         </View>
 
-        {/* Bottom Sheet Containers */}
       </Screen>
       <View style={styles.bottomView()}>
-        <Button title='ADD TO CART' onPress={() => handleAddToCartBtn(selectedProduct)} />
+        <Button 
+          title={soldOut ? 'SOLD OUT' : 'ADD TO CART'}
+          disabled={soldOut}
+          onPress={() => handleAddToCartBtn(selectedProduct)} 
+          />
       </View>
+        {/* Bottom Sheet Containers */}
       <BottomSheetContainer
         isVisible={isSizeBottomSheetVisible}
         onClose={handleSizeDropdownPressClose}
@@ -244,8 +290,8 @@ export const MainProductScreen = ({ route }) => {
           {
             colorsList.map((color) => {
               return (
-                <TouchableOpacity onPress={() => toggleColors(color)} activeOpacity={0.7} style={[styles.colorItem(),  userColorSelected === color && styles.colorItemActive()]} key={color}>
-                  <View style={styles.colors(color)}></View>
+                <TouchableOpacity onPress={() => toggleColors(color.name)} activeOpacity={0.7} style={[styles.colorItem(),  userColorSelected === color.name && styles.colorItemActive()]} key={color.name+color.color}>
+                  <View style={styles.colors(color.color)}></View>
                 </TouchableOpacity>
               )
             })

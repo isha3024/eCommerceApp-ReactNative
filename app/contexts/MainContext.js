@@ -16,15 +16,15 @@ export const MainContextProvider = props => {
   const [paymentCardSelected, setPaymentCardSelected] = useState({});
   const [cartProductList, setCartProductList] = useState([]);
 
-  console.log('allproducts in main context: ',allProducts)
-
-  const saveProducts = async () => {
+  const saveProducts = async (products) => {
+    setLoading(true)
     try {
-      await AsyncStorage.setItem('productList', JSON.stringify(allProducts));
+      await AsyncStorage.setItem('productList', JSON.stringify(products));
     }
     catch (error) {
       console.error('Failed to store the products ', error);
     }
+    setLoading(false)
   }
 
   const fetchProducts = async () => {
@@ -33,14 +33,38 @@ export const MainContextProvider = props => {
       const storedProducts = await AsyncStorage.getItem('productList');
       if(storedProducts){
         setAllProducts(JSON.parse(storedProducts));
-        setLoading(false)
       }
     }
     catch (error) {
       console.error('Failed to load products from storage ',error);
-      setLoading(false)
     }
+    setLoading(false)
   } 
+
+  const saveCartProductList = async (list) => {
+    setLoading(true)
+    try {
+      await AsyncStorage.setItem('cartList', JSON.stringify(list));
+    } catch (error) {
+      console.error('Failed to store the cart product list ', error);
+    }
+    setLoading(false)
+  };
+
+  const loadCartListItemsFromStorage = async () => {
+    setLoading(true);
+    try {
+      const response = await AsyncStorage.getItem('cartList');
+      if(response) {
+        const responseInJSON = JSON.parse(response);
+        setCartProductList(responseInJSON)
+      }
+    }
+    catch (error) {
+      console.error('Failed to load cart list items from storage ', error);
+    }
+    setLoading(false);
+  }
 
   const value = useMemo(() => {
     return {
@@ -58,6 +82,8 @@ export const MainContextProvider = props => {
       setPaymentCardSelected: setPaymentCardSelected,
       cartProductList: cartProductList,
       setCartProductList: setCartProductList,
+      saveProducts: saveProducts,
+      saveCartProductList: saveCartProductList,
     }
   }, [
     loading,
@@ -77,12 +103,22 @@ export const MainContextProvider = props => {
   ]);
 
   useEffect(() => {
-    saveProducts()
+    saveProducts(allProducts)
   },[allProducts])
 
   useEffect(() => {
     fetchProducts();
   },[])
+
+  useEffect(() => {
+    loadCartListItemsFromStorage();
+  }, []);
+
+  useEffect(() => {
+    if (cartProductList.length > 0) {
+      saveCartProductList(cartProductList);
+    }
+  }, [cartProductList]);
 
   return <context.Provider value={value}>{props.children}</context.Provider>;
 };

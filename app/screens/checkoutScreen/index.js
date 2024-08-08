@@ -10,9 +10,9 @@ import { useNavigation } from '@react-navigation/native'
 export const CheckoutScreen = ({route}) => {
   const navigation = useNavigation();
   const orderTotal = route.params.orderTotal;
-  const deliveryAmount = 15;
+  const deliveryFees = 15;
 
-  const orderAmountSummary = orderTotal + deliveryAmount;
+  const orderAmountSummary = orderTotal + deliveryFees;
   const checkoutAddress = useMainContext()?.selectedAddress;
   const paymentCardSelected = useMainContext()?.paymentCardSelected;
 

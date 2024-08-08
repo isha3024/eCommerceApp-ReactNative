@@ -2,8 +2,8 @@ import { color, fonts, fontSize, size } from "../../theme"
 
 export const mainView = () => ({
   flex: 1,
-  backgroundColor: color.primary
 })
+
 export const topView = () => ({
   gap: size.moderateScale(18),
   paddingBottom: size.moderateScale(12),
@@ -21,21 +21,41 @@ export const mainTitle = () => ({
 })
 
 export const middleView = () => ({
-  
+  flex: 1,
 })
 
 export const orderedProducts = () => ({
+  flex: 1,
   marginHorizontal: size.moderateScale(16),
 })
 
-export const flatList = () => ({})
+export const flatList = () => ({
+  // backgroundColor: color.darkGray
+})
 
 export const contentContainerStyle = () => ({
-  gap: size.moderateScale(24)
+  gap: size.moderateScale(24),
+  paddingTop: size.moderateScale(16),
 })
 
 export const promoCardWrapper = () => ({
-  marginTop: size.moderateScale(25)
+  // marginHorizontal: size.moderateScale(16),
+  // marginTop: size.moderateScale(25)
+})
+
+export const promoCardWrapperBottomSheet = () => ({
+  marginHorizontal: size.moderateScale(16),
+})
+
+export const bottomView = () => ({
+  // position: 'absolute',
+  backgroundColor: color.primary,
+  // width: size.deviceWidth - size.moderateScale(32), 
+  // bottom: size.moderateScale(0),
+  zIndex: size.moderateScale(1),
+  paddingBottom: size.moderateScale(80),
+  paddingTop: size.moderateScale(15),
+  marginHorizontal: size.moderateScale(16)
 })
 
 export const promoCodeInput = () => ({
@@ -44,7 +64,6 @@ export const promoCodeInput = () => ({
   fontFamily: fonts.metropolisMedium,
   fontSize: fontSize.small,
   paddingHorizontal: size.moderateScale(20),
-  marginHorizontal: size.moderateScale(16),
   borderRadius: size.moderateScale(8),
   height: size.moderateScale(36),
   alignItems: 'center'
@@ -58,7 +77,7 @@ export const forwardButton = () => ({
   alignItems: 'center',
   justifyContent: 'center',
   position: 'absolute',
-  right: size.moderateScale(16)
+  right: size.moderateScale(0)
 })
 
 export const totalAmountView = () => ({
@@ -66,7 +85,6 @@ export const totalAmountView = () => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   marginVertical: size.moderateScale(28),
-  paddingHorizontal: size.moderateScale(16)
 })
 
 export const totalAmountText = () => ({
@@ -82,7 +100,7 @@ export const totalAmount = () => ({
 })
 
 export const button = () => ({
-  marginHorizontal: size.moderateScale(16)
+  // marginHorizontal: size.moderateScale(16)
 })
 
 export const orderListEmpty = () => ({
