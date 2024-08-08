@@ -35,6 +35,22 @@ export const addressContainer = () => ({
   elevation: size.moderateScale(5)
 })
 
+export const emptyField = () => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+})
+
+export const emptyFieldText = () => ({
+  fontFamily: fonts.metropolisMedium,
+  fontSize: fontSize.small,
+  color: color.mostlyBlack
+})
+
+export const redTextView = () => ({
+  
+})
+
 export const changeAddress = () => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
