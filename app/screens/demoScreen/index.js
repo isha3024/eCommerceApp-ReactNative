@@ -36,7 +36,6 @@ export const DemoScreen = () => {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
         );
-        console.log('granted:::', granted)
         if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
           Alert.alert(
             'Permission Denied',
@@ -101,7 +100,6 @@ export const DemoScreen = () => {
       error => {
         Alert.alert(`Code ${error.code}`, error.message)
         // setLocation(null)
-        console.log('error::: ', error)
       },
       {
         enableHighAccuracy: true,
@@ -157,7 +155,6 @@ export const DemoScreen = () => {
       latitude: marker.latitude,
       longitude: marker.longitude,
     }));
-    console.log('coordinates::: ', coordinates)
     if(mapRef.current){
       mapRef.current.fitToCoordinates(coordinates, {
         edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },

@@ -91,11 +91,9 @@ async function getVerifiedKeys(keys) {
 
 export const getCredentials = async () => {
   try {
-    // console.log("🚀 ~ getCredentials ~ store.getState().authReducer.userLoginResponse:", store.getState().authReducer.userLoginResponse)
     const credentials =
       (await store.getState().authReducer.userLoginResponse) ?? null;
 
-    // console.log("🚀 ~ getCredentials ~ store:", store)
     const checkTokenIsVerify = await getVerifiedKeys(credentials);
 
     if (credentials != null && checkTokenIsVerify != null) {

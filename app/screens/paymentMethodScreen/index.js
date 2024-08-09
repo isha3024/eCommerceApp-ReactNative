@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, ImageBackground, ScrollView, StatusBar, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ImageBackground, ScrollView, StatusBar, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -12,10 +12,15 @@ import * as styles from './styles';
 export const PaymentMethodScreen = () => {
 
   const navigation = useNavigation();
-  const { paymentCardDetails, setPaymentCardDetails } = useMainContext();
-  const { paymentCardSelected, setPaymentCardSelected } = useMainContext()
-
-  const [selectedCardIndex, setSelectedCardIndex] = useState(0)
+  const { 
+    paymentCardDetails, 
+    setPaymentCardDetails, 
+    savePaymentCard, 
+    paymentCardSelected, 
+    setPaymentCardSelected,
+    paymentCardSelectedIndex,
+    setPaymentCardSelectedIndex
+  } = useMainContext();
 
   const [cardDetails, setCardDetails] = useState({
     name : '',
@@ -28,8 +33,8 @@ export const PaymentMethodScreen = () => {
 
 
   const toggleCheckbox = (index) => {
-    if(selectedCardIndex !== index){
-      setSelectedCardIndex(index)
+    if(paymentCardSelectedIndex !== index){
+      setPaymentCardSelectedIndex(index)
       setPaymentCardSelected(paymentCardDetails[index])
     }
   };
@@ -48,15 +53,17 @@ export const PaymentMethodScreen = () => {
         console.error('prevCard is not an array:', prevCard);
         return [cardDetails];
       }
-      return [...prevCard, cardDetails]
+      const updatePaymentCardDetails = [...prevCard, cardDetails];
+      savePaymentCard(updatePaymentCardDetails)
+      return updatePaymentCardDetails
     })
     setShowBottomSheetForNewCard(false)
   }
 
   useEffect(() => {
     if(paymentCardDetails.length === 1){
-      setSelectedCardIndex(0)
-      setPaymentCardSelected(paymentCardDetails[0])
+      setPaymentCardSelectedIndex(paymentCardSelectedIndex)
+      setPaymentCardSelected(paymentCardDetails[paymentCardSelectedIndex])
     }
   },[paymentCardDetails])
 
@@ -92,7 +99,7 @@ export const PaymentMethodScreen = () => {
                         <ImageBackground
                           source={images.imgPaymentCardBG}
                           resizeMode="cover"
-                          style={styles.image(selectedCardIndex === index)}
+                          style={styles.image(paymentCardSelectedIndex === index)}
                         >
                           <View style={styles.cardDetails()}>
                             <Image source={images.imgPaymentChip} />
@@ -117,7 +124,7 @@ export const PaymentMethodScreen = () => {
                             style={styles.checkboxButton()}
                           >
                             {
-                              selectedCardIndex === index 
+                              paymentCardSelectedIndex === index 
                               ? ( <IcCheckBoxActive fill={color.mostlyBlack} />) 
                               : (<IcCheckBoxInactive />)
                             }

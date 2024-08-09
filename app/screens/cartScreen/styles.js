@@ -7,6 +7,7 @@ export const mainView = () => ({
 export const topView = () => ({
   gap: size.moderateScale(18),
   paddingBottom: size.moderateScale(12),
+  backgroundColor: color.primary
 })
 
 export const header = () => ({
@@ -48,14 +49,11 @@ export const promoCardWrapperBottomSheet = () => ({
 })
 
 export const bottomView = () => ({
-  // position: 'absolute',
   backgroundColor: color.primary,
-  // width: size.deviceWidth - size.moderateScale(32), 
-  // bottom: size.moderateScale(0),
   zIndex: size.moderateScale(1),
   paddingBottom: size.moderateScale(80),
   paddingTop: size.moderateScale(15),
-  marginHorizontal: size.moderateScale(16)
+  paddingHorizontal: size.moderateScale(16)
 })
 
 export const promoCodeInput = () => ({

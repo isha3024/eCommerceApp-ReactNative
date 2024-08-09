@@ -1,48 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StatusBar, TouchableOpacity, LogBox } from 'react-native';
+import { View, Text, StatusBar, TouchableOpacity } from 'react-native';
 import { useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Button, Header, Screen } from '../../components';
 import { useMainContext } from '../../contexts/MainContext';
 import { color, IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcPlus } from '../../theme';
 import * as styles from './styles';
 
-
-// Ignore specific warning
-// LogBox.ignoreLogs([
-//   'Warning: Cannot update a component (`MainContextProvider`) while rendering a different component (`AddressScreen`).'
-// ]);
-
 export const AddressScreen = ({route}) => {
 
   const navigation = useNavigation();
-  const { addresses, setAddresses } = useMainContext();
-  const { setSelectedAddress } = useMainContext()
+  // const { addresses, loading, saveAddresses } = useMainContext();
+  const { addresses, loading, setSelectedAddress, selectedAddressIndex, setSelectedAddressIndex } = useMainContext();
 
-  const [selectedAddressIndex, setSelectedAddressIndex] = useState(0)
-
-  // Add new address if provided in route.params
-  useEffect(() => {
-    if (route.params?.newAddress) {
-      const newAddress = route.params.newAddress;
-      setAddresses(prevAddresses => [...prevAddresses, newAddress]);
-    }
-  }, [route.params, setAddresses])
+  // const [selectedAddressIndex, setSelectedAddressIndex] = useState(0)
 
   const toggleCheckbox = (index) => {
-    console.log('index: ', index)
     if(selectedAddressIndex !== index){
       setSelectedAddressIndex(index)
       setSelectedAddress(addresses[index])
     }
   }
 
-  useEffect(() => {
-    if(addresses.length === 1){
-      setSelectedAddressIndex(0)
-      setSelectedAddress(addresses[0])
-    }
-  },[addresses])
+
+  // useEffect(() => {
+  //   if(addresses.length === 1){
+  //     setSelectedAddressIndex(0)
+  //     setSelectedAddress(addresses[0])
+  //   }
+  // },[addresses])
 
   return (
     <View style={styles.mainView()}>
@@ -57,7 +44,7 @@ export const AddressScreen = ({route}) => {
           leftIconPress={() => navigation.goBack()}
         />
       </View>
-      <Screen withScroll bgColor={color.primary} style={styles.middleView()}>
+      <Screen withScroll bgColor={color.primary} translucent={true} loading={loading} style={styles.middleView()}>
         {addresses.length > 0
           ? (
              <>

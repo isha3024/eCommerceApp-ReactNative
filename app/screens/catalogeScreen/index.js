@@ -102,7 +102,6 @@ export const CatalogeScreen = ({route}) => {
   /**sorting the product based on selection */
   const sortProducts = (sortOption) => {
     let sortedList = [...showProductList];
-    // console.log('list: ', sortedList);
     switch (sortOption.id) {
       case 3: 
         sortedList.sort((a, b) => b.ratings - a.ratings);
@@ -237,7 +236,6 @@ export const CatalogeScreen = ({route}) => {
       //filter by color
       if (filters.colors && filters.colors.length > 0) {
         filteredProducts = filteredProducts.filter(product =>{
-          console.log(product.availableColors, filters.colors)
           return product.availableColors && product.availableColors.some(availableColor => filters.colors.includes(availableColor))
         })
           

@@ -35,7 +35,6 @@ const sortProductType = [
 export const SortBy = () => {
 
   const [isSelected, setIsSelected] = useState(false);
-  console.log('isSelected: ', isSelected.name);
 
   const renderSortProductTypes = ({item}) => {
     return(

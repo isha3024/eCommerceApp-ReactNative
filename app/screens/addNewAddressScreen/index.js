@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -25,20 +25,19 @@ export const AddNewAddressScreen = ({ route }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleSave = () => {
-    if (isEditing) {
-      // Update the existing address
-      setAddresses(prevAddresses =>
-        prevAddresses.map(addr =>
-          addr.id === address.id ? address : addr
-        )
-      );
-    } else {
-      // Add a new address
-      setAddresses(prevAddresses => [...prevAddresses, { ...address, id: prevAddresses.length + 1 }]);
+    if(validateAddress(address)) {
+      setAddresses([...addresses, address]);
     }
-    navigation.goBack();
   };
 
+  const validateAddress = (address) => {
+    for(let key in address) {
+      if(!address[key]){
+        return false
+      }
+    }
+    return true
+  }
 
   useEffect(() => {
     if (route.params?.editAddress) {

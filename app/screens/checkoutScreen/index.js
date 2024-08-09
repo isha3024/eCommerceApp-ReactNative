@@ -1,25 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, StatusBar, ToastAndroid } from 'react-native'
+import {  useNavigation } from '@react-navigation/native'
 
-import * as styles from './styles'
-import { Button, Header } from '../../components'
 import { color, IcBackArrow, IcDHL, IcFedEx, IcMasterCard, IcUSPS, size } from '../../theme'
 import { useMainContext } from '../../contexts/MainContext'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { Button, Header } from '../../components'
+import * as styles from './styles'
 
 export const CheckoutScreen = ({ route }) => {
 
   const navigation = useNavigation();
   const orderTotal = route.params.orderTotal;
+  const cartList = route.params.cartList;
   const deliveryFees = 15;
-  const orderAmountSummary = Number(orderTotal) + deliveryFees;
+  const orderAmountSummary = (Number(orderTotal) + deliveryFees).toFixed(2);
 
-  const { selectedAddress, paymentCardSelected } = useMainContext()
-  console.log('selectedAddress',Object.keys(selectedAddress).length);
-  console.log('paymentCardSelected', paymentCardSelected);
+  const { selectedAddress, paymentCardSelected, orders, saveOrders, setCartProductList } = useMainContext();
 
-  const cardNumberSlice = paymentCardSelected.cardNumber.slice(-4);
-  const maskedNumber = '**** **** **** '+cardNumberSlice
+
+  const [maskedNumber, setMaskedNumber] = useState('')
+
 
   const handleCheckOut = () => {
     if(Object.keys(selectedAddress).length === 0) {
@@ -31,14 +31,30 @@ export const CheckoutScreen = ({ route }) => {
       return
     }
 
+    const newOrder = {
+      orderAmountSummary: orderAmountSummary,
+      orderItem: cartList,
+      orderAmount: orderTotal,
+      deliveryFees: deliveryFees,
+      selectedAddress: selectedAddress,
+      paymentCardSelected: paymentCardSelected,
+    }
+
+    const updatedOrders = [...orders, newOrder];
+    saveOrders(updatedOrders);
+
+    setCartProductList([]);
+
     navigation.navigate('successScreen')
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log('CheckoutScreen focus effect');
-    },[selectedAddress, paymentCardSelected])
-  )
+  useEffect(() => {
+    if (paymentCardSelected && paymentCardSelected.cardNumber) {
+      let sliceNumber = paymentCardSelected.cardNumber.slice(-4);
+      let num = '**** **** **** ' + sliceNumber;
+      setMaskedNumber(num);
+    }
+  }, [paymentCardSelected]);
 
   return (
     <View style={styles.mainView()}>

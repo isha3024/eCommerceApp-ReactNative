@@ -1,5 +1,5 @@
-import React from 'react'
-import { ImageBackground, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { BackHandler, ImageBackground, Platform, ToastAndroid, View } from 'react-native'
 
 import * as styles from './styles'
 import { color, images } from '../../theme'
@@ -7,7 +7,32 @@ import { Button, Screen, Text } from '../../components'
 import { useNavigation } from '@react-navigation/native'
 
 export const SuccessScreen = () => {
-  const navigation = useNavigation()
+
+
+  const navigation = useNavigation();
+  let currentCount = 0;
+
+  useEffect(() => {
+
+    const backAction = () => {
+      if (currentCount < 1) {
+        currentCount += 1;
+        ToastAndroid.show('Press back again to return to the home screen', ToastAndroid.SHORT);
+      } else {
+        navigation.navigate('homeStackNavigation')
+      }
+      setTimeout(() => {
+        currentCount = 0;
+      }, 2000);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove()
+
+  },[])
+
   return (
     <Screen style={styles.mainView()} bgColor={color.transparent} translucent={true}>
       <ImageBackground source={images.ImgOrderComplete} style={styles.imgBG()}>

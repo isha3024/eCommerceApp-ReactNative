@@ -26,6 +26,7 @@ export const BottomStackNavigation = () => {
   return (
     <Tab.Navigator
       tabBar={props => <CustomBottomTabBar {...props} />}
+      initialRouteName='homeStackNavigation'
       screenOptions={{
         headerShown: false
       }}>

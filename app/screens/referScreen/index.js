@@ -28,7 +28,6 @@ export const ReferScreen = () => {
   const [remarks, setRemarks] = useState('');
   const [coursesList, setCoursesList] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
-  console.log('🚀 ~ ReferScreen ~ selectedCourses:', selectedCourses);
   const [layout, setLayout] = useState(false);
 
   useEffect(() => {

@@ -16,10 +16,8 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 
 
 export const RatingsReviewsScreen = ({route}) => {
-  // console.log('Reviews: ', route.params.productReview)
-  const reviewData = data.reviewsList;
-  // console.log('reviewData: ', reviewData);
   
+  const reviewData = data.reviewsList;
   const navigation = useNavigation();
   
   const [showHeaderTitle, setShowHeaderTitle] = useState(false);
@@ -49,7 +47,6 @@ export const RatingsReviewsScreen = ({route}) => {
   
 
   const openImagePicker = () => {
-    console.log('open picker')
     const options = {
       mediaType: 'photo',
       includeBase64: false,

@@ -12,15 +12,15 @@ import * as styles from './styles'
 export const CartScreen = () => {
 
   const navigation = useNavigation();
-  const { 
-    cartProductList, 
-    setCartProductList, 
-    allProducts, 
-    setAllProducts, 
-    saveProducts, 
-    saveCartProductList 
+  const {
+    cartProductList,
+    setCartProductList,
+    allProducts,
+    setAllProducts,
+    saveProducts,
+    saveCartProductList
   } = useMainContext();
-  
+
   const [orderedProducts, setOrderedProducts] = useState(cartProductList);
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
   const [showCartOptions, setShowCartOptions] = useState(null);
@@ -45,8 +45,8 @@ export const CartScreen = () => {
 
   const applyPromoCode = (promoCode) => {
     const selectedPromoCode = originalPromoCodes.find((item) => item.code === promoCode.code);
-    if(selectedPromoCode) {
-      const {code, discount, title} = selectedPromoCode
+    if (selectedPromoCode) {
+      const { code, discount, title } = selectedPromoCode
       ToastAndroid.show(`${title} promocode applied`, ToastAndroid.SHORT)
       setSelectedPromoCode(code);
       setAppliedDiscount(discount);
@@ -82,7 +82,7 @@ export const CartScreen = () => {
     setAllProducts(updatedProducts);
 
     const updatedCartProduct = cartProductList.map((cartProduct) => {
-      if(cartProduct.id == id) {
+      if (cartProduct.id == id) {
         return {
           ...cartProduct,
           isFavorite: true
@@ -106,8 +106,8 @@ export const CartScreen = () => {
 
   const handleSearchCode = (value) => {
     setPromoCodeValue(value);
-    if (value.trim() === '') { 
-      setOriginalPromoCodes(data.promoCards); 
+    if (value.trim() === '') {
+      setOriginalPromoCodes(data.promoCards);
     } else {
       const filteredCodes = data.promoCards.filter((code) => {
         return code.code.toLowerCase().includes(value.toLowerCase());
@@ -130,9 +130,9 @@ export const CartScreen = () => {
       return cartProduct;
     })
     setCartProductList(updatedCartProduct);
-    
+
     const updateAllProducts = allProducts.map((product) => {
-      if(product.id === item.id) {
+      if (product.id === item.id) {
         product.productQuantity += 1;
         product.stocks -= 1;
       }
@@ -146,12 +146,12 @@ export const CartScreen = () => {
 
   const decreaseProductQuantity = async (item) => {
     const updatedCartProduct = cartProductList.map((cartProduct) => {
-      if(cartProduct.id === item.id) {
+      if (cartProduct.id === item.id) {
         cartProduct.productQuantity -= 1;
         cartProduct.productPrice = (cartProduct.originalPrice * cartProduct.productQuantity).toFixed(2);
         cartProduct.stocks += 1;
 
-        if(cartProduct.productQuantity < 1) {
+        if (cartProduct.productQuantity < 1) {
           handleDeleteFromCartList(item)
           return null
         }
@@ -161,7 +161,7 @@ export const CartScreen = () => {
     setCartProductList(updatedCartProduct);
 
     const updateAllProducts = allProducts.map((product) => {
-      if(product.id === item.id) {
+      if (product.id === item.id) {
         product.productQuantity -= 1;
         product.stocks += 1;
       }
@@ -179,9 +179,9 @@ export const CartScreen = () => {
   const orderTotalAmount = () => {
     let total = 0;
     cartProductList.forEach((item) => {
-      if(appliedDiscount && selectedPromoCode.length > 0){
+      if (appliedDiscount && selectedPromoCode.length > 0) {
         total += item.originalPrice * item.productQuantity;
-        const discountedTotal = (total - ((appliedDiscount * total)/100)).toFixed(2);
+        const discountedTotal = (total - ((appliedDiscount * total) / 100)).toFixed(2);
         setTotalAmount(discountedTotal)
       }
       else {
@@ -198,12 +198,12 @@ export const CartScreen = () => {
   useFocusEffect(
     useCallback(() => {
       setOrderedProducts(cartProductList)
-    },[cartProductList])
+    }, [cartProductList])
   )
 
   useEffect(() => {
     orderTotalAmount()
-  },[cartProductList, appliedDiscount, selectedPromoCode])
+  }, [cartProductList, appliedDiscount, selectedPromoCode])
 
   const renderProducts = ({ item }) => {
     return (
@@ -242,7 +242,7 @@ export const CartScreen = () => {
   }
 
   return (
-    <Screen withScroll bgColor={color.primary} style={styles.mainView()}>
+    <>
       <View style={styles.topView()}>
         <Header
           headerStyle={styles.header()}
@@ -253,23 +253,51 @@ export const CartScreen = () => {
         />
         <Text style={styles.mainTitle()}>My Bag</Text>
       </View>
-      <View style={styles.middleView()}>
-        {
-          orderedProducts.length > 0
-            ? (
-              <>
-              <View style={styles.orderedProducts()}>
-                <FlatList
-                  // ListHeaderComponent={<View />}
-                  data={orderedProducts}
-                  renderItem={renderProducts}
-                  style={styles.flatList()}
-                  keyExtractor={(item) => item?.id?.toString() ?? Math.random().toString()}
-                  contentContainerStyle={styles.contentContainerStyle()}
-                  ListFooterComponent={<View/>}
-                />
-              </View>
-              <View style={styles.bottomView()}>
+      <Screen withScroll bgColor={color.primary} style={styles.mainView()} translucent={true}>
+        <View style={styles.middleView()}>
+          {
+            orderedProducts.length > 0
+              ? (
+                <>
+                  <View style={styles.orderedProducts()}>
+                    <FlatList
+                      // ListHeaderComponent={<View />}
+                      data={orderedProducts}
+                      renderItem={renderProducts}
+                      style={styles.flatList()}
+                      keyExtractor={(item) => item?.id?.toString() ?? Math.random().toString()}
+                      contentContainerStyle={styles.contentContainerStyle()}
+                      ListFooterComponent={<View />}
+                    />
+                  </View>
+                </>
+              )
+              : (
+                <View style={styles.orderListEmpty()}>
+                  <Text style={styles.orderListEmptyText()}>No orders placed</Text>
+                  <Text style={styles.orderListAddProductText()}>You have products from your wishlist waiting to be yours</Text>
+                  <View style={styles.buttonWrapper()}>
+                    <Button
+                      title='Continue Shopping'
+                      border
+                      btnStyle={styles.buttonEmpty()}
+                      onPress={() => navigation.navigate('homeStackNavigation')}
+                    />
+                    <Button
+                      title='Add from Wishlist'
+                      btnStyle={styles.buttonEmpty()}
+                      onPress={() => navigation.navigate('favoriteStackNavigation')}
+                    />
+                  </View>
+                </View>
+              )
+          }
+        </View>
+      </Screen>
+      {
+        orderedProducts.length > 0
+          ? (
+            <View style={styles.bottomView()}>
               <View style={styles.promoCardWrapper()}>
                 <TextInput
                   style={styles.promoCodeInput()}
@@ -297,32 +325,14 @@ export const CartScreen = () => {
               <Button
                 title='CHECK OUT'
                 btnStyle={styles.button()}
-                onPress={() => navigation.navigate('checkoutScreen', {orderTotal: totalAmount})}
+                onPress={() => navigation.navigate('checkoutScreen', { orderTotal: totalAmount, cartList: cartProductList })}
               />
             </View>
-            </>
-            )
-            : (
-              <View style={styles.orderListEmpty()}>
-                <Text style={styles.orderListEmptyText()}>No orders placed</Text>
-                <Text style={styles.orderListAddProductText()}>You have products from your wishlist waiting to be yours</Text>
-                <View style={styles.buttonWrapper()}>
-                  <Button
-                    title='Continue Shopping'
-                    border
-                    btnStyle={styles.buttonEmpty()}
-                    onPress={() => navigation.navigate('homeStackNavigation')}
-                  />
-                  <Button
-                    title='Add from Wishlist'
-                    btnStyle={styles.buttonEmpty()}
-                    onPress={() => navigation.navigate('favoriteStackNavigation')}
-                  />
-                </View>
-              </View>
-            )
-        }
-      </View>
+          ) 
+          : (
+            <View />
+          )
+      }
       <BottomSheetContainer
         isVisible={showPromoCodeSheet}
         customHeight={'60%'}
@@ -381,6 +391,6 @@ export const CartScreen = () => {
         </View>
 
       </BottomSheetContainer>
-    </Screen>
+    </>
   )
 }

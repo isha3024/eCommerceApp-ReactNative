@@ -46,7 +46,6 @@ export const MainProductScreen = ({ route }) => {
   const selectedSize = route.params.selectedSize;
   const { allProducts, setAllProducts } = useMainContext();
   const selectedProduct = allProducts.find(product => product.id === productId);
-  console.log('selectedProduct: ',selectedProduct)
   const favoriteProduct = selectedProduct.isFavorite;
   const soldOut = selectedProduct.isProductSold;
 
@@ -81,7 +80,6 @@ export const MainProductScreen = ({ route }) => {
   }
 
   const toggleColors = (colorName) => {
-    console.log('color: ', colorName)
     setUserColorSelected(colorName)
   }
 
