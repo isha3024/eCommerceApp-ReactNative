@@ -1,5 +1,5 @@
-import React, { act, useEffect, useState } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { TouchableOpacity } from 'react-native'
 import Animated, {interpolateColor, useSharedValue, useAnimatedStyle, withSpring, withTiming, useDerivedValue} from 'react-native-reanimated'
 
 import * as styles from './styles'

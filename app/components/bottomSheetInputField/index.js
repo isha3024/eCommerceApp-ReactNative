@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, TextInput, Animated, Easing } from 'react-native'
-import { color, fontSize, fonts } from '../../theme'
-
-import * as styles from './styles'
+import { View, Animated, Easing } from 'react-native'
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet'
+
+import { color, fontSize, fonts } from '../../theme'
+import * as styles from './styles'
 
 export const InputFieldBottomSheet = ({
   error,

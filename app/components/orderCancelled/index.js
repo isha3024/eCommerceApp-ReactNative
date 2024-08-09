@@ -2,10 +2,10 @@ import React from 'react'
 import { FlatList, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 
-import * as styles from './styles'
 import { Text } from '../text';
-import * as data from '../../json'
 import { Button } from '../button';
+import * as data from '../../json'
+import * as styles from './styles'
 
 
 const userOrderDetails = data.userOrdersDetails;

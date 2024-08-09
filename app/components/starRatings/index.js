@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
-import { IcStar, color } from '../../theme'
 
+import { IcStar, color } from '../../theme'
 import * as styles from './styles'
 
 export const StarRatings = ({customStarRatingStyle, ratings, ratingsCounts}) => {

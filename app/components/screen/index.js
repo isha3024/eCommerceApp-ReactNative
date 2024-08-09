@@ -9,8 +9,8 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 import {Loader} from '../loader';
-import * as styles from './styles';
 import { color } from '../../theme';
+import * as styles from './styles';
 
 export const Screen = props => {
   const {

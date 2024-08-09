@@ -1,7 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, View, StatusBar } from 'react-native'
-import { Text } from '../text'
 
+import { Text } from '../text' 
 import * as styles from './styles'
 
 const statusBarHeight = StatusBar.currentHeight;

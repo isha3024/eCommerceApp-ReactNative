@@ -1,6 +1,6 @@
 // INFO: custom text component for i18n translation
 import React from 'react';
-import {Text as ReactNativeText} from 'react-native';
+import {Text as ReactNativeText} from 'react-native'; 
 // import '../../i18nTranslation/i18n';
 
 import * as styles from './styles';

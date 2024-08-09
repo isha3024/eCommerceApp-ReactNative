@@ -1,9 +1,9 @@
 import React from 'react'
-import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, TouchableOpacity, View } from 'react-native'
 
-import * as styles from './styles'
 import { images } from '../../theme'
 import { Text } from '../text'
+import * as styles from './styles'
 
 const kidsData = [
   {

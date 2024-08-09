@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
 
 import { Text } from '../text';
-import * as styles from './styles';
 import { color } from '../../theme';
+import * as styles from './styles'; 
 
 export const Button = ({ title, onPress, activeOpacity, btnStyle, btnTextStyle, textWhite, disabled, border, icon, renderIcon, loading }) => {
   const [isDisabled, setIsDisabled] = useState(disabled || loading);

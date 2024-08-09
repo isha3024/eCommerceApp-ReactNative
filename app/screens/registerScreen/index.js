@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Alert, Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
+import { Alert, Animated, Platform, StatusBar, TouchableOpacity, UIManager, View, Keyboard } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
@@ -86,6 +86,7 @@ export const RegisterScreen = () => {
     if (!validateForm()) {
       return;
     }else {
+      Keyboard.dismiss()
       setErrors({
         name: '',
         email: '',

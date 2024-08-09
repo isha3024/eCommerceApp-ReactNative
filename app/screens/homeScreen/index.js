@@ -124,7 +124,7 @@ export const HomeScreen = () => {
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBackgroundColor(color.transparent)
-    },[])
+    },[allProducts])
   )
 
   useEffect(() => {
@@ -138,6 +138,7 @@ export const HomeScreen = () => {
 
 
   return (
+    <>
     <Screen withScroll bgColor={color.transparent} translucent={true}>
       <View style={styles.topView()}>
           <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
@@ -176,10 +177,11 @@ export const HomeScreen = () => {
             keyExtractor={(item, index) => item + index}
           />
         </View>
-      <BottomSheetContainer
+    </Screen>
+    <BottomSheetContainer
         isVisible={isSizeBottomSheetVisible}
         onClose={handleClosePressSizeSheet}
-        customHeight={'43%'}>
+        customHeight={'47%'}>
         <Text style={styles.titleBottomSheet()}>Select Size</Text>
         <View style={styles.sizeContainer()}>
           {
@@ -199,6 +201,6 @@ export const HomeScreen = () => {
         </TouchableOpacity>
         <Button activeOpacity={0.8} title='ADD TO CART' onPress={() => handleMainProductScreen()} btnStyle={styles.button()} />
       </BottomSheetContainer>
-    </Screen>
+    </>
   )
 }

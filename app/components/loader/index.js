@@ -14,9 +14,6 @@ export const Loader = () => {
         loop
         style={styles.lottieImage()}
       />
-      {/* <View style={styles.imageOverlay()}> */}
-      {/* <ActivityIndicator size={'large'} color={color.gray100} /> */}
-      {/* </View> */}
     </View>
   );
 };

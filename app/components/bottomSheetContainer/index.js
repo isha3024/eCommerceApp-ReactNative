@@ -2,8 +2,8 @@ import React, { useCallback, useMemo, useRef } from 'react';
 import { View } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 
-import * as styles from './styles'
 import { color } from '../../theme';
+import * as styles from './styles'
 
 export const BottomSheetContainer = ({isVisible, onClose, children, customHeight}) => {
   

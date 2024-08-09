@@ -1,8 +1,8 @@
 import {View, TouchableOpacity } from 'react-native';
-
-import * as styles from './styles'
-import { Text } from '../text';
 import { useNavigationState } from '@react-navigation/native';
+
+import { Text } from '../text';
+import * as styles from './styles'
 
 
 export const CustomTopTabBar = ({ state, descriptors, navigation }) => {

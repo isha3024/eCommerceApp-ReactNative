@@ -1,9 +1,10 @@
 import React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
-import * as styles from './styles'
-import { color, IcCartActive, IcClose, IcFilledHeart, IcHeart, IcMinus, IcPlus, IcShowMore, size } from '../../theme'
-import { Text } from '../text'
+
 import { StarRatings } from '../starRatings'
+import { Text } from '../text'
+import { color, IcCartActive, IcClose, IcFilledHeart, IcHeart, IcMinus, IcPlus, IcShowMore, size } from '../../theme'
+import * as styles from './styles'
 
 export const ProductCardMain = ({
   customProductStyle,

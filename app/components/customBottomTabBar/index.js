@@ -1,9 +1,9 @@
 import React from 'react'
 import { TouchableOpacity, View } from 'react-native';
 
-import * as styles from './styles'
 import { IcCart, IcCartActive, IcFavorite, IcFavoriteActive, IcHomeActive, IcHomeInactive, IcPerson, IcPersonActive, IcShop, IcShopActive, size } from '../../theme';
 import { Text } from '../text';
+import * as styles from './styles'
 
 
 export const CustomBottomTabBar = ({state, descriptors, navigation}) => {

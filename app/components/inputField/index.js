@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { View, TextInput, Animated, Easing } from 'react-native'
+
 import { color, fontSize, fonts } from '../../theme'
 import * as styles from './styles'
 

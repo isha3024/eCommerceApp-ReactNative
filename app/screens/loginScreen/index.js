@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Alert, Animated, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
+import { Alert, Animated, Keyboard, Platform, StatusBar, TouchableOpacity, UIManager, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import * as styles from './styles'
@@ -72,6 +72,7 @@ export const LoginScreen = () => {
 
   const  handleSubmit = async () => {
     if (handleValidations()) {
+      Keyboard.dismiss()
       setErrors({
         email: '',
         password: ''

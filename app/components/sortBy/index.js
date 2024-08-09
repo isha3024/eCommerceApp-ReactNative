@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
+import { FlatList, TouchableOpacity } from 'react-native'
 
-import * as styles from './styles'
 import { Text } from '../text'
-import { FlatList } from 'react-native-gesture-handler'
-import { color } from '../../theme'
-import { View } from 'react-native'
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
+import * as styles from './styles'
 
 
 

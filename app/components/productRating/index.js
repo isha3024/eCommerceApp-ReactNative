@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 
-import * as styles from './styles'
 import { color, IcStar, size } from '../../theme'
+import * as styles from './styles'
 
 export const ProductRating = () => {  
   
