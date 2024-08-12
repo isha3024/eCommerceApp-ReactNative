@@ -92,3 +92,22 @@ export const successText = () => ({
 export const flatListOrder = () => ({
   paddingBottom: size.moderateScale(70)
 });
+
+export const emptyOrderInfo = () => ({
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: size.moderateScale(10),
+  marginBottom: size.moderateScale(60)
+});
+
+export const emptyOrderText = () => ({
+  fontSize: fontSize.middleSmallMedium,
+  fontFamily: fonts.metropolisSemiBold,
+  color: color.mostlyBlack,
+});
+
+export const buttonContShop = () => ({
+  paddingHorizontal: size.moderateScale(10),
+  paddingVertical: size.moderateScale(10)
+});

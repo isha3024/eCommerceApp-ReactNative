@@ -8,6 +8,7 @@ const initialState = {
 export const authReducer = (state=initialState, action) => {
   switch (action.type) {
     case actions.USER_REGISTER:
+      case actions.USER_LOGIN:
       return {
         ...state,
         isUserRegistered: true,

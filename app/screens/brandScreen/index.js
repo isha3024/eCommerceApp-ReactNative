@@ -6,11 +6,11 @@ import { Header, Screen, Text } from '../../components'
 import { IcBackArrow, IcCheckBoxActive, IcCheckBoxInactive, IcSearch, color, size } from '../../theme'
 import * as styles from './styles'
 
-const brands = ['adidas', 'adidas Originals', 'Blend', 'Boutique Moschino', 'Champion', 'Diesel', 'Jack & Jones', 'Naf Naf', 'Red Valentino', 's.Oliver'];
+const brands = ['adidas', 'adidas Originals', 'Blend', 'Boutique Moschino', 'Champion', 'Diesel', 'Jack & Jones', 'Naf Naf', 'Red Valentino', 's.Oliver', 'H&M', 'Nike', 'Forever 21', "Levi's", 'Uniqlo', 'Mango'];
 
-export const BrandScreen = ({route}) => {
+export const BrandScreen = () => {
+
   const navigation = useNavigation();
-
 
   const [searchValue, setSearchValue] = useState('');
   const [showSearchedBrands, setshowSearchedBrands] = useState(brands);

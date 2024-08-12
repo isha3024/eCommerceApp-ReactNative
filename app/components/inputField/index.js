@@ -3,6 +3,7 @@ import { View, TextInput, Animated, Easing } from 'react-native'
 
 import { color, fontSize, fonts } from '../../theme'
 import * as styles from './styles'
+import { Text } from '../text'
 
 export const InputField = ({
   error,
@@ -81,11 +82,16 @@ export const InputField = ({
         onSubmitEditing={onSubmitEditing}
         {...props}
       />
-      <View style={styles.rightIcon()}>
+      {
+        icon && (
+          <View style={styles.rightIcon()}>{renderRightIcon()}</View>
+        )
+      }
+      {/* <View style={styles.rightIcon()}>
         {icon && iconPlace === 'right' ? (
           renderRightIcon()
         ) : null}
-      </View>
+      </View> */}
     </Animated.View>
   )
 }

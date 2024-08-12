@@ -15,11 +15,26 @@ export const CheckoutScreen = ({ route }) => {
   const deliveryFees = 15;
   const orderAmountSummary = (Number(orderTotal) + deliveryFees).toFixed(2);
 
-  const { selectedAddress, paymentCardSelected, orders, saveOrders, setCartProductList } = useMainContext();
+  const { selectedAddress, paymentCardSelected, orders, saveOrders, setCartProductList, saveCartProductList } = useMainContext();
 
 
-  const [maskedNumber, setMaskedNumber] = useState('')
+  const [maskedNumber, setMaskedNumber] = useState('');
 
+  const generateRandomOrderNo = () => {
+    return 'Order №'+Math.floor(Math.random() * 101) + 100;
+  }
+
+  const generateOrderDate = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`
+  }
+
+  const generateTrackingNumber = () => {
+    return 'IW'+Math.floor(Math.random() * 1000000000) + 1000000000
+  }
 
   const handleCheckOut = () => {
     if(Object.keys(selectedAddress).length === 0) {
@@ -32,6 +47,9 @@ export const CheckoutScreen = ({ route }) => {
     }
 
     const newOrder = {
+      orderNo: generateRandomOrderNo(),
+      date: generateOrderDate(),
+      trackingNum: generateTrackingNumber(),
       orderAmountSummary: orderAmountSummary,
       orderItem: cartList,
       orderAmount: orderTotal,
@@ -43,8 +61,8 @@ export const CheckoutScreen = ({ route }) => {
     const updatedOrders = [...orders, newOrder];
     saveOrders(updatedOrders);
 
-    setCartProductList([]);
-
+    setCartProductList([])
+    saveCartProductList([]);
     navigation.navigate('successScreen')
   }
 

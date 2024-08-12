@@ -11,25 +11,26 @@ import * as styles from './styles';
 export const AddressScreen = ({route}) => {
 
   const navigation = useNavigation();
-  // const { addresses, loading, saveAddresses } = useMainContext();
-  const { addresses, loading, setSelectedAddress, selectedAddressIndex, setSelectedAddressIndex } = useMainContext();
-
-  // const [selectedAddressIndex, setSelectedAddressIndex] = useState(0)
+  const { addresses, setSelectedAddress, selectedAddressIndex, setSelectedAddressIndex } = useMainContext();
+  
 
   const toggleCheckbox = (index) => {
     if(selectedAddressIndex !== index){
       setSelectedAddressIndex(index)
       setSelectedAddress(addresses[index])
     }
+    else {
+      setSelectedAddressIndex(0)
+      setSelectedAddress(addresses[0])
+    }
   }
 
-
-  // useEffect(() => {
-  //   if(addresses.length === 1){
-  //     setSelectedAddressIndex(0)
-  //     setSelectedAddress(addresses[0])
-  //   }
-  // },[addresses])
+  useEffect(() => {
+    if(addresses.length === 1){
+      setSelectedAddressIndex(selectedAddressIndex)
+      setSelectedAddress(addresses[selectedAddressIndex])
+    }
+  },[addresses])
 
   return (
     <View style={styles.mainView()}>
@@ -44,7 +45,7 @@ export const AddressScreen = ({route}) => {
           leftIconPress={() => navigation.goBack()}
         />
       </View>
-      <Screen withScroll bgColor={color.primary} translucent={true} loading={loading} style={styles.middleView()}>
+      <Screen withScroll bgColor={color.primary} translucent={true} style={styles.middleView()}>
         {addresses.length > 0
           ? (
              <>

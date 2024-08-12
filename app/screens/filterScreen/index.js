@@ -5,29 +5,25 @@ import { useNavigation } from '@react-navigation/native'
 import * as styles from './styles'
 import { IcBackArrow, color, size } from '../../theme'
 import { Button, Header, PriceRange, Screen, Text } from '../../components'
-// import PriceRange from '../../components/priceRange'
+import { useMainContext } from '../../contexts/MainContext'
 
 const colorsList = ['#020202', '#F6F6F6', '#B82222', '#BEA9A9', '#E2BB8D', '#151867'];
 const sizeList = ['XS', 'S', 'M', "L", 'XL']
 const category = ['All', 'Women', 'Men', 'Boys', 'Girls']
 
-export const FilterScreen = () => {
+export const FilterScreen = ({route}) => {
 
   const navigation = useNavigation();
+  const { filters, setFilters } = useMainContext(); 
   const MIN_DEFAULT = 10;
   const MAX_DEFAULT = 500;
 
   const [selectColors, setSelectColors] = useState([]);
   const [selectSize, setSelectSize] = useState([]);
   const [selectCategory, setSelectCategory] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
   const [low, setLow] = useState(0);
   const [high, setHigh] = useState(500);
-  const [appliedFilters, setAppliedFilters] = useState({
-    colors: null,
-    size: null,
-    category: null,
-    priceRange: null,
-  })
   const [minValue, setMinValue] = useState(MIN_DEFAULT);
   const [maxValue, setMaxValue] = useState(MAX_DEFAULT);
 
@@ -70,14 +66,17 @@ export const FilterScreen = () => {
       size: selectSize,
       category: selectCategory,
       priceRange: [minValue, maxValue],
+      brands: selectedBrands
     };
-    setAppliedFilters(filters)
+    setFilters(filters)
     navigation.navigate('catalogeScreen', {appliedFilters: filters})
   }
 
   useEffect(() => {
-    console.log('applyFilters', appliedFilters)
-  }, [appliedFilters])
+    if (route.params?.selectedBrands) {
+      setSelectedBrands(route.params.selectedBrands);
+    }
+  }, [route.params?.selectedBrands]);
 
   return (
     <>
@@ -149,7 +148,7 @@ export const FilterScreen = () => {
               <Text style={styles.text()}>Brand</Text>
               <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(8)} height={size.moderateScale(12)} />
             </TouchableOpacity>
-            <Text style={styles.brandText()}>adidas Original, Jack & Jones, s.Oliver</Text>
+            <Text style={styles.brandText()}>{selectedBrands.length > 0 ? selectedBrands.join(', ') : 'No brands selected'}</Text>
           </View>
         </View>
       </Screen>

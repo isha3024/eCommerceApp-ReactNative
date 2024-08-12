@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { ToastAndroid, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -27,12 +27,14 @@ export const AddNewAddressScreen = ({ route }) => {
   const handleSave = () => {
     if(validateAddress(address)) {
       setAddresses([...addresses, address]);
+      navigation.goBack()
     }
   };
 
   const validateAddress = (address) => {
     for(let key in address) {
       if(!address[key]){
+        ToastAndroid.show("Please fill in all fields", ToastAndroid.SHORT)
         return false
       }
     }

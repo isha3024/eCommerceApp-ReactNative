@@ -1,15 +1,17 @@
 import React from 'react'
-
-import * as styles from './styles'
-import { CustomTopTabBar, Header, OrderCancelled, OrderDelivered, OrderProcessing, Text } from '../../components'
-import { color, IcBackArrow, IcSearch } from '../../theme'
+import { StatusBar, View } from 'react-native'
 import { useNavigation, useNavigationState } from '@react-navigation/native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-import { StatusBar, View } from 'react-native'
+
+import { CustomTopTabBar, Header, OrderCancelled, OrderDelivered, OrderProcessing, Text } from '../../components'
+import { color, IcBackArrow, IcSearch } from '../../theme'
+import * as styles from './styles'
 
 
 const Tab = createMaterialTopTabNavigator();
+
 export const OrderScreen = () => {
+  
   const navigation = useNavigation();
   return (
     <View style={styles.mainView()}>

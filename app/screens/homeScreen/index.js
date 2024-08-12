@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { View, ImageBackground, TouchableOpacity, FlatList, BackHandler, Alert, ToastAndroid, StatusBar } from 'react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { useMainContext } from '../../contexts/MainContext'
 import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
@@ -14,7 +13,7 @@ const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 export const HomeScreen = () => {
 
   const navigation = useNavigation();
-  const { allProducts, setAllProducts } = useMainContext();
+  const { allProducts, setAllProducts, saveProducts, fetchProducts } = useMainContext();
 
   const [products, setProducts] = useState([]);
   const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
@@ -51,13 +50,8 @@ export const HomeScreen = () => {
       }
       return product;
     })
-    setAllProducts(updateAllProducts)
-
-    try {
-      await AsyncStorage.setItem('allProducts', JSON.stringify(updateAllProducts));
-    } catch (error) {
-      console.error('Failed to save the updated products to AsyncStorage:', error);
-    }
+    setAllProducts(updateAllProducts);
+    saveProducts(updateAllProducts);
 
     const message = item.isFavorite 
     ? `${item.name} removed from favs`

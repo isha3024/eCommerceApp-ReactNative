@@ -7,11 +7,11 @@ import { color, IcBackArrow, IcMasterCard, IcSearch, images } from '../../theme'
 import * as data from '../../json'
 import * as styles from './styles'
 
-const orderProducts = data.orderedProducts;
 
 export const OrderDetailsScreen = ({route}) => {
-  const {source} = route.params;
+
   const navigation = useNavigation()
+  const {source, orderDetail} = route.params;
 
   const showOrder = () => {
     let order;
@@ -39,14 +39,6 @@ export const OrderDetailsScreen = ({route}) => {
     navigation.navigate('cartStackNavigation')
   }
 
-  const totalAmount = () => {
-    let total = 0;
-    orderProducts.map((product) => {
-      total += product.productPrice * product.productQuantity;
-    })
-    return Math.floor(total);
-  }
-
   return (
     <View style={styles.mainView()}>
       <Header 
@@ -65,30 +57,31 @@ export const OrderDetailsScreen = ({route}) => {
       />
       <Screen withScroll bgColor={color.white}>
         <View style={styles.orderNoAndDate()}>
-          <Text style={styles.h2()}>Order No 1947034</Text>
-          <Text style={styles.date()}>05-12-2019</Text>
+          <Text style={styles.h2()}>{orderDetail.orderNo}</Text>
+          <Text style={styles.date()}>{orderDetail.date}</Text>
         </View>
         <View style={styles.justifySpaceBetween()}>
           <View style={styles.flexRow()}>
             <Text style={styles.date()}>Tracking number: </Text>
-            <Text style={styles.trackingNumValue()}>IW3475453455</Text>
+            <Text style={styles.trackingNumValue()}>{orderDetail.trackingNum}</Text>
           </View>
           <Text style={[styles.successText(), {color: showOrder()[0]}]}>{showOrder()[1]}</Text>
         </View>
-        <Text style={styles.darkTextItem()}>3 items</Text>
+        <Text style={styles.darkTextItem()}>{orderDetail.orderItem.length} items</Text>
         <View style={styles.orderedItemsList()}>
           {
-            orderProducts.map((product) => {
+            orderDetail.orderItem.map((product, index) => {
               return (
                 <ProductCardMain
+                  key={index}
                   activeOpacity={0.7}
                   productHorizontal={true}
-                  productImage={product.productImage}
-                  productTitle={product.productName}
-                  brandName={product.productBrand}
-                  productColor={product.productColorSelected}
-                  productSize={product.productSizeSelected}
-                  originalPrice={product.productPrice}
+                  productImage={product.images}
+                  productTitle={product.name}
+                  brandName={product.brand}
+                  productColor={product.productColor}
+                  productSize={product.size}
+                  originalPrice={product.productPrice ?? product.originalPrice}
                   productUnits={product.productQuantity}
                 />
               )
@@ -99,28 +92,33 @@ export const OrderDetailsScreen = ({route}) => {
           <Text style={styles.orderInfoTitle()}>Order information</Text>
           <View style={styles.information()}>
             <Text style={styles.lightText()}>Shipping Address:</Text>
-            <Text style={styles.darkTextAddress()}>3 Newbridge Court ,Chino Hills, 
-            CA 91709, United States </Text>
+            <Text style={styles.darkTextAddress()}>
+              {orderDetail.selectedAddress.addressLineOne}, 
+              {orderDetail.selectedAddress.city}, 
+              {orderDetail.selectedAddress.province}, 
+              {orderDetail.selectedAddress.zipCode}, 
+              {orderDetail.selectedAddress.country}
+            </Text>
           </View>
           <View style={styles.informationCenter()}>
             <Text style={styles.paymentText()}>Payment method:</Text>
             <View style={styles.paymentRow()}>
               <IcMasterCard style={styles.masterCard()} />
-              <Text style={styles.cardNum()}>**** **** **** 3947</Text>
+              <Text style={styles.cardNum()}> **** **** **** {orderDetail.paymentCardSelected.cardNumber.slice(-4)}</Text>
             </View>
             <Text style={styles.darkTextMedium()}></Text>
           </View>
           <View style={styles.information()}>
             <Text style={styles.lightText()}>Delivery Method:</Text>
-            <Text style={styles.darkTextMedium()}>FedEx, 3 days, 15$</Text>
+            <Text style={styles.darkTextMedium()}>FedEx, 3 days, {orderDetail.deliveryFees}$</Text>
           </View>
           <View style={styles.information()}>
             <Text style={styles.lightText()}>Discount:</Text>
-            <Text style={styles.darkTextMedium()}>10%, Personal promo code</Text>
+            <Text style={styles.darkTextMedium()}>{orderDetail.orderItem[0].discount}%, Personal promo code</Text>
           </View>
           <View style={styles.information()}>
             <Text style={styles.lightText()}>Total Amount:</Text>
-            <Text style={styles.darkTextMedium()}>{totalAmount()}$</Text>
+            <Text style={styles.darkTextMedium()}>{orderDetail.orderAmountSummary}$</Text>
           </View>
         </View>
         <View style={styles.buttonContainer()}>

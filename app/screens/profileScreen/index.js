@@ -4,7 +4,7 @@ import { Alert, Image, TouchableOpacity, View } from 'react-native';
 import * as styles from './styles';
 import { Header, Screen, Text } from '../../components';
 import { color, IcBackArrow, IcLogout, images, size } from '../../theme';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../redux';
 import { useMainContext } from '../../contexts/MainContext';
@@ -14,8 +14,13 @@ export const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const userInfo = useSelector(state => state.authUser.userInfo);
-  const { addresses } = useMainContext();
-  const { paymentCardSelected } = useMainContext();
+  const { addresses, paymentCardSelected, getOrdersFromStorage, orders } = useMainContext();
+
+  useFocusEffect(
+    useCallback(() => {
+      getOrdersFromStorage()
+    },[])
+  )
 
   let maskedNumber = ''
   if(Object.keys(paymentCardSelected).length !== 0){
@@ -61,14 +66,14 @@ export const ProfileScreen = () => {
           <TouchableOpacity onPress={() => navigation.navigate('orderScreen')} activeOpacity={0.6} style={styles.profileOptionItem()}>
             <View>
               <Text style={styles.profileOptionTitle()}>My Orders</Text>
-              <Text style={styles.message()}>Already have 12 orders</Text>
+              <Text style={styles.message()}>{orders && orders.length > 0 ? `Already have ${orders.length} orders` : 'No orders yet'}</Text>
             </View>
             <IcBackArrow fill={color.darkGray} width={size.moderateScale(8)} height={size.moderateScale(12)} style={styles.forwardArrow()} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('addressScreen')} activeOpacity={0.6} style={styles.profileOptionItem()}>
             <View>
               <Text style={styles.profileOptionTitle()}>Shipping Address</Text>
-              <Text style={styles.message()}>{addresses.length === undefined ? 'No Addresses' : addresses.length == 1 ? addresses.length + ' address' : addresses.length + ' addresses'}</Text>
+              <Text style={styles.message()}>{addresses.length > 0 ? `${addresses.length} addresses` : 'No addressess'}</Text>
             </View>
             <IcBackArrow fill={color.darkGray} width={size.moderateScale(8)} height={size.moderateScale(12)} style={styles.forwardArrow()} />
           </TouchableOpacity>

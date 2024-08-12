@@ -18,11 +18,19 @@ export const MainContextProvider = props => {
   const [paymentCardSelectedIndex, setPaymentCardSelectedIndex] = useState(0)
   const [cartProductList, setCartProductList] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [filters, setFilters] = useState({
+    colors: [],
+    size: [],
+    category: [],
+    priceRange: [0, 500],
+    brands: []
+  });
 
   const saveProducts = async (products) => {
     setLoading(true)
     try {
       await AsyncStorage.setItem('productList', JSON.stringify(products));
+      setAllProducts(products)
     }
     catch (error) {
       console.error('Failed to store the products ', error);
@@ -136,7 +144,7 @@ export const MainContextProvider = props => {
     try {
       const response = await AsyncStorage.getItem('orders');
       if(response !== null) {
-        setOrders(JSON.parse(response))
+        setOrders(JSON.parse(response));
         setLoading(false)
       }
     }
@@ -151,9 +159,9 @@ export const MainContextProvider = props => {
       setLoading: setLoading,
       allProducts: allProducts,
       setAllProducts: setAllProducts,
+      saveProducts: saveProducts,
       addresses: addresses,
       setAddresses: setAddresses,
-      saveAddress: saveAddress,
       getAddressesFromStorage: getAddressesFromStorage,
       selectedAddress: selectedAddress,
       selectedAddressIndex: selectedAddressIndex,
@@ -169,49 +177,31 @@ export const MainContextProvider = props => {
       setPaymentCardSelectedIndex: setPaymentCardSelectedIndex,
       cartProductList: cartProductList,
       setCartProductList: setCartProductList,
-      saveProducts: saveProducts,
       saveCartProductList: saveCartProductList,
       orders: orders,
       setOrders: setOrders,
       saveOrders: saveOrders,
       getOrdersFromStorage: getOrdersFromStorage,
+      filter: filters,
+      setFilters: setFilters
     }
   }, [
-    loading,
-    setLoading,
-    allProducts,
-    setAllProducts,
-    addresses,
-    setAddresses,
-    saveAddress,
-    getAddressesFromStorage,
-    selectedAddress,
-    setSelectedAddress,
-    selectedAddressIndex,
-    setSelectedAddressIndex,
-    paymentCardDetails,
-    setPaymentCardDetails,
-    savePaymentCard,
-    getPaymentCardFromStorage,
-    paymentCardSelectedIndex,
-    setPaymentCardSelectedIndex,
-    paymentCardSelected,
-    setPaymentCardSelected,
-    cartProductList,  
-    setCartProductList,
-    orders,
-    setOrders,
-    saveOrders,
-    getOrdersFromStorage
+    loading, setLoading,
+    allProducts, setAllProducts,
+    saveProducts, fetchProducts,
+    addresses, setAddresses,
+    saveAddress, getAddressesFromStorage,
+    selectedAddress, setSelectedAddress,
+    selectedAddressIndex, setSelectedAddressIndex,
+    paymentCardDetails, setPaymentCardDetails,
+    savePaymentCard, getPaymentCardFromStorage,
+    paymentCardSelectedIndex, setPaymentCardSelectedIndex,
+    paymentCardSelected, setPaymentCardSelected,
+    cartProductList, setCartProductList,
+    orders, setOrders,
+    saveOrders, getOrdersFromStorage,
+    filters , setFilters
   ]);
-
-  useEffect(() => {
-    saveProducts(allProducts)
-  },[allProducts])
-
-  useEffect(() => {
-    fetchProducts();
-  },[])
 
   useEffect(() => {
     loadCartListItemsFromStorage();

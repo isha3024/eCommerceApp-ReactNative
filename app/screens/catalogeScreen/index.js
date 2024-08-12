@@ -229,7 +229,7 @@ export const CatalogeScreen = ({route}) => {
       };
       if (filters.priceRange) {
         filteredProducts = filteredProducts.filter(product => {
-          return isPriceWithinRange(product.originalPrice, filters.priceRange)
+          return isPriceWithinRange(product.originalPrice, filters.priceRange);
         });
       }
 
@@ -240,6 +240,14 @@ export const CatalogeScreen = ({route}) => {
         })
           
       }
+
+      //filter by brands
+      if (filters.brands && filters.brands.length > 0) {
+        filteredProducts = filteredProducts.filter(product => {
+          return product.brand && filters.brands.map(b => b.toLowerCase()).includes(product.brand.toLowerCase());
+        });
+       }
+
       setShowProductList(filteredProducts)
     }
     else {
@@ -293,11 +301,10 @@ export const CatalogeScreen = ({route}) => {
   },[])
 
   useEffect(() => {
-    if (route.params && route.params.appliedFilters) {
-      const filters = route.params.appliedFilters;
-      setFilters(filters)
-    }
-  }, [route.params]);
+    const filtersFromParams = route.params?.filters || null;
+    setFilters(filtersFromParams);
+    filterProducts();
+  }, [route.params?.filters, allProducts]);
 
   return (
       <Screen bgColor={color.white} translucent={true}>

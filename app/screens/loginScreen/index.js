@@ -6,6 +6,8 @@ import * as styles from './styles'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
+import { useDispatch } from 'react-redux'
+import { loginUser } from '../../redux'
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -15,6 +17,8 @@ if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental)
 export const LoginScreen = () => {
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const [errors, setErrors] = useState({});
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false)
@@ -77,28 +81,12 @@ export const LoginScreen = () => {
         email: '',
         password: ''
       })
-      navigation.navigate('bottomStackNavigation')
-      // setLoading(true)
-      // setFormIsSubmitting(true)
-      // const responseBody = {
-      //   email: inputField.email,
-      //   password: inputField.password
-      // }
-      // try {
-      //   const response = await userLogin(responseBody);
-      //   console.log('response in register:', response);
-      //   if (response.statusCode === 201) {
-      //     dispatch(setUserLoggedIn(response.data));
-      //     Alert.alert('Success', response.message,[{ text: 'OK', onPress: () => navigation.navigate('bottomStackNavigation')}])
-      //   }
-      // } catch (error) {
-      //   console.log('error in register: ', error)
-      //   Alert.alert('Error', error.message, [{ text: 'Ok', onPress: () => null}])
-      // }
-      // finally {
-      //   setLoading(false)
-      //   setFormIsSubmitting(false)
-      // }
+      const userData = {
+        email: inputField?.email,
+        password: inputField?.password
+      }
+      dispatch(loginUser(userData))
+      // navigation.navigate('bottomStackNavigation')
     }
   }
 

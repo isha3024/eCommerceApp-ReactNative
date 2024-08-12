@@ -209,6 +209,7 @@ export const CartScreen = () => {
     return (
       <>
         <ProductCardMain
+          activeOpacity={1}
           productHorizontal
           productTitle={item?.name}
           brandName={item?.brand}

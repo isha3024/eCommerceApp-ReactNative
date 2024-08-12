@@ -17,7 +17,7 @@ export const inputField = (rightIcon, isFocus) => ({
   height: size.moderateScale(65),
   paddingTop:isFocus ? size.moderateScale(25):size.moderateScale(12),
   paddingLeft: size.moderateScale(10),
-  paddingRight: rightIcon ? 0 : size.moderateScale(20),
+  paddingRight: rightIcon ? 0 : size.moderateScale(10),
   fontFamily: fonts.metropolisRegular,
   fontSize: fontSize.small,
   color: color.mostlyBlack,
@@ -41,9 +41,11 @@ export const errorText = () => ({
 })
 
 export const rightIcon = () => ({
+  position: 'absolute',
+  right: size.moderateScale(0),
   width: size.deviceWidth * 0.08,
   height: size.deviceHeight * 0.04,
   alignItems: 'flex-end',
   justifyContent: 'center',
-  marginRight: size.moderateScale(15)
+  marginRight: size.moderateScale(15),
 })
