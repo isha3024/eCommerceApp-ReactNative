@@ -14,6 +14,7 @@ export const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const userInfo = useSelector(state => state.authUser.userInfo);
+  console.log(userInfo)
   const { addresses, paymentCardSelected, getOrdersFromStorage, orders } = useMainContext();
 
   useFocusEffect(

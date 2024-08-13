@@ -7,14 +7,15 @@ import { IcBackArrow, color, size } from '../../theme'
 import { Button, Header, PriceRange, Screen, Text } from '../../components'
 import { useMainContext } from '../../contexts/MainContext'
 
-const colorsList = ['#020202', '#F6F6F6', '#B82222', '#BEA9A9', '#E2BB8D', '#151867'];
+const colorsList = ['#020202', '#F6F6F6', '#B82222x', '#BEA9A9', '#E2BB8D', '#151867'];
 const sizeList = ['XS', 'S', 'M', "L", 'XL']
 const category = ['All', 'Women', 'Men', 'Boys', 'Girls']
 
 export const FilterScreen = ({route}) => {
 
   const navigation = useNavigation();
-  const { filters, setFilters } = useMainContext(); 
+  const { filters, setFilters, updateFilters, resetFilters } = useMainContext(); 
+
   const MIN_DEFAULT = 10;
   const MAX_DEFAULT = 500;
 

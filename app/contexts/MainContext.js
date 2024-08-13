@@ -52,6 +52,48 @@ export const MainContextProvider = props => {
     setLoading(false)
   } 
 
+  const saveFavoriteProducts = async (products) => {
+    setLoading(true)
+    try {
+      await AsyncStorage.setItem('favoriteProducts', JSON.stringify(products));
+    }
+    catch (error) {
+      console.error('Failed to store the favorite products ', error);
+    }
+    setLoading(false)
+  }
+
+  const updateFilters = (newFilters) => {
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      ...newFilters
+    }))
+  }
+
+  const resetFilters = () => {
+    setFilters({
+      colors: [],
+      size: [],
+      category: [],
+      priceRange: [0, 500],
+      brands: []
+    })
+  }
+
+  const loadFavoriteProductsFromStorage = async () => {
+    setLoading(true)
+    try {
+      const response = await AsyncStorage.getItem('favoriteProducts');
+      if(response){
+        return JSON.parse(response)
+      }
+    }
+    catch (error) {
+      console.error('Failed to load favorite products from storage ', error);
+    }
+    setLoading(false)
+  }
+
   const saveCartProductList = async (list) => {
     setLoading(true)
     try {
@@ -160,6 +202,10 @@ export const MainContextProvider = props => {
       allProducts: allProducts,
       setAllProducts: setAllProducts,
       saveProducts: saveProducts,
+      saveFavoriteProducts: saveFavoriteProducts,
+      loadFavoriteProductsFromStorage: loadFavoriteProductsFromStorage,
+      updateFilters: updateFilters,
+      resetFilters: resetFilters,
       addresses: addresses,
       setAddresses: setAddresses,
       getAddressesFromStorage: getAddressesFromStorage,
@@ -191,6 +237,8 @@ export const MainContextProvider = props => {
     saveProducts, fetchProducts,
     addresses, setAddresses,
     saveAddress, getAddressesFromStorage,
+    saveFavoriteProducts, loadFavoriteProductsFromStorage,
+    updateFilters, resetFilters,
     selectedAddress, setSelectedAddress,
     selectedAddressIndex, setSelectedAddressIndex,
     paymentCardDetails, setPaymentCardDetails,
@@ -203,15 +251,16 @@ export const MainContextProvider = props => {
     filters , setFilters
   ]);
 
-  useEffect(() => {
-    loadCartListItemsFromStorage();
-  }, []);
 
   useEffect(() => {
     if (cartProductList.length > 0) {
       saveCartProductList(cartProductList);
     }
   }, [cartProductList]);
+
+  useEffect(() => {
+    loadCartListItemsFromStorage();
+  }, []);
 
   useEffect(() => {
     if(addresses.length > 0) {

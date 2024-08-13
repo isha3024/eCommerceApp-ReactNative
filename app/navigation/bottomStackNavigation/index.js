@@ -12,16 +12,6 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-const getRouteName = (route) => {
-  const routeName = getFocusedRouteNameFromRoute(route);
-  switch (routeName) {
-    case 'filterScreen':
-      return 'none';
-    case 'brandScreen':
-      return 'none';
-  }
-}
-
 export const BottomStackNavigation = () => {
   return (
     <Tab.Navigator
@@ -44,7 +34,6 @@ export const BottomStackNavigation = () => {
         component={ShopStackNavigation} 
         options={({ route }) => ({
           tabBarLabel: 'Shop',
-          tabBarStyle: {display: getRouteName(route)},
         })} 
       />
       <Tab.Screen name='cartStackNavigation' component={CartStackNavigation} options={{

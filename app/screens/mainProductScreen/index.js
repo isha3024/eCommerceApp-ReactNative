@@ -229,7 +229,7 @@ export const MainProductScreen = ({ route }) => {
               renderItem={({item}) => {
                 return (
                   <ProductCardMain
-                    onProductPress={() => navigation.navigate('mainProductScreen', { productId: item.id })}
+                    onProductPress={() => navigation.push('mainProductScreen', { productId: item.id })}
                     customProductStyle={styles.productCardHome()}
                     productImage={item?.images}
                     brandName={item?.brand}

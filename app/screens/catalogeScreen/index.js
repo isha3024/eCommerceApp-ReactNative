@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react' 
 import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ScrollView, Alert, LogBox, ToastAndroid } from 'react-native'
-import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
-import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
-
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import { useDispatch, useSelector } from 'react-redux'
-import { loadProducts, toggleFavorite } from '../../redux'
-import * as styles from './styles'
+
 import { useMainContext } from '../../contexts/MainContext'
+import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
+import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as styles from './styles'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -295,16 +293,23 @@ export const CatalogeScreen = ({route}) => {
     },[filters])
   )
 
+  useFocusEffect(
+    useCallback(() => {
+      console.log('filters: ',route.params?.appliedFilters)
+    },[route.params?.appliedFilters, allProducts])
+  )
+
   useEffect(() => {
     setIsSortOptionSelected(sortProductType[3])
     setSortOptionName(sortProductType[3].name)
   },[])
 
   useEffect(() => {
-    const filtersFromParams = route.params?.filters || null;
+    const filtersFromParams = route.params?.appliedFilters || null;
+    console.log('filters: ',filtersFromParams)    
     setFilters(filtersFromParams);
     filterProducts();
-  }, [route.params?.filters, allProducts]);
+  }, [route.params?.appliedFilters, allProducts]);
 
   return (
       <Screen bgColor={color.white} translucent={true}>
@@ -330,7 +335,7 @@ export const CatalogeScreen = ({route}) => {
             <View style={styles.flatList()}>
             <ScrollView
             horizontal
-            showsHorizontalScrollIndicator={true}
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: size.moderateScale(4)}}>
               {
                 womenTopCategory.map((item, index) => {

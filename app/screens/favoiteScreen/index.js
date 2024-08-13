@@ -77,7 +77,7 @@ export const FavoriteScreen = () => {
 
   const navigation = useNavigation();
   // const productList = useSelector((state) => state.product.products);
-  const { allProducts, setAllProducts } = useMainContext();
+  const { allProducts, setAllProducts, loadFavoriteProductsFromStorage } = useMainContext();
 
   const [showProductList, setShowProductList] = useState([]);
   const [isSheetVisible, setSheetVisible] = useState(false);
@@ -87,6 +87,17 @@ export const FavoriteScreen = () => {
   const [title, showTitle] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
+
+  const loadInitialData = async () => {
+    const storedFavorites = await loadFavoriteProductsFromStorage();
+    if (storedFavorites.length > 0) {
+      const updatedAllProducts = allProducts.map((product) => {
+        const isFavorite = storedFavorites.some((fav) => fav.id === product.id);
+        return { ...product, isFavorite };
+      });
+      setAllProducts(updatedAllProducts);
+    }
+  };
 
   //toggling the layout -- grid / list and headerTitle / mainTitle 
   const toggleLayout = () => {
@@ -193,6 +204,10 @@ export const FavoriteScreen = () => {
     const showFavoriteProducts = allProducts.filter((product) => product.isFavorite === true);
     setShowProductList(showFavoriteProducts);
   },[allProducts])
+
+  useEffect(() => {
+    loadInitialData()
+  },[])
 
 
   return (

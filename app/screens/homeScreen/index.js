@@ -13,7 +13,7 @@ const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 export const HomeScreen = () => {
 
   const navigation = useNavigation();
-  const { allProducts, setAllProducts, saveProducts, fetchProducts } = useMainContext();
+  const { allProducts, setAllProducts, saveFavoriteProducts, loadFavoriteProductsFromStorage } = useMainContext();
 
   const [products, setProducts] = useState([]);
   const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
@@ -51,12 +51,31 @@ export const HomeScreen = () => {
       return product;
     })
     setAllProducts(updateAllProducts);
-    saveProducts(updateAllProducts);
+    
+    const favoriteProducts = updateAllProducts.filter((product) => product.isFavorite === true);
+
+    try {
+      await saveFavoriteProducts(favoriteProducts);
+    }
+    catch (error) {
+      console.log('Failed to save favorite products to AsyncStorage:', error);
+    }
 
     const message = item.isFavorite 
     ? `${item.name} removed from favs`
     : `${item.name} added to favs` 
     ToastAndroid.show(message, ToastAndroid.SHORT)
+  };
+
+  const loadInitialData = async () => {
+    const storedFavorites = await loadFavoriteProductsFromStorage();
+    if (storedFavorites.length > 0) {
+      const updatedAllProducts = allProducts.map((product) => {
+        const isFavorite = storedFavorites.some((fav) => fav.id === product.id);
+        return { ...product, isFavorite };
+      });
+      setAllProducts(updatedAllProducts);
+    }
   };
 
   const handleProductPress = (item) => {
@@ -130,6 +149,10 @@ export const HomeScreen = () => {
     setProducts(newProducts);
   }, [allProducts]);
 
+  useEffect(() => {
+    loadInitialData()
+  },[])
+
 
   return (
     <>
@@ -173,9 +196,9 @@ export const HomeScreen = () => {
         </View>
     </Screen>
     <BottomSheetContainer
-        isVisible={isSizeBottomSheetVisible}
-        onClose={handleClosePressSizeSheet}
-        customHeight={'47%'}>
+      isVisible={isSizeBottomSheetVisible}
+      onClose={handleClosePressSizeSheet}
+      customHeight={'47%'}>
         <Text style={styles.titleBottomSheet()}>Select Size</Text>
         <View style={styles.sizeContainer()}>
           {
