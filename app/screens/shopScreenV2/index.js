@@ -1,16 +1,19 @@
 import React from 'react'
-import { StatusBar, View } from 'react-native'
+import { View } from 'react-native'
 import { CustomTopTabBar, Header, KidsCategories, MenCategories, Screen, WomenCategories } from '../../components'
 import { IcBackArrow, IcSearch, color, fontSize, fonts, size } from '../../theme'
 
 import * as styles from './styles'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { useNavigation } from '@react-navigation/native'
+import axios from 'axios'
 
 const Tab = createMaterialTopTabNavigator();
 
 export const ShopScreenV2 = () => {
+
   const navigation = useNavigation();
+
   return (
     <Screen style={styles.mainView()} bgColor={color.white}>
       <View style={styles.topView()}>

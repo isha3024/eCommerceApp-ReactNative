@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Alert, Animated, Platform, StatusBar, TouchableOpacity, UIManager, View, Keyboard } from 'react-native'
+import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View, Keyboard, ToastAndroid } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import * as styles from './styles'
-import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
+
+import { useDispatch } from 'react-redux'
 import { EmailValidation } from '../../utils/functions'
 import { Button, Header, InputField, Text } from '../../components'
-import { useDispatch } from 'react-redux'
 import { registerUser } from '../../redux'
+import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
+import * as styles from './styles'
+import axios from 'axios'
+import { username } from '../checkoutScreen/styles'
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -17,14 +20,17 @@ export const RegisterScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  
   const shakeAnim = useRef(new Animated.Value(0)).current;
+
+  const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({});
   const [isNameValid, setIsNameValid] = useState(false)
+  const [isUsernameValid, setIsUsernameValid] = useState(false)
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [inputField, setInputField] = useState({
     name: '',
+    username: '',
     email: '',
     password: ''
   })
@@ -55,6 +61,16 @@ export const RegisterScreen = () => {
       setIsNameValid(false);
     }else {
       setIsNameValid(true)
+    }
+
+    if(!inputField.username){
+      newErrors.username = 'Username is required'
+      setIsUsernameValid(false);
+    }else if(inputField.username.length < 2){
+      newErrors.username = 'Username length must be greater than 2 letter'
+      setIsUsernameValid(false);
+    }else {
+      setIsUsernameValid(true)
     }
 
     if(!inputField.email){
@@ -89,30 +105,60 @@ export const RegisterScreen = () => {
       Keyboard.dismiss()
       setErrors({
         name: '',
+        userName: '',
         email: '',
         password: ''
       })
-      const data = {
-        name: inputField.name,
+
+      const body = {
+        firstName: inputField.name,
+        username: inputField.username,
         email: inputField.email,
         password: inputField.password
       }
-      dispatch(registerUser(data))
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: JSON.stringify(body),
+      }
+
+      setLoading(true);
+      try {
+        const response = await axios('https://dummyjson.com/user/add', options);
+        if(response.status === 201) {
+          setLoading(false);
+          ToastAndroid.show('Succesfull Registration', ToastAndroid.SHORT);
+          dispatch(registerUser(body))
+        }
+      }
+      catch (error) {
+        setLoading(false);
+        ToastAndroid.show('Error Occured', ToastAndroid.SHORT)
+      }
+      finally {
+        setLoading(false);
+      }
     }
 }
 
   const handleNavigation = () => {
     setErrors({
       name: '',
+      username: '',
       email: '',
       password: ''
     })
     setInputField({
       name: '',
+      username: '',
       email: '',
       password: ''
     })
     setIsNameValid(false);
+    setIsEmailValid(false)
     setIsEmailValid(false);
     setIsPasswordValid(false);
     navigation.navigate('Login')
@@ -152,6 +198,29 @@ export const RegisterScreen = () => {
           />
           {errors.name ? 
             (<Text style={styles.errorText()}>{errors.name}</Text>) 
+            : (<Text style={styles.noError()}></Text>)
+          }
+        </Animated.View>
+        <Animated.View style={[styles.inputView(), errors.username && { transform: [{ translateX: shakeAnim }] }]}>
+          <InputField 
+            error={errors.username}
+            value={inputField?.username}
+            placeholder={'Username'}
+            label={'Username'}
+            autoCapitalize='none'
+            onChangeText={(val) => handleChange(val, 'username')}
+            editable={true}
+            keyboardType='default'
+            icon
+            iconPlace='right'
+            renderRightIcon={() => (
+            errors.username 
+            ? (<IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />)
+            : isNameValid && (<IcCheck width={size.moderateScale(24)} height={size.moderateScale(24)} />) 
+            )}
+          />
+          {errors.username ? 
+            (<Text style={styles.errorText()}>{errors.username}</Text>) 
             : (<Text style={styles.noError()}></Text>)
           }
         </Animated.View>
@@ -210,7 +279,7 @@ export const RegisterScreen = () => {
           activeOpacity={0.8} 
           btnStyle={styles.buttonWithText()} 
           title='SIGN UP' 
-          onPress={handleSubmit} 
+          onPress={handleSubmit}
         />
       </View>
       <View style={styles.bottomContainer()}>

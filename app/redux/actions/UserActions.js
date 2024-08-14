@@ -1,13 +1,13 @@
 import * as actions from '../Types'
-import * as data from '../../json'
 
-
-const products = data.productList
-
-export const loadProducts = () => {
+export const loadProducts = (data) => {
+  const productsWithFavorite = data.map((product) => ({
+    ...product,
+    isFavorite: product.isFavorite || false, // Ensure isFavorite is set
+  }));
   return {
     type: actions.LOAD_PRODUCTS,
-    payload: products
+    payload: productsWithFavorite
   }
 }
 

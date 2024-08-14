@@ -7,6 +7,9 @@ import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, siz
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as styles from './styles'
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleFavorite } from '../../redux'
+import axios from 'axios'
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -69,8 +72,14 @@ const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 export const CatalogeScreen = ({route}) => {
 
   const navigation = useNavigation();
-  const { allProducts, setAllProducts } = useMainContext();
+  const dispatch = useDispatch();
+  const { categoryUrl } = route.params;
+  console.log('categoryUrl: ', categoryUrl);
+  const productsFetch = useSelector(state => state.product.products);
 
+
+  const { allProducts, setAllProducts } = useMainContext();
+  const [loading, setLoading] = useState(false)
   const [showProductList, setShowProductList] = useState([]);
   const [isSheetVisible, setSheetVisible] = useState(false);
   const [sortOptionName, setSortOptionName] = useState(null)
@@ -85,6 +94,28 @@ export const CatalogeScreen = ({route}) => {
   LogBox.ignoreLogs([
     'Tried to modify key `reduceMotion` of an object which has been already passed to a worklet'
   ]);
+
+  const showProductsByCategorySelected = async () => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }
+    setLoading(true);
+    try {
+      const response = await axios(categoryUrl.url,options);
+      if(response.status === 200) {
+        const products = response.data.products;
+        setShowProductList(products);
+        setLoading(false)
+      }
+    }
+    catch (error) {
+      console.log(error)
+      setLoading(false)
+    }
+  }
 
   const toggleLayout = () => {
     LayoutAnimation.configureNext({
@@ -102,13 +133,13 @@ export const CatalogeScreen = ({route}) => {
     let sortedList = [...showProductList];
     switch (sortOption.id) {
       case 3: 
-        sortedList.sort((a, b) => b.ratings - a.ratings);
+        sortedList.sort((a, b) => b.rating - a.rating);
         break;
       case 4:
-        sortedList.sort((a, b) => a.originalPrice - b.originalPrice);
+        sortedList.sort((a, b) => a.price - b.price);
         break;
       case 5:
-        sortedList.sort((a, b) => b.originalPrice - a.originalPrice);
+        sortedList.sort((a, b) => b.price - a.price);
         break;
       default:
         break;
@@ -168,37 +199,11 @@ export const CatalogeScreen = ({route}) => {
   }
 
   const handleFavoriteBtn = async (item) => {
-    const updatedProducts = showProductList.map((product) => {
-      if (product.id === item.id) {
-        return {
-          ...product,
-          isFavorite: !product.isFavorite,
-        }
-      }
-      return product
-    })
-    setShowProductList(updatedProducts);
-
-    const updateAllProducts = allProducts.map((product) => {
-      if(product.id === item.id) {
-        return {
-          ...product,
-          isFavorite: !product.isFavorite
-        }
-      }
-      return product;
-    })
-    setAllProducts(updateAllProducts)
-
-    try {
-      await AsyncStorage.setItem('allProducts', JSON.stringify(updateAllProducts));
-    } catch (error) {
-      console.error('Failed to save the updated products to AsyncStorage:', error);
-    }
-
+    console.log('item: ', item)
+    dispatch(toggleFavorite(item.id));
     const message = item.isFavorite 
-    ? `${item.name} removed from favs`
-    : `${item.name} added to favs` 
+    ? `${item.title} removed from favs`
+    : `${item.title} added to favs` 
     ToastAndroid.show(message, ToastAndroid.SHORT)
   };
 
@@ -254,6 +259,7 @@ export const CatalogeScreen = ({route}) => {
   }
   
   const renderProducts = ({item}) => {
+    // console.log('item: ', item)
     return (
         <ProductCardMain 
           onProductPress={() => {
@@ -261,20 +267,17 @@ export const CatalogeScreen = ({route}) => {
             setSizeSheetVisible(true);
           }}
           productHorizontal={showGrid ? true : false}
-          productTitle={item?.name}
+          productTitle={item?.title}
           brandName={item?.brand}
           showRatings={true}
-          ratings={item?.ratings}
-          ratingsCounts={item?.rating_count}
-          showDiscount={showGrid ? false : item?.discount}
-          originalPrice={item?.originalPrice}
-          sellingPrice={item?.saleProductPrice}
+          ratingsCounts={item?.rating}
+          originalPrice={item?.price}
           newProduct={showGrid ? false : item?.isProductNew}
-          productImage={item?.images}
+          productImage={item?.images[0]}
           topRightIcon={false}
           addToFavoriteIcon
           onAddToFavorite={() => handleFavoriteBtn(item)}
-          isProductFavorite={item?.isProductFavorite ||item?.isFavorite}
+          isProductFavorite={item?.isFavorite}
           flotingBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
           customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
         />
@@ -305,17 +308,25 @@ export const CatalogeScreen = ({route}) => {
   },[])
 
   useEffect(() => {
+    showProductsByCategorySelected()
+  },[])
+
+  useEffect(() => {
     const filtersFromParams = route.params?.appliedFilters || null;
     console.log('filters: ',filtersFromParams)    
     setFilters(filtersFromParams);
     filterProducts();
   }, [route.params?.appliedFilters, allProducts]);
 
+  useEffect(() => {
+    setShowProductList(productsFetch)
+  },[])
+
   return (
       <Screen bgColor={color.white} translucent={true}>
         <Header
           title={title ? true : false}
-          headerTitle={"Women's top"}
+          headerTitle={categoryUrl.name}
           headerStyle={styles.header(title)}
           leftIconPress={() => navigation.goBack()}
           headerLeftIcon
@@ -329,14 +340,14 @@ export const CatalogeScreen = ({route}) => {
         />
         <View style={styles.topContainer()}>
           <View style={styles.mainView()}>
-            {title ? null : (<Text style={styles.title()}>Women's tops</Text>)}
+            {title ? null : (<Text style={styles.title()}>{categoryUrl.name}</Text>)}
           </View>
           <View style={styles.horizontalScroll(title)}>
             <View style={styles.flatList()}>
             <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: size.moderateScale(4)}}>
+            contentContainerStyle={{paddingBottom: size.moderateScale(4),flexGrow: 1}}>
               {
                 womenTopCategory.map((item, index) => {
                   return (
@@ -374,7 +385,10 @@ export const CatalogeScreen = ({route}) => {
                 data={showProductList}
                 renderItem={renderProducts}
                 key={'_'}
-                keyExtractor={item => '_'+item.name}
+                keyExtractor={(item, index) => { 
+                  const uniqueKey = item.id ? item.id.toString() : index.toString();
+                  return `_${uniqueKey}`
+                }}
               />
             ) : (
               <FlatList
@@ -384,7 +398,10 @@ export const CatalogeScreen = ({route}) => {
                 data={showProductList}
                 renderItem={renderProducts}
                 key={'#'}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item, index) => { 
+                  const uniqueKey = item.id ? item.id.toString() : index.toString();
+                  return `#${uniqueKey}`
+                }}
               />
             )
           } 

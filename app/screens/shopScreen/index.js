@@ -4,6 +4,7 @@ import { Header, Screen, Text } from '../../components'
 import { IcBackArrow, IcSearch, color, images, size } from '../../theme'
 
 import * as styles from './styles'
+import axios from 'axios'
 
 const womenData = [
   {
@@ -83,6 +84,8 @@ const kidsData = [
 
 
 export const ShopScreen = () => {
+
+  const [loading, setLoading] = useState(false)
   const [categoryTab, setCategoryTab] = useState(['women', 'men', 'kids']);
   const [selectedCategory, setSelectedCategory] = useState(categoryTab);
 
@@ -111,9 +114,12 @@ export const ShopScreen = () => {
     }
   }
 
+
   useEffect(() => {
     setSelectedCategory('women')
   }, [categoryTab])
+
+
   return (
     <Screen bgColor={color.white}>
       <Header 

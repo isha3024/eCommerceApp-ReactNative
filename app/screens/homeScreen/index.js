@@ -2,23 +2,55 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { View, ImageBackground, TouchableOpacity, FlatList, BackHandler, Alert, ToastAndroid, StatusBar } from 'react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
+import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 
 import { useMainContext } from '../../contexts/MainContext'
 import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
 import { color, IcBackArrow, images, size } from '../../theme'
 import * as styles from './styles'
+import { loadProducts } from '../../redux'
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
 export const HomeScreen = () => {
 
   const navigation = useNavigation();
-  const { allProducts, setAllProducts, saveFavoriteProducts, loadFavoriteProductsFromStorage } = useMainContext();
+  const dispatch = useDispatch();
+  const userInfo = useSelector(state => state.authUser.userInfo);
+  console.log('userInfo: ',userInfo)
+  const { saveFavoriteProducts } = useMainContext();
 
+  const [loading, setLoading] = useState(false)
   const [products, setProducts] = useState([]);
   const [isSizeBottomSheetVisible, setSizeBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+
+  const fetchProducts = async () => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }
+    setLoading(true)
+    try {
+      const response  = await axios('https://dummyjson.com/products',options);
+      if(response.status === 200) {
+        const data = response.data.products;
+        setProducts(data);
+        dispatch(loadProducts(data))
+      }
+      setLoading(false)
+    }
+    catch (error) {
+      console.log('error', error)
+    }
+    finally {
+      setLoading(false)
+    }
+  }
 
   const handleClosePressSizeSheet = () => {
     setUserSizeOption(false)
@@ -41,7 +73,7 @@ export const HomeScreen = () => {
     })
     setProducts(updatedProducts);
 
-    const updateAllProducts = allProducts.map((product) => {
+    const updateAllProducts = products.map((product) => {
       if(product.id === item.id) {
         return {
           ...product,
@@ -50,7 +82,7 @@ export const HomeScreen = () => {
       }
       return product;
     })
-    setAllProducts(updateAllProducts);
+    setProducts(updateAllProducts);
     
     const favoriteProducts = updateAllProducts.filter((product) => product.isFavorite === true);
 
@@ -65,17 +97,6 @@ export const HomeScreen = () => {
     ? `${item.name} removed from favs`
     : `${item.name} added to favs` 
     ToastAndroid.show(message, ToastAndroid.SHORT)
-  };
-
-  const loadInitialData = async () => {
-    const storedFavorites = await loadFavoriteProductsFromStorage();
-    if (storedFavorites.length > 0) {
-      const updatedAllProducts = allProducts.map((product) => {
-        const isFavorite = storedFavorites.some((fav) => fav.id === product.id);
-        return { ...product, isFavorite };
-      });
-      setAllProducts(updatedAllProducts);
-    }
   };
 
   const handleProductPress = (item) => {
@@ -98,12 +119,11 @@ export const HomeScreen = () => {
       <ProductCardMain
         onProductPress={() => handleProductPress(item)}
         customProductStyle={styles.productCardHome()}
-        productImage={item?.images}
+        productImage={item.images[0]}
         brandName={item?.brand}
-        productTitle={item?.name}
-        originalPrice={item?.originalPrice}
-        ratings={item?.ratings}
-        ratingsCounts={item?.rating_count}
+        productTitle={item.title}
+        originalPrice={item?.price}
+        ratingsCounts={item?.rating}
         newProduct={item?.isProductNew}
         addToFavoriteIcon
         onAddToFavorite={() => handleFavoriteBtn(item)}
@@ -137,26 +157,26 @@ export const HomeScreen = () => {
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBackgroundColor(color.transparent)
-    },[allProducts])
+    },[products])
   )
 
   useEffect(() => {
     StatusBar.setBackgroundColor(color.transparent)
-  },[allProducts])
-
-  useEffect(() => {
-    const newProducts = allProducts.filter(product => product.isProductNew);
-    setProducts(newProducts);
-  }, [allProducts]);
-
-  useEffect(() => {
-    loadInitialData()
   },[])
+
+  // useEffect(() => {
+  //   const newProducts = products.filter(product => product.isProductNew);
+  //   setProducts(newProducts);
+  // }, [products]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
 
   return (
     <>
-    <Screen withScroll bgColor={color.transparent} translucent={true}>
+    <Screen withScroll bgColor={color.transparent} translucent={true} loading={loading}>
       <View style={styles.topView()}>
           <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
             <LinearGradient

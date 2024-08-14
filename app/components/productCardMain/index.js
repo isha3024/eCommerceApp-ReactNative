@@ -46,12 +46,13 @@ export const ProductCardMain = ({
 }) => {
   const discount = Math.floor(((originalPrice - sellingPrice)/originalPrice) * 100);
 
+
   if (productHorizontal) {
     return (
       <View style={styles.mainViewHorizontal(isProductSold)}>
         <TouchableOpacity style={[styles.mainProductCardHorizontal(),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
           <View style={styles.imageViewHorizontal()}>
-            <Image source={productImage} style={styles.imageHorizontal()} resizeMode='cover' />
+            <Image source={typeof productImage === 'string' ? { uri: productImage } : productImage} style={styles.imageHorizontal()} resizeMode='cover' />
             <View style={[styles.badge(newProduct), sellingPrice && showDiscount && styles.discountBadge()]}>
               {
                 sellingPrice && showDiscount ? 
@@ -176,7 +177,7 @@ export const ProductCardMain = ({
       <View>
         <TouchableOpacity style={[styles.mainProductCard(isProductSold),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
           <View style={styles.imageView()}>
-            <Image source={productImage} style={[styles.image(), customProductImageStyle]} />
+            <Image source={typeof productImage === 'string' ? { uri: productImage } : productImage} style={[styles.image(), customProductImageStyle]} />
             <View style={[styles.badge(newProduct),  sellingPrice && styles.discountBadge()]}>
               {
                 sellingPrice ? (

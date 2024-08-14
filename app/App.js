@@ -17,21 +17,21 @@ const App = () => {
   ]);
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-      <GestureHandlerRootView>
-        <SafeAreaView style={styles.container}>
-          <MainContextProvider>
-            <LocalizationProvider>
-              {/* <Text>App</Text> */}
-              <MainStackNavigation />
-              {/* <DemoScreen /> */}
-            </LocalizationProvider>
-          </MainContextProvider>
-        </SafeAreaView>
-      </GestureHandlerRootView>
-      </PersistGate>
-    </Provider>
+    <MainContextProvider>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <GestureHandlerRootView>
+            <SafeAreaView style={styles.container}>
+              <LocalizationProvider>
+                {/* <Text>App</Text> */}
+                <MainStackNavigation />
+                {/* <DemoScreen /> */}
+              </LocalizationProvider>
+            </SafeAreaView>
+          </GestureHandlerRootView>
+        </PersistGate>
+      </Provider>
+    </MainContextProvider>
   );
 };
 const styles = StyleSheet.create({

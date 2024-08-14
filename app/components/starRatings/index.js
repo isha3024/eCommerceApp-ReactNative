@@ -5,8 +5,13 @@ import { IcStar, color } from '../../theme'
 import * as styles from './styles'
 
 export const StarRatings = ({customStarRatingStyle, ratings, ratingsCounts}) => {
-  const [defaultRating, setDefaultRating] = useState(ratings);
+  
+  const [defaultRating, setDefaultRating] = useState(ratingsCounts);
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
+
+  if(ratingsCounts < 2 && ratingsCounts > 1) {
+    console.log('ratingsCounts: ', ratingsCounts)
+  }
 
   return (
     <View style={[styles.starContainer(), customStarRatingStyle]}>

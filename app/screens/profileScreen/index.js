@@ -14,7 +14,6 @@ export const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const userInfo = useSelector(state => state.authUser.userInfo);
-  console.log(userInfo)
   const { addresses, paymentCardSelected, getOrdersFromStorage, orders } = useMainContext();
 
   useFocusEffect(
@@ -59,7 +58,7 @@ export const ProfileScreen = () => {
             <Image source={images.imgAvatarLogo} style={styles.profileImg()}/>
           </View>
           <View>
-            <Text style={styles.profileName()}>{userInfo.name}</Text>
+            <Text style={styles.profileName()}>{userInfo.firstName}</Text>
             <Text style={styles.profileEmail()}>{userInfo.email}</Text>
           </View>
         </View>

@@ -53,7 +53,6 @@ export const _userAdd = async body => {
 
 //Login - Isha
 export const _userLogin = async body => {
-  // console.log('in API CALLS file')
   let {_api_calls} = HttpCalls;
   let headers = await headersData({});
 

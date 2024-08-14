@@ -27,7 +27,7 @@ export const MainContextProvider = props => {
   });
 
   const saveProducts = async (products) => {
-    setLoading(true)
+
     try {
       await AsyncStorage.setItem('productList', JSON.stringify(products));
       setAllProducts(products)
@@ -35,11 +35,11 @@ export const MainContextProvider = props => {
     catch (error) {
       console.error('Failed to store the products ', error);
     }
-    setLoading(false)
+
   }
 
   const fetchProducts = async () => {
-    setLoading(true)
+
     try {
       const storedProducts = await AsyncStorage.getItem('productList');
       if(storedProducts){
@@ -49,18 +49,18 @@ export const MainContextProvider = props => {
     catch (error) {
       console.error('Failed to load products from storage ',error);
     }
-    setLoading(false)
+
   } 
 
   const saveFavoriteProducts = async (products) => {
-    setLoading(true)
+
     try {
       await AsyncStorage.setItem('favoriteProducts', JSON.stringify(products));
     }
     catch (error) {
       console.error('Failed to store the favorite products ', error);
     }
-    setLoading(false)
+
   }
 
   const updateFilters = (newFilters) => {
@@ -81,7 +81,7 @@ export const MainContextProvider = props => {
   }
 
   const loadFavoriteProductsFromStorage = async () => {
-    setLoading(true)
+
     try {
       const response = await AsyncStorage.getItem('favoriteProducts');
       if(response){
@@ -91,21 +91,21 @@ export const MainContextProvider = props => {
     catch (error) {
       console.error('Failed to load favorite products from storage ', error);
     }
-    setLoading(false)
+
   }
 
   const saveCartProductList = async (list) => {
-    setLoading(true)
+
     try {
       await AsyncStorage.setItem('cartList', JSON.stringify(list));
     } catch (error) {
       console.error('Failed to store the cart product list ', error);
     }
-    setLoading(false)
+
   };
 
   const loadCartListItemsFromStorage = async () => {
-    setLoading(true);
+
     try {
       const response = await AsyncStorage.getItem('cartList');
       if(response) {
@@ -116,7 +116,7 @@ export const MainContextProvider = props => {
     catch (error) {
       console.error('Failed to load cart list items from storage ', error);
     }
-    setLoading(false);
+
   }
 
   const saveAddress = async (addresses) => {
@@ -129,18 +129,18 @@ export const MainContextProvider = props => {
   }
 
   const getAddressesFromStorage = async () => {
-    setLoading(true)
+
     try {
       const response = await AsyncStorage.getItem('addresses');
       if(response !== null) {
         setAddresses(JSON.parse(response))
         setSelectedAddress(JSON.parse(response)[selectedAddressIndex])
-        setLoading(false)
+    
       }
     }
     catch (error) {
       console.log('Failed to fetch addresses',error)
-      setLoading(false)
+  
     }
   }
 
@@ -154,18 +154,18 @@ export const MainContextProvider = props => {
   }
 
   const getPaymentCardFromStorage = async () => {
-    setLoading(true)
+
     try {
       const response = await AsyncStorage.getItem('paymentCardDetails');
       if(response !== null) {
         setPaymentCardDetails(JSON.parse(response))
         setPaymentCardSelected(JSON.parse(response)[paymentCardSelectedIndex])
-        setLoading(false)
+    
       }
     }
     catch (error) {
       console.log('Failed to fetch payment card details',error)
-      setLoading(false)
+  
     }
   }
 
@@ -182,12 +182,12 @@ export const MainContextProvider = props => {
   };
 
   const getOrdersFromStorage = async () => {
-    setLoading(true)
+
     try {
       const response = await AsyncStorage.getItem('orders');
       if(response !== null) {
         setOrders(JSON.parse(response));
-        setLoading(false)
+    
       }
     }
     catch (error) {

@@ -22,7 +22,8 @@ export const mainTitleText = () => ({
 
 export const middleContainer = () => ({
   padding: size.moderateScale(15),
-  marginTop: size.moderateScale(60),
+  // marginTop: size.moderateScale(60),
+  justifyContent: 'center',
   gap: size.moderateScale(22)
 })
 
