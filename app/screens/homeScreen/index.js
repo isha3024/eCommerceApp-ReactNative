@@ -164,11 +164,6 @@ export const HomeScreen = () => {
     StatusBar.setBackgroundColor(color.transparent)
   },[])
 
-  // useEffect(() => {
-  //   const newProducts = products.filter(product => product.isProductNew);
-  //   setProducts(newProducts);
-  // }, [products]);
-
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -209,6 +204,8 @@ export const HomeScreen = () => {
           <FlatList
             horizontal
             contentContainerStyle={{ paddingBottom: size.moderateScale(80) }}
+            initialNumToRender={10}
+            refreshing={true}
             data={products}
             renderItem={renderProducts}
             keyExtractor={(item, index) => item + index}

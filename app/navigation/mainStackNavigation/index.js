@@ -32,23 +32,20 @@ export const MainStackNavigation = () => {
             }}
           />
         ) : null}
-        {
-          isUserLoggedIn === false 
-            ? (<Stack.Screen
-              name="authStackNavigation"
-              component={AuthStackNavigation}
-              options={{
-                headerShown: false,
-              }}
-            />)
-            : (<Stack.Screen
-              name="bottomStackNavigation"
-              component={BottomStackNavigation}
-              options={{
-                headerShown: false,
-              }}
-            />)
-        }
+        <Stack.Screen
+          name="authStackNavigation"
+          component={AuthStackNavigation}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="bottomStackNavigation"
+          component={BottomStackNavigation}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen
           name="cameraScreen"
           component={CameraScreen}

@@ -2,14 +2,14 @@ import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { Animated, Keyboard, Platform, StatusBar, ToastAndroid, TouchableOpacity, UIManager, View } from 'react-native'
+import axios from 'axios'
+import auth from '@react-native-firebase/auth'
 
 import { useMainContext } from '../../contexts/MainContext'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { Button, Header, InputField, Text } from '../../components'
 import { loginUser } from '../../redux'
 import * as styles from './styles'
-import axios from 'axios'
-import { username } from '../checkoutScreen/styles'
 
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -24,12 +24,12 @@ export const LoginScreen = () => {
 
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({});
-  // const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false)
   const [inputField, setInputField] = useState({
-    // email: '',
-    username: '',
+    email: '',
+    // username: '',
     password: ''
   })
 
@@ -53,27 +53,29 @@ export const LoginScreen = () => {
   const handleValidations = () => {
     let newErrors = {};
 
-    // if (!inputField.email) {
-    //   newErrors.email = 'Email is required'
-    //   setIsEmailValid(false)
-    // } else {
-    //   setIsEmailValid(true)
-    // }
-
-    if (!inputField.username) {
-      newErrors.username = 'Username is required'
-      setIsUsernameValid(false)
+    if (!inputField.email) {
+      newErrors.email = 'Email is required'
+      setIsEmailValid(false)
     } else {
-      setIsUsernameValid(true)
+      setIsEmailValid(true)
     }
+
+    // if (!inputField.username) {
+    //   newErrors.username = 'Username is required'
+    //   setIsUsernameValid(false)
+    // } else {
+    //   setIsUsernameValid(true)
+    // }
 
     if (!inputField.password) {
       newErrors.password = 'Password is required'
       setIsPasswordValid(false)
-    } else if (inputField.password.length < 8) {
-      newErrors.password = 'Password length must be greater than 8'
-      setIsPasswordValid(false)
-    } else {
+    } 
+    // else if (inputField.password.length < 8) {
+    //   newErrors.password = 'Password length must be greater than 8'
+    //   setIsPasswordValid(false)
+    // } 
+    else {
       setIsPasswordValid(true)
     }
 
@@ -82,50 +84,93 @@ export const LoginScreen = () => {
     return Object.keys(newErrors).length === 0
   }
 
+  // handle submit function using axios and redux
+  // const handleSubmit = async () => {
+  //   if (!handleValidations()) {
+  //     return 
+  //   }
+  //   else {
+  //     setErrors({
+  //       email: '',
+  //       username: '',
+  //       password: ''
+  //     })
+
+  //     const body = {
+  //       username: inputField.username,
+  //       password: inputField.password
+  //     }
+
+  //     const options = {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       data: JSON.stringify(body),
+  //     }
+
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios('https://dummyjson.com/user/login', options);
+  //       if(response.status === 200) {
+  //         setLoading(false);
+  //         const data = response.data
+  //         ToastAndroid.show('Succesfully Login', ToastAndroid.SHORT);
+  //         dispatch(loginUser(data))
+  //       }
+  //     }
+  //     catch (error) {
+  //       setLoading(false);
+  //       ToastAndroid.show('Error Occured', ToastAndroid.SHORT)
+  //     }
+  //     finally {
+  //       setLoading(false);
+  //     }
+      
+  //   }
+  // }
+
+
   const handleSubmit = async () => {
     if (!handleValidations()) {
-      return 
+      return;
     }
-    else {
-      setErrors({
-        email: '',
-        username: '',
-        password: ''
-      })
 
-      const body = {
-        username: inputField.username,
-        password: inputField.password
-      }
+    const email = inputField?.email;
+    const password = inputField?.password;
 
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: JSON.stringify(body),
+    setLoading(true)
+    auth().signInWithEmailAndPassword(email, password)
+    .then((response) => {
+      console.log(response);
+      if(response) {
+        setLoading(false)
+        ToastAndroid.show('Succesfully Login', ToastAndroid.SHORT);
+        navigation.navigate('bottomStackNavigation')
       }
+    })
+    .catch((error) => {
+      console.log('error', error)
 
-      setLoading(true);
-      try {
-        const response = await axios('https://dummyjson.com/user/login', options);
-        if(response.status === 200) {
-          setLoading(false);
-          const data = response.data
-          ToastAndroid.show('Succesfully Login', ToastAndroid.SHORT);
-          dispatch(loginUser(data))
-        }
-      }
-      catch (error) {
+      if(error.code === 'auth/invalid-email') {
         setLoading(false);
-        ToastAndroid.show('Error Occured', ToastAndroid.SHORT)
+        ToastAndroid.show('Invalid Email', ToastAndroid.SHORT);
       }
-      finally {
+
+      if(error.code === 'auth/invalid-credential') {
         setLoading(false);
+        ToastAndroid.show('Invalid Email or Password', ToastAndroid.SHORT);
       }
-      
-    }
-  }
+
+      if(error.code === 'auth/weak-password') {
+        setLoading(false);
+        ToastAndroid.show('Weak Password', ToastAndroid.SHORT);
+      }
+    })
+    .finally(() => {
+      setLoading(false)
+    })
+  } 
 
   const handleHeaderBackPress = () => {
     setErrors({
@@ -141,17 +186,17 @@ export const LoginScreen = () => {
 
   const handleForgetPasswordPress = () => {
     setErrors({
-      // email: '',
-      username:'',
+      email: '',
+      // username:'',
       password: ''
     })
     setInputField({
-      // email: '',
-      username: '',
+      email: '',
+      // username: '',
       password: ''
     })
-    setIsUsernameValid(false);
-    // setIsEmailValid(false);
+    // setIsUsernameValid(false);
+    setIsEmailValid(false);
     setIsPasswordValid(false);
     navigation.navigate('ForgetPassword')
   }
@@ -171,7 +216,7 @@ export const LoginScreen = () => {
         <Text style={styles.mainTitleText()}>Login</Text>
       </View>
       <View style={styles.middleContainer()}>
-        {/* <Animated.View style={[styles.inputView(), errors.email && { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View style={[styles.inputView(), errors.email && { transform: [{ translateX: shakeAnim }] }]}>
           <InputField
             error={errors.email}
             value={inputField?.email}
@@ -192,8 +237,8 @@ export const LoginScreen = () => {
             (<Text style={styles.errorText()}>{errors.email}</Text>)
             : (<Text style={styles.noError()}></Text>)
           }
-        </Animated.View> */}
-        <Animated.View style={[styles.inputView(), errors.username && { transform: [{ translateX: shakeAnim }] }]}>
+        </Animated.View>
+        {/* <Animated.View style={[styles.inputView(), errors.username && { transform: [{ translateX: shakeAnim }] }]}>
           <InputField
             error={errors.username}
             value={inputField?.username}
@@ -214,7 +259,7 @@ export const LoginScreen = () => {
             (<Text style={styles.errorText()}>{errors.username}</Text>)
             : (<Text style={styles.noError()}></Text>)
           }
-        </Animated.View>
+        </Animated.View> */}
         <Animated.View style={[styles.inputView(), errors.password && { transform: [{ translateX: shakeAnim }] }]}>
           <InputField
             error={errors.password}
