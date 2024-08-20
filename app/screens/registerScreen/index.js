@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import auth from '@react-native-firebase/auth'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 import { EmailValidation } from '../../utils/functions'
 import { registerUser } from '../../redux'
@@ -159,35 +160,68 @@ export const RegisterScreen = () => {
     const email = inputField?.email;
     const password = inputField?.password;
 
-    setLoading(true)
-    auth().createUserWithEmailAndPassword(email, password)
-    .then((response) => {
-      if(response) {
+    try {
+      setLoading(true); 
+      const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+      console.log('userCredential: ', userCredential)
+      if(userCredential) {
         setLoading(false);
         ToastAndroid.show('Succesfull Registration', ToastAndroid.SHORT);
-        navigation.navigate('Login')
-      }
-    })
-    .catch((error) => {
-      console.log('error: ',error)
-      if(error.code == 'auth/email-already-in-use') {
-        setLoading(false);
-        ToastAndroid.show('Email already exists', ToastAndroid.SHORT);
+        // dispatch(registerUser(userCredential.user));
       }
 
-      if(error.code === 'auth/invalid-email') {
-        setLoading(false);
-        ToastAndroid.show('Invalid Email', ToastAndroid.SHORT);
-      }
+      const { idToken } = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-      if(error.code === 'auth/weak-password') {
-        setLoading(false);
-        ToastAndroid.show('Weak Password', ToastAndroid.SHORT);
-      }
-    })
-    .finally(() => {
-      setLoading(false)
-    })
+      const linkedGoogleAccount = await userCredential.user.linkWithCredential(googleCredential);
+      console.log('Google account linked: ', linkedGoogleAccount.user);
+      return linkedGoogleAccount.user;
+      // navigation.navigate('Login')
+    }
+    catch (error) {
+      console.error('Error during sign-up or linking:', error);
+      throw error;
+    }
+
+    // setLoading(true)
+    // auth().createUserWithEmailAndPassword(email, password)
+    // .then(async (response) => {
+    //   if(response) {
+    //     setLoading(false);
+    //     ToastAndroid.show('Succesfull Registration', ToastAndroid.SHORT);
+    //   }
+    // })
+    // .catch((error) => {
+    //   console.log('error: ',error)
+    //   if(error.code == 'auth/email-already-in-use') {
+    //     setLoading(false);
+    //     ToastAndroid.show('Email already exists', ToastAndroid.SHORT);
+    //   }
+
+    //   if(error.code === 'auth/invalid-email') {
+    //     setLoading(false);
+    //     ToastAndroid.show('Invalid Email', ToastAndroid.SHORT);
+    //   }
+
+    //   if(error.code === 'auth/weak-password') {
+    //     setLoading(false);
+    //     ToastAndroid.show('Weak Password', ToastAndroid.SHORT);
+    //   }
+    // })
+    // .finally(() => {
+    //   setLoading(false)
+    // })
+  }
+
+  const googleButtonSignIn = async () => {
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true});
+    const { user, idToken } = await GoogleSignin.signIn();
+    console.log('user: ', user);
+    if(user) {
+      dispatch(registerUser(user));
+    }
+    const googleCredentials = auth.GoogleAuthProvider.credential(idToken);
+    return auth().signInWithCredential(googleCredentials);
   }
 
   const handleNavigation = () => {
@@ -209,6 +243,14 @@ export const RegisterScreen = () => {
     setIsPasswordValid(false);
     navigation.navigate('Login')
   }
+
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '559773031110-un6tfom1klu53dqm9c6fbon57b94vf5d.apps.googleusercontent.com',
+      offlineAccess: true,
+    })
+  },[])
 
   return ( 
     <View style={styles.mainView()}>
@@ -331,7 +373,7 @@ export const RegisterScreen = () => {
       <View style={styles.bottomContainer()}>
         <Text style={styles.text()}>Or sign up with social account</Text>
         <View style={styles.buttonContainer()}>
-          <TouchableOpacity style={styles.button()}>
+          <TouchableOpacity onPress={googleButtonSignIn} style={styles.button()}>
             <IcGoogle style={styles.buttonIcon()} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.button()}>

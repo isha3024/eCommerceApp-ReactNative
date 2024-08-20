@@ -8,6 +8,7 @@ buildscript {
         kotlinVersion = "1.9.22"
         // googlePlayServicesVersion = "18.0.0"
         playServicesLocationVersion = "21.0.1"
+        googlePlayServicesAuthVersion = "20.7.0"
     }
     repositories {
         maven {

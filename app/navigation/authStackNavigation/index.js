@@ -12,9 +12,6 @@ export const AuthStackNavigation = () => {
   const isUserRegistered = useSelector(state => state.authUser.isUserRegistered);
   const isUserLoggedIn = useSelector(state => state.authUser.isUserLoggedIn);
 
-  console.log('isUserRegistered:',isUserRegistered)
-  console.log('isUserLoggedIn:',isUserLoggedIn)
-
 
   return (
     <AuthStack.Navigator>

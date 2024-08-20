@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Animated, Keyboard, Platform, StatusBar, ToastAndroid, TouchableOpacity, UIManager, View } from 'react-native'
 import axios from 'axios'
 import auth from '@react-native-firebase/auth'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 import { useMainContext } from '../../contexts/MainContext'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
@@ -139,37 +140,28 @@ export const LoginScreen = () => {
     const email = inputField?.email;
     const password = inputField?.password;
 
-    setLoading(true)
-    auth().signInWithEmailAndPassword(email, password)
-    .then((response) => {
-      console.log(response);
-      if(response) {
-        setLoading(false)
-        ToastAndroid.show('Succesfully Login', ToastAndroid.SHORT);
-        navigation.navigate('bottomStackNavigation')
-      }
-    })
-    .catch((error) => {
-      console.log('error', error)
-
-      if(error.code === 'auth/invalid-email') {
+    try {
+      setLoading(true); 
+      const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+      console.log('userCredential: ', userCredential)
+      if(userCredential) {
         setLoading(false);
-        ToastAndroid.show('Invalid Email', ToastAndroid.SHORT);
+        ToastAndroid.show('Succesfull Registration', ToastAndroid.SHORT);
+        // dispatch(registerUser(userCredential.user));
       }
 
-      if(error.code === 'auth/invalid-credential') {
-        setLoading(false);
-        ToastAndroid.show('Invalid Email or Password', ToastAndroid.SHORT);
-      }
+      const { idToken } = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-      if(error.code === 'auth/weak-password') {
-        setLoading(false);
-        ToastAndroid.show('Weak Password', ToastAndroid.SHORT);
-      }
-    })
-    .finally(() => {
-      setLoading(false)
-    })
+      const linkedGoogleAccount = await userCredential.user.linkWithCredential(googleCredential);
+      console.log('Google account linked: ', linkedGoogleAccount.user);
+      return linkedGoogleAccount.user;
+      // navigation.navigate('Login')
+    }
+    catch (error) {
+      console.error('Error during sign-up or linking:', error);
+      throw error;
+    }
   } 
 
   const handleHeaderBackPress = () => {
@@ -182,6 +174,17 @@ export const LoginScreen = () => {
       password: ''
     })
     navigation.navigate('Register')
+  }
+
+  const googleButtonSignIn = async () => {
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true});
+    const { user, idToken } = await GoogleSignin.signIn();
+    console.log('user: ', user);
+    if(user) {
+      dispatch(loginUser(user));
+    }
+    const googleCredentials = auth.GoogleAuthProvider.credential(idToken);
+    return auth().signInWithCredential(googleCredentials);
   }
 
   const handleForgetPasswordPress = () => {
@@ -299,7 +302,7 @@ export const LoginScreen = () => {
       <View style={styles.bottomContainer()}>
         <Text style={styles.text()}>Or sign up with social account</Text>
         <View style={styles.buttonContainer()}>
-          <TouchableOpacity style={styles.button()}>
+          <TouchableOpacity onPress={googleButtonSignIn} style={styles.button()}>
             <IcGoogle style={styles.buttonIcon()} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.button()}>

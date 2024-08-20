@@ -17,8 +17,8 @@ export const HomeScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const userInfo = useSelector(state => state.authUser.userInfo);
-  console.log('userInfo: ',userInfo)
+  // const userInfo = useSelector(state => state.authUser.userInfo);
+  // console.log('userInfo: ',userInfo)
   const { saveFavoriteProducts } = useMainContext();
 
   const [loading, setLoading] = useState(false)

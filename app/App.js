@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from 'react-redux';
+import { firebase } from '@react-native-firebase/auth';
 
 import { LocalizationProvider } from './contexts';
 import { MainContextProvider } from './contexts/MainContext';
 import { MainStackNavigation } from './navigation';
-import { color, fonts, size } from './theme';
-import { Provider } from 'react-redux';
+import { color, fonts,  images,  size } from './theme';
 import { persistor, store } from './redux';
-import { PersistGate } from 'redux-persist/integration/react';
+import { uploadProductsToFireStore } from './firebase';
+
 
 const App = () => {
 
   LogBox.ignoreLogs([
     'Tried to modify key `reduceMotion` of an object which has been already passed to a worklet'
   ]);
+
+  useEffect(() => {
+    if(!firebase.apps.length) {
+      firebase.initializeApp()
+    }
+  },[])
+
+  // useEffect(() => {
+  //   uploadProductsToFireStore()
+  // },[])
 
   return (
     <MainContextProvider>

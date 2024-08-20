@@ -37,5 +37,6 @@ export const images = {
   productImage4: require('./image/images/productImage4.jpeg'),
   productImage3: require('./image/images/productImage3.jpeg'),
   productImage2: require('./image/images/productImage2.jpeg'),
-  productImage1: require('./image/images/productImage1.jpeg'),
+  EveningDress: require('./image/images/EveningDress.jpeg'),
 };
+

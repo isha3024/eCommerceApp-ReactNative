@@ -1,6 +1,7 @@
 import * as actions from '../Types'
 
 export const registerUser = (body) => {
+  console.log('body: ', body)
   return {
     type: actions.USER_REGISTER,
     payload: body

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Image, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import auth from '@react-native-firebase/auth'
 
 import * as styles from './styles';
 import { Header, Screen, Text } from '../../components';
@@ -34,9 +35,23 @@ export const ProfileScreen = () => {
       'Are you sure you want to logout?',
       [
         {text: 'Cancel',onPress: () => null},
-        {text: 'OK', onPress: () => dispatch(logoutUser())}
+        {text: 'OK', onPress: () => logout()}
       ]
     )
+    
+    function logout () {
+      dispatch(logoutUser());
+      auth().signOut()
+      .then(() => {
+        navigation.navigate('authStackNavigation');
+      })
+      .catch(error => {
+        console.error(error);
+      })
+
+      ToastAndroid.show('User Logout', ToastAndroid.SHORT);
+    }
+    
   }
   
   return (
@@ -55,10 +70,10 @@ export const ProfileScreen = () => {
         <Text style={styles.mainTitle()}>My profile</Text>
         <View style={styles.profileInfo()}>
           <View style={styles.profileImgView()}>
-            <Image source={images.imgAvatarLogo} style={styles.profileImg()}/>
+            <Image source={{uri: userInfo.photo}} style={styles.profileImg()}/>
           </View>
           <View>
-            <Text style={styles.profileName()}>{userInfo.firstName}</Text>
+            <Text style={styles.profileName()}>{userInfo.givenName} {userInfo.familyName}</Text>
             <Text style={styles.profileEmail()}>{userInfo.email}</Text>
           </View>
         </View>
