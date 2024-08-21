@@ -8,12 +8,14 @@ import { firebase } from '@react-native-firebase/auth';
 import { LocalizationProvider } from './contexts';
 import { MainContextProvider } from './contexts/MainContext';
 import { MainStackNavigation } from './navigation';
-import { color, fonts,  images,  size } from './theme';
+import { color, fonts, size } from './theme';
 import { persistor, store } from './redux';
-import { uploadProductsToFireStore } from './firebase';
+import { uploadNewUserToFireStore } from './firebase';
+
 
 
 const App = () => {
+
 
   LogBox.ignoreLogs([
     'Tried to modify key `reduceMotion` of an object which has been already passed to a worklet'
@@ -25,9 +27,11 @@ const App = () => {
     }
   },[])
 
-  // useEffect(() => {
-  //   uploadProductsToFireStore()
-  // },[])
+  useEffect(() => {
+    if(!firebase.apps.length) {
+      firebase.initializeApp()
+    }
+  },[])
 
   return (
     <MainContextProvider>

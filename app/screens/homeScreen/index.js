@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, ImageBackground, TouchableOpacity, FlatList, BackHandler, Alert, ToastAndroid, StatusBar } from 'react-native'
+import { View, ImageBackground, TouchableOpacity, FlatList, BackHandler, Alert, ToastAndroid, StatusBar, Image } from 'react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
+import firestore from '@react-native-firebase/firestore'
 
 import { useMainContext } from '../../contexts/MainContext'
 import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
@@ -17,8 +18,6 @@ export const HomeScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  // const userInfo = useSelector(state => state.authUser.userInfo);
-  // console.log('userInfo: ',userInfo)
   const { saveFavoriteProducts } = useMainContext();
 
   const [loading, setLoading] = useState(false)
@@ -27,28 +26,77 @@ export const HomeScreen = () => {
   const [userSizeOption, setUserSizeOption] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
+  //fetch Products using axios and stored in redux
+  // const fetchProducts = async () => {
+  //   const options = {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     }
+  //   }
+  //   setLoading(true)
+  //   try {
+  //     const response  = await axios('https://dummyjson.com/products',options);
+  //     if(response.status === 200) {
+  //       const data = response.data.products;
+  //       setProducts(data);
+  //       dispatch(loadProducts(data))
+  //     }
+  //     setLoading(false)
+  //   }
+  //   catch (error) {
+  //     console.log('error', error)
+  //   }
+  //   finally {
+  //     setLoading(false)
+  //   }
+  // }
+
   const fetchProducts = async () => {
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }
     setLoading(true)
     try {
-      const response  = await axios('https://dummyjson.com/products',options);
-      if(response.status === 200) {
-        const data = response.data.products;
-        setProducts(data);
-        dispatch(loadProducts(data))
-      }
+      const products = await firestore().collection('products').get();
+      const productList = products.docs.map(doc => {
+        return {
+          id: doc.id,
+          ...doc.data()
+        }
+      })
+
+      const filterNewProducts = productList.filter(product => product.isProductNew)
+      setProducts(filterNewProducts);
       setLoading(false)
     }
     catch (error) {
-      console.log('error', error)
+      console.error('Error fetching products:', error);
+        setLoading(false);
     }
     finally {
-      setLoading(false)
+      setLoading(false);
+    }
+  }
+
+  const updateImageUrls = async () => {
+    try {
+      const products = await firestore().collection('products').get();
+      const batch = firestore().batch();
+
+      products.docs.forEach((doc) => {
+        const data = doc.data();
+        if(Array.isArray(data.image)) {
+          const updateImages = data.images.map(imageUrl => {
+            if(imageUrl.startsWith('gs://')) {
+              return imageUrl.replace('gs://', 'https://storage.googleapis.com/')
+            }
+            return imageUrl
+          })
+        }
+      });
+
+      batch.u
+    }
+    catch (error) {
+      console.error('Error updating image URLs:', error);
     }
   }
 
@@ -119,11 +167,12 @@ export const HomeScreen = () => {
       <ProductCardMain
         onProductPress={() => handleProductPress(item)}
         customProductStyle={styles.productCardHome()}
-        productImage={item.images[0]}
+        productImage={item?.images[0]}
         brandName={item?.brand}
-        productTitle={item.title}
-        originalPrice={item?.price}
-        ratingsCounts={item?.rating}
+        productTitle={item?.title}
+        originalPrice={item?.originalPrice}
+        ratingsCounts={item?.ratings}
+        ratings={item?.ratings}
         newProduct={item?.isProductNew}
         addToFavoriteIcon
         onAddToFavorite={() => handleFavoriteBtn(item)}

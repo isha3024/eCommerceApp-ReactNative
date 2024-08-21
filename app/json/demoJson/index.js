@@ -2,8 +2,7 @@ import { images } from "../../theme";
 
 export const productList = [
   {
-    "id": 1,
-    "name": "Evening Dress",
+    "title": "Evening Dress",
     "brand": "H&M",
     "categories": ["Women"],
     "availableSizes": ["XS", "S", "M", "L"],
@@ -11,7 +10,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/EveningDress.jpeg','gs://e-commerce-app-3ee86.appspot.com/productImages/EveningDress2.jpeg'],
     "ratings": 2,
     "rating_count": 12,
-    "originalPrice": 17.99,
+    "price": 17.99,
     "discount": 10,
     "isProductOnSale": true,
     "saleProductPrice": 16.19,
@@ -23,8 +22,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 2,
-    "name": "Casual Shirt",
+    "title": "Casual Shirt",
     "brand": "Zara",
     "categories": ["Men"],
     "availableSizes": ["S", "M", "L", "XL"],
@@ -32,7 +30,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/CasualShirt.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/CasualShirt2.jpeg'],
     "ratings": 4,
     "rating_count": 8,
-    "originalPrice": 25.99,
+    "price": 25.99,
     "discount": 5,
     "isProductOnSale": false,
     "saleProductPrice": null,
@@ -44,8 +42,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 3,
-    "name": "Summer Dress",
+    "title": "Summer Dress",
     "brand": "Forever 21",
     "categories": ["Women"],
     "availableSizes": ["XS", "S", "M", "L"],
@@ -53,7 +50,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/SummerDress.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/SummerDress2.jpeg'],
     "ratings": 5,
     "rating_count": 20,
-    "originalPrice": 19.99,
+    "price": 19.99,
     "discount": 15,
     "isProductOnSale": true,
     "saleProductPrice": 16.99,
@@ -65,8 +62,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 4,
-    "name": "Denim Jacket",
+    "title": "Denim Jacket",
     "brand": "Levi's",
     "categories": ["Men", "Women"],
     "availableSizes": ["M", "L", "XL"],
@@ -74,7 +70,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/DenimJacket.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/DenimJacket2.jpeg'],
     "ratings": 4,
     "rating_count": 15,
-    "originalPrice": 49.99,
+    "price": 49.99,
     "discount": 20,
     "isProductOnSale": false,
     "saleProductPrice": null,
@@ -86,8 +82,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 5,
-    "name": "Leather Boots",
+    "title": "Leather Boots",
     "brand": "Dr. Martens",
     "categories": ["Men"],
     "availableSizes": ["XS", "S", "M", "L", "XL"],
@@ -95,7 +90,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/LeatherBoots.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/LeatherBoot2.jpeg'],
     "ratings": 4,
     "rating_count": 10,
-    "originalPrice": 99.99,
+    "price": 99.99,
     "discount": 15,
     "isProductOnSale": true,
     "saleProductPrice": 84.99,
@@ -107,8 +102,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 6,
-    "name": "Sweater",
+    "title": "Sweater",
     "brand": "Uniqlo",
     "categories": ["Men", "Women"],
     "availableSizes": ["M", "L", "XL"],
@@ -116,7 +110,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/Sweater.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/Sweater.jpeg'],
     "ratings": 3,
     "rating_count": 25,
-    "originalPrice": 29.99,
+    "price": 29.99,
     "discount": 10,
     "isProductOnSale": false,
     "saleProductPrice": null,
@@ -128,8 +122,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 7,
-    "name": "Sneakers",
+    "title": "Sneakers",
     "brand": "Nike",
     "categories": ["Men", "Women", "Boys", "Girls"],
     "availableSizes": ["XS", "S", "M", "L", "XL"],
@@ -137,7 +130,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/Sneakers.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/Sneakers2.jpeg'],
     "ratings": 5,
     "rating_count": 30,
-    "originalPrice": 89.99,
+    "price": 89.99,
     "discount": 25,
     "isProductOnSale": true,
     "saleProductPrice": 67.49,
@@ -149,8 +142,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 8,
-    "name": "Blazer",
+    "title": "Blazer",
     "brand": "Mango",
     "categories": ["Women"],
     "availableSizes": ["XS", "S", "M", "L"],
@@ -158,7 +150,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/Blazer.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/Blazer2.jpeg'],
     "ratings": 4,
     "rating_count": 12,
-    "originalPrice": 79.99,
+    "price": 79.99,
     "discount": 20,
     "isProductOnSale": false,
     "saleProductPrice": null,
@@ -170,8 +162,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 9,
-    "name": "Jeans",
+    "title": "Jeans",
     "brand": "Wrangler",
     "categories": ["Men"],
     "availableSizes": ["S", "M", "L", "XL"],
@@ -179,7 +170,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/Jeans.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/Jeans2.jpeg'],
     "ratings": 3,
     "rating_count": 18,
-    "originalPrice": 39.99,
+    "price": 39.99,
     "discount": 10,
     "isProductOnSale": true,
     "saleProductPrice": 35.99,
@@ -191,8 +182,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 10,
-    "name": "T-shirt",
+    "title": "T-shirt",
     "brand": "GAP",
     "categories": ["Men", "Boys", "Girls"],
     "availableSizes": ["XS", "S", "M", "L", "XL"],
@@ -200,7 +190,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/T-shirt.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/T-shirt2.jpeg'],
     "ratings": 4,
     "rating_count": 25,
-    "originalPrice": 15.99,
+    "price": 15.99,
     "discount": 5,
     "isProductOnSale": false,
     "saleProductPrice": null,
@@ -212,8 +202,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 11,
-    "name": "Polo Shirt",
+    "title": "Polo Shirt",
     "brand": "Ralph Lauren",
     "categories": ["Women"],
     "availableSizes": ["XS", "S", "M", "L"],
@@ -221,7 +210,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/PoloShirt.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/PoloShirt2.jpeg'],
     "ratings": 5,
     "rating_count": 14,
-    "originalPrice": 49.99,
+    "price": 49.99,
     "discount": 10,
     "isProductOnSale": true,
     "saleProductPrice": 44.99,
@@ -233,8 +222,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 12,
-    "name": "Running Shorts",
+    "title": "Running Shorts",
     "brand": "Adidas",
     "categories": ["Women"],
     "availableSizes": ["XS", "S", "L"],
@@ -242,7 +230,7 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/RunningShorts.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/RunningShorts2.jpeg'],
     "ratings": 4,
     "rating_count": 10,
-    "originalPrice": 29.99,
+    "price": 29.99,
     "discount": 20,
     "isProductOnSale": false,
     "saleProductPrice": null,
@@ -254,16 +242,15 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 13,
-    "name": "Trench Coat",
+    "title": "Trench Coat",
     "brand": "Burberry",
     "categories": ["Men"],
     "availableSizes": ["XS", "S", "M", "L"],
     "availableColors": ["#020202", "#F6F6F6"],
-    "images": images.productImage13,
+    "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/TrenchCoat.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/TrenchCoat2.jpeg'],
     "ratings": 5,
     "rating_count": 8,
-    "originalPrice": 299.99,
+    "price": 299.99,
     "discount": 25,
     "isProductOnSale": true,
     "saleProductPrice": 224.99,
@@ -275,8 +262,7 @@ export const productList = [
     "productQuantity": 0
   },
   {
-    "id": 14,
-    "name": "Belt",
+    "title": "Belt",
     "brand": "Michael Kors",
     "categories": ["Boys"],
     "availableSizes": ["XS", "S", "M", "L"],
@@ -284,35 +270,13 @@ export const productList = [
     "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/Belt.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/Belt2.jpeg'],
     "ratings": 3,
     "rating_count": 6,
-    "originalPrice": 69.99,
+    "price": 69.99,
     "discount": 10,
     "isProductOnSale": false,
     "saleProductPrice": null,
     "isProductNew": false,
     "isProductSold": false,
-    "mainProductImageOne": images.productImage14,
     "description": "Elegant leather belt with a polished buckle. Versatile accessory for both casual and formal outfits.",
-    "stocks": 20,
-    "isFavorite": false,
-    "productQuantity": 0
-  },
-  {
-    "id": 15,
-    "name": "Baseball Cap",
-    "brand": "New Era",
-    "categories": ["Girls"],
-    "availableSizes": ["XS", "S", "M", "L"],
-    "availableColors": ["#020202", "#F6F6F6"],
-    "images": ['gs://e-commerce-app-3ee86.appspot.com/productImages/BaseballCap.jpeg', 'gs://e-commerce-app-3ee86.appspot.com/productImages/BaseballCap2.jpeg'],
-    "ratings": 4,
-    "rating_count": 18,
-    "originalPrice": 24.99,
-    "discount": 5,
-    "isProductOnSale": true,
-    "saleProductPrice": 19.99,
-    "isProductNew": true,
-    "isProductSold": false,
-    "description": "Stylish baseball cap with adjustable strap and embroidered logo. Perfect for casual wear and outdoor activities.",
     "stocks": 20,
     "isFavorite": false,
     "productQuantity": 0

@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View, Keyboard, ToastAndroid } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import auth from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 import { EmailValidation } from '../../utils/functions'
+import { uploadNewUserToFireStore } from '../../firebase'
 import { registerUser } from '../../redux'
 import { Button, Header, InputField, Text } from '../../components'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
@@ -22,19 +23,21 @@ export const RegisterScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const shakeAnim = useRef(new Animated.Value(0)).current;
+  const userInfo = useSelector(state => state.authUser.userInfo);
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  // const [isNameValid, setIsNameValid] = useState(false)
+  const [isNameValid, setIsNameValid] = useState(false)
   // const [isUsernameValid, setIsUsernameValid] = useState(false)
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [inputField, setInputField] = useState({
-    // name: '',
+    name: '',
     // username: '',
     email: '',
     password: ''
   })
+  const [user, setUser] = useState(null)
   
   const shake = () => {
     Animated.sequence([
@@ -54,15 +57,15 @@ export const RegisterScreen = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    // if(!inputField.name){
-    //   newErrors.name = 'Name is required'
-    //   setIsNameValid(false);
-    // }else if(inputField.name.length < 2){
-    //   newErrors.name = 'Name length must be greater than 2 letter'
-    //   setIsNameValid(false);
-    // }else {
-    //   setIsNameValid(true)
-    // }
+    if(!inputField.name){
+      newErrors.name = 'Name is required'
+      setIsNameValid(false);
+    }else if(inputField.name.length < 2){
+      newErrors.name = 'Name length must be greater than 2 letter'
+      setIsNameValid(false);
+    }else {
+      setIsNameValid(true)
+    }
 
     // if(!inputField.username){
     //   newErrors.username = 'Username is required'
@@ -157,60 +160,46 @@ export const RegisterScreen = () => {
       return;
     }
 
+    const name = inputField?.name
     const email = inputField?.email;
     const password = inputField?.password;
 
-    try {
-      setLoading(true); 
-      const userCredential = await auth().createUserWithEmailAndPassword(email, password);
-      console.log('userCredential: ', userCredential)
-      if(userCredential) {
+    setLoading(true)
+    auth().createUserWithEmailAndPassword(email, password)
+    .then(async (response) => {
+      if(response) {
         setLoading(false);
+        const sendUserDataToFirestore = {
+          fullName: name,
+          userEmail: email,
+          userId: response.user.uid,
+        }
+        setUser(sendUserDataToFirestore)
+        dispatch(registerUser(sendUserDataToFirestore))
+        uploadNewUserToFireStore(sendUserDataToFirestore)
         ToastAndroid.show('Succesfull Registration', ToastAndroid.SHORT);
-        // dispatch(registerUser(userCredential.user));
+      }
+    })
+    .catch((error) => {
+      console.log('error: ',error)
+      if(error.code == 'auth/email-already-in-use') {
+        setLoading(false);
+        ToastAndroid.show('Email already exists', ToastAndroid.SHORT);
       }
 
-      const { idToken } = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      if(error.code === 'auth/invalid-email') {
+        setLoading(false);
+        ToastAndroid.show('Invalid Email', ToastAndroid.SHORT);
+      }
 
-      const linkedGoogleAccount = await userCredential.user.linkWithCredential(googleCredential);
-      console.log('Google account linked: ', linkedGoogleAccount.user);
-      return linkedGoogleAccount.user;
-      // navigation.navigate('Login')
-    }
-    catch (error) {
-      console.error('Error during sign-up or linking:', error);
-      throw error;
-    }
-
-    // setLoading(true)
-    // auth().createUserWithEmailAndPassword(email, password)
-    // .then(async (response) => {
-    //   if(response) {
-    //     setLoading(false);
-    //     ToastAndroid.show('Succesfull Registration', ToastAndroid.SHORT);
-    //   }
-    // })
-    // .catch((error) => {
-    //   console.log('error: ',error)
-    //   if(error.code == 'auth/email-already-in-use') {
-    //     setLoading(false);
-    //     ToastAndroid.show('Email already exists', ToastAndroid.SHORT);
-    //   }
-
-    //   if(error.code === 'auth/invalid-email') {
-    //     setLoading(false);
-    //     ToastAndroid.show('Invalid Email', ToastAndroid.SHORT);
-    //   }
-
-    //   if(error.code === 'auth/weak-password') {
-    //     setLoading(false);
-    //     ToastAndroid.show('Weak Password', ToastAndroid.SHORT);
-    //   }
-    // })
-    // .finally(() => {
-    //   setLoading(false)
-    // })
+      if(error.code === 'auth/weak-password') {
+        setLoading(false);
+        ToastAndroid.show('Weak Password', ToastAndroid.SHORT);
+      }
+    })
+    .finally(() => {
+      setLoading(false)
+    })
   }
 
   const googleButtonSignIn = async () => {
@@ -252,6 +241,12 @@ export const RegisterScreen = () => {
     })
   },[])
 
+  useEffect(() => {
+    if(userInfo) {
+      uploadNewUserToFireStore(userInfo)
+    }
+  },[userInfo])
+
   return ( 
     <View style={styles.mainView()}>
       <View style={styles.topContainer()}>
@@ -266,7 +261,7 @@ export const RegisterScreen = () => {
         <Text style={styles.mainTitleText()}>Sign Up</Text>
       </View>
       <View style={styles.middleContainer()}>
-        {/* <Animated.View style={[styles.inputView(), errors.name && { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View style={[styles.inputView(), errors.name && { transform: [{ translateX: shakeAnim }] }]}>
           <InputField 
             error={errors.name}
             value={inputField?.name}
@@ -289,7 +284,7 @@ export const RegisterScreen = () => {
             : (<Text style={styles.noError()}></Text>)
           }
         </Animated.View>
-        <Animated.View style={[styles.inputView(), errors.username && { transform: [{ translateX: shakeAnim }] }]}>
+        {/* <Animated.View style={[styles.inputView(), errors.username && { transform: [{ translateX: shakeAnim }] }]}>
           <InputField 
             error={errors.username}
             value={inputField?.username}

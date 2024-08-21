@@ -23,7 +23,7 @@ export const Button = ({ title, onPress, activeOpacity, btnStyle, btnTextStyle, 
         btnStyle]}
     >
     { loading 
-      ? (<ActivityIndicator color={color.white}/>) 
+      ? (<ActivityIndicator color={color.white} size='small' />) 
       : (<>{icon && renderIcon ? renderIcon() : null}</>)
     }
       <Text style={[styles.titleStyle(), btnTextStyle, border && styles.titleStyle2(textWhite)]}>{title}</Text>

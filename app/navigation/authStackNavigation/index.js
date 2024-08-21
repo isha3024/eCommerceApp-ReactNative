@@ -15,7 +15,7 @@ export const AuthStackNavigation = () => {
 
   return (
     <AuthStack.Navigator>
-      {
+      {/* {
         isUserRegistered && !isUserLoggedIn && (
           <AuthStack.Screen
           name="Login"
@@ -23,10 +23,10 @@ export const AuthStackNavigation = () => {
           options={{headerShown: false}}
         />
         )
-      }
+      } */}
       {
-        !isUserRegistered && !isUserLoggedIn && (
-          <>
+        // !isUserRegistered && !isUserLoggedIn && (
+        <>
           <AuthStack.Screen
             name="Register"
             component={RegisterScreen}
@@ -38,7 +38,7 @@ export const AuthStackNavigation = () => {
           options={{headerShown: false}}
         />
         </>
-        )
+        // )
       }
       <AuthStack.Screen
         name="ForgetPassword"

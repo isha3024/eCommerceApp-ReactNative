@@ -17,6 +17,9 @@ export const ProfileScreen = () => {
   const userInfo = useSelector(state => state.authUser.userInfo);
   const { addresses, paymentCardSelected, getOrdersFromStorage, orders } = useMainContext();
 
+  const [userProfilePhoto, setuserProfilePhoto] = useState(images.imgAvatarLogo)
+
+
   useFocusEffect(
     useCallback(() => {
       getOrdersFromStorage()
@@ -53,6 +56,14 @@ export const ProfileScreen = () => {
     }
     
   }
+
+  useEffect(() => {
+    if(userInfo?.photo) {
+      setuserProfilePhoto({uri: userInfo.photo});
+    }else {
+      setuserProfilePhoto(images.imgAvatarLogo);
+    }
+  }, [userInfo.photo])
   
   return (
     <Screen translucent={true} bgColor={color.primary} style={styles.mainContainer()}>
@@ -70,11 +81,11 @@ export const ProfileScreen = () => {
         <Text style={styles.mainTitle()}>My profile</Text>
         <View style={styles.profileInfo()}>
           <View style={styles.profileImgView()}>
-            <Image source={{uri: userInfo.photo}} style={styles.profileImg()}/>
+            <Image source={userProfilePhoto} style={styles.profileImg()}/>
           </View>
           <View>
-            <Text style={styles.profileName()}>{userInfo.givenName} {userInfo.familyName}</Text>
-            <Text style={styles.profileEmail()}>{userInfo.email}</Text>
+            <Text style={styles.profileName()}>{userInfo.fullName}</Text>
+            <Text style={styles.profileEmail()}>{userInfo.userEmail}</Text>
           </View>
         </View>
         <View style={styles.profileOptionsList()}>
