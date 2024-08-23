@@ -1,5 +1,5 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REHYDRATE, REGISTER } from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { thunk } from 'redux-thunk';
 
@@ -9,11 +9,12 @@ import { productReducer } from './UserReducers';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  whiteList: ['authUser', 'favorites']
 };
 
 const rootReducer = combineReducers({
   authUser: authReducer,
-  product: productReducer,
+  favorites: productReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -22,9 +23,7 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      }
+      serializableCheck: false
     }).concat(thunk),
 });
 

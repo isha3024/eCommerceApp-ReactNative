@@ -1,9 +1,9 @@
 import * as actions from '../Types'
 
-export const registerUser = (body) => {
+export const setUser = (user) => {
   return {
-    type: actions.USER_REGISTER,
-    payload: body
+    type: actions.SET_USER,
+    payload: user
   }
 }
 
@@ -14,9 +14,9 @@ export const loginUser = (body) => {
   }
 }
 
-export const logoutUser = () => {
+export const clearUser = () => {
   return {
-    type: actions.USER_LOGOUT,
+    type: actions.CLEAR_USER,
     payload: null
   }
 }

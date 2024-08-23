@@ -2,32 +2,22 @@ import * as actions from '../Types'
 
 const initialState = {
   userInfo: null,
-  isUserRegistered: false,
-  isUserLoggedIn: false,
+  isUserLoggedIn: false
 }
 
 export const authReducer = (state=initialState, action) => {
   switch (action.type) {
-    case actions.USER_REGISTER:
+    case actions.SET_USER:
       return {
         ...state,
-        isUserRegistered: true,
-        isUserLoggedIn: true,
-        userInfo: action.payload
+        userInfo: action.payload,
+        isUserLoggedIn: true
       }
-    case actions.USER_LOGIN:
-      return {
-        ...state,
-        isUserRegistered: true,
-        isUserLoggedIn: true,
-        userInfo: action.payload
-      }
-    case actions.USER_LOGOUT: 
+    case actions.CLEAR_USER: 
     return {
       ...state,
-      isUserRegistered: true,
-      isUserLoggedIn: false,
-      userInfo: {}
+      userInfo: null,
+      isUserLoggedIn: false
     }
     default: 
     return state

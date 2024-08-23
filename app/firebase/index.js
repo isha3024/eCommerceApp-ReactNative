@@ -1,2 +1,1 @@
-export * from './uploadProducts';
-export * from './userList';
+export * from './Products';

@@ -7,29 +7,41 @@ import { Header, Screen, Text } from '../../components';
 import { color, IcBackArrow, IcLogout, images, size } from '../../theme';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutUser } from '../../redux';
+import { clearFavorites, clearUser } from '../../redux';
 import { useMainContext } from '../../contexts/MainContext';
 
 export const ProfileScreen = () => {
 
   const navigation = useNavigation();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const userInfo = useSelector(state => state.authUser.userInfo);
   const { addresses, paymentCardSelected, getOrdersFromStorage, orders } = useMainContext();
 
-  const [userProfilePhoto, setuserProfilePhoto] = useState(images.imgAvatarLogo)
-
+  const [userProfilePhoto, setuserProfilePhoto] = useState(images.imgAvatarLogo);
+  const [currentUser, setCurrentUser] = useState({})
 
   useFocusEffect(
     useCallback(() => {
       getOrdersFromStorage()
-    },[])
+    }, [])
   )
 
   let maskedNumber = ''
-  if(Object.keys(paymentCardSelected).length !== 0){
+  if (Object.keys(paymentCardSelected).length !== 0) {
     let slicedNumber = paymentCardSelected.cardNumber.slice(-2);
-    maskedNumber = '**'+slicedNumber;
+    maskedNumber = '**' + slicedNumber;
+  }
+
+  const logout = async () => {
+    try {
+      await auth().signOut();
+      dispatch(clearUser());
+      dispatch(clearFavorites())
+      ToastAndroid.show('User loggged out', ToastAndroid.SHORT);
+      navigation.navigate('authStackNavigation');
+    } catch (error) {
+      console.log('Logout error: ',error)
+    }
   }
 
   const handleLogout = () => {
@@ -37,37 +49,29 @@ export const ProfileScreen = () => {
       'Logout',
       'Are you sure you want to logout?',
       [
-        {text: 'Cancel',onPress: () => null},
-        {text: 'OK', onPress: () => logout()}
+        { text: 'Cancel', onPress: () => null },
+        { text: 'OK', onPress:() => logout() }
       ]
     )
-    
-    function logout () {
-      dispatch(logoutUser());
-      auth().signOut()
-      .then(() => {
-        navigation.navigate('authStackNavigation');
-      })
-      .catch(error => {
-        console.error(error);
-      })
-
-      ToastAndroid.show('User Logout', ToastAndroid.SHORT);
-    }
-    
   }
 
   useEffect(() => {
-    if(userInfo?.photo) {
-      setuserProfilePhoto({uri: userInfo.photo});
-    }else {
+    if (currentUser?.photo) {
+      setuserProfilePhoto({ uri: currentUser.photo });
+    } else {
       setuserProfilePhoto(images.imgAvatarLogo);
     }
-  }, [userInfo.photo])
-  
+  }, [])
+
+  useEffect(() => {
+    if (Object.keys(userInfo).length !== 0) {
+      setCurrentUser(userInfo);
+    }
+  },[])
+
   return (
     <Screen translucent={true} bgColor={color.primary} style={styles.mainContainer()}>
-      <Header 
+      <Header
         headerStyle={styles.header()}
         headerRightIcon
         rightIcon={() => {
@@ -81,11 +85,11 @@ export const ProfileScreen = () => {
         <Text style={styles.mainTitle()}>My profile</Text>
         <View style={styles.profileInfo()}>
           <View style={styles.profileImgView()}>
-            <Image source={userProfilePhoto} style={styles.profileImg()}/>
+            <Image source={userProfilePhoto} style={styles.profileImg()} />
           </View>
           <View>
-            <Text style={styles.profileName()}>{userInfo.fullName}</Text>
-            <Text style={styles.profileEmail()}>{userInfo.userEmail}</Text>
+            <Text style={styles.profileName()}>{currentUser.name}</Text>
+            <Text style={styles.profileEmail()}>{currentUser.email}</Text>
           </View>
         </View>
         <View style={styles.profileOptionsList()}>
@@ -106,7 +110,7 @@ export const ProfileScreen = () => {
           <TouchableOpacity onPress={() => navigation.navigate('paymentMethodScreen')} activeOpacity={0.6} style={styles.profileOptionItem()}>
             <View>
               <Text style={styles.profileOptionTitle()}>Payment Method</Text>
-              <Text style={styles.message()}>{Object.keys(paymentCardSelected).length === 0 ? 'No payment cards' : 'Visa '+maskedNumber}</Text>
+              <Text style={styles.message()}>{Object.keys(paymentCardSelected).length === 0 ? 'No payment cards' : 'Visa ' + maskedNumber}</Text>
             </View>
             <IcBackArrow fill={color.darkGray} width={size.moderateScale(8)} height={size.moderateScale(12)} style={styles.forwardArrow()} />
           </TouchableOpacity>

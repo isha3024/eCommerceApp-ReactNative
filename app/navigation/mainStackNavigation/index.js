@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore';
+
 import { AddNewAddressScreen, AddressScreen, BrandScreen, CameraScreen, CaptureImageScreen, CheckoutScreen, DemoScreen, FilterScreen, ImagesScreen, MainProductScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
-import { useSelector } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,6 +15,8 @@ const Stack = createNativeStackNavigator();
 export const MainStackNavigation = () => {
 
   const isUserLoggedIn = useSelector(state => state.authUser.isUserLoggedIn);
+  console.log('isUserLoggedIn: ', isUserLoggedIn)
+
   const [showSplashScreen, setHideSplashScreen] = useState(true);
 
   useEffect(() => {

@@ -1,15 +1,17 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
-import { Animated, Keyboard, Platform, StatusBar, ToastAndroid, TouchableOpacity, UIManager, View } from 'react-native'
+import { Alert, Animated, Platform, StatusBar, ToastAndroid, TouchableOpacity, UIManager, View } from 'react-native'
 import axios from 'axios'
 import auth from '@react-native-firebase/auth'
+import { firebase } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 import { useMainContext } from '../../contexts/MainContext'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import { Button, Header, InputField, Text } from '../../components'
-import { loginUser } from '../../redux'
+import { setUser } from '../../redux'
 import * as styles from './styles'
 
 
@@ -21,6 +23,7 @@ export const LoginScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { setCurrentUser } = useMainContext()
   // const { loading } = useMainContext()
 
   const [loading, setLoading] = useState(false)
@@ -71,7 +74,7 @@ export const LoginScreen = () => {
     if (!inputField.password) {
       newErrors.password = 'Password is required'
       setIsPasswordValid(false)
-    } 
+    }
     // else if (inputField.password.length < 8) {
     //   newErrors.password = 'Password length must be greater than 8'
     //   setIsPasswordValid(false)
@@ -117,7 +120,7 @@ export const LoginScreen = () => {
   //         setLoading(false);
   //         const data = response.data
   //         ToastAndroid.show('Succesfully Login', ToastAndroid.SHORT);
-  //         dispatch(loginUser(data))
+  //         dispatch(setUser(data))
   //       }
   //     }
   //     catch (error) {
@@ -127,7 +130,7 @@ export const LoginScreen = () => {
   //     finally {
   //       setLoading(false);
   //     }
-      
+
   //   }
   // }
 
@@ -140,29 +143,43 @@ export const LoginScreen = () => {
     const email = inputField?.email;
     const password = inputField?.password;
 
+    setLoading(true)
     try {
-      setLoading(true); 
-      const userCredential = await auth().createUserWithEmailAndPassword(email, password);
-      console.log('userCredential: ', userCredential)
-      if(userCredential) {
-        setLoading(false);
-        ToastAndroid.show('Succesfull Registration', ToastAndroid.SHORT);
-        // dispatch(registerUser(userCredential.user));
-      }
+      const userCredential = await auth().signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
 
-      const { idToken } = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-      const linkedGoogleAccount = await userCredential.user.linkWithCredential(googleCredential);
-      console.log('Google account linked: ', linkedGoogleAccount.user);
-      return linkedGoogleAccount.user;
-      // navigation.navigate('Login')
+      const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+      const userData = userDoc.data();
+      ToastAndroid.show('User Logged In', ToastAndroid.SHORT)
+      dispatch(setUser({ uid: user.uid, email: user.email, name: userData.name }));
+      setInputField({
+        email: '',
+        password: '',
+      })
+      setErrors({
+        email: '',
+        username: '',
+        password: ''
+      })
+      navigation.navigate('bottomStackNavigation')
     }
     catch (error) {
-      console.error('Error during sign-up or linking:', error);
-      throw error;
+      console.error(error);
+      if(error.code === 'auth/invalid-email') {
+        setLoading(false);
+        ToastAndroid.show('Invalid Email!', ToastAndroid.SHORT);
+      }
+
+      if(error.code === 'auth/weak-password') {
+        setLoading(false);
+        ToastAndroid.show('Password must be atleast 6 characters!', ToastAndroid.SHORT);
+      }
     }
-  } 
+    finally {
+      setLoading(false)
+    }
+  };
+
 
   const handleHeaderBackPress = () => {
     setErrors({
@@ -177,11 +194,11 @@ export const LoginScreen = () => {
   }
 
   const googleButtonSignIn = async () => {
-    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true});
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
     const { user, idToken } = await GoogleSignin.signIn();
     console.log('user: ', user);
-    if(user) {
-      dispatch(loginUser(user));
+    if (user) {
+      dispatch(setUser(user));
     }
     const googleCredentials = auth.GoogleAuthProvider.credential(idToken);
     return auth().signInWithCredential(googleCredentials);

@@ -3,15 +3,16 @@ import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View, Keybo
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
-import auth from '@react-native-firebase/auth'
+import auth, { firebase } from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 import { EmailValidation } from '../../utils/functions'
 import { uploadNewUserToFireStore } from '../../firebase'
-import { registerUser } from '../../redux'
+import { setUser } from '../../redux'
 import { Button, Header, InputField, Text } from '../../components'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import * as styles from './styles'
+import { useMainContext } from '../../contexts/MainContext'
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -24,6 +25,9 @@ export const RegisterScreen = () => {
   const dispatch = useDispatch();
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const userInfo = useSelector(state => state.authUser.userInfo);
+  console.log('userInfo in registerScreen: ', userInfo);
+
+  const { setCurrentUser} = useMainContext()
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -37,7 +41,6 @@ export const RegisterScreen = () => {
     email: '',
     password: ''
   })
-  const [user, setUser] = useState(null)
   
   const shake = () => {
     Animated.sequence([
@@ -139,7 +142,7 @@ export const RegisterScreen = () => {
   //       if(response.status === 201) {
   //         setLoading(false);
   //         ToastAndroid.show('Succesfull Registration', ToastAndroid.SHORT);
-  //         dispatch(registerUser(body))
+  //         dispatch(setUser(body))
   //       }
   //     }
   //     catch (error) {
@@ -160,27 +163,33 @@ export const RegisterScreen = () => {
       return;
     }
 
-    const name = inputField?.name
-    const email = inputField?.email;
-    const password = inputField?.password;
+    const { name, email, password } = inputField;
 
-    setLoading(true)
-    auth().createUserWithEmailAndPassword(email, password)
-    .then(async (response) => {
-      if(response) {
-        setLoading(false);
-        const sendUserDataToFirestore = {
-          fullName: name,
-          userEmail: email,
-          userId: response.user.uid,
-        }
-        setUser(sendUserDataToFirestore)
-        dispatch(registerUser(sendUserDataToFirestore))
-        uploadNewUserToFireStore(sendUserDataToFirestore)
-        ToastAndroid.show('Succesfull Registration', ToastAndroid.SHORT);
-      }
-    })
-    .catch((error) => {
+    try{
+      setLoading(true)
+      const userCredentials = await auth().createUserWithEmailAndPassword(email, password);
+      const user = userCredentials.user;
+
+      await firebase.firestore().collection('users').doc(user.uid).set({
+        uid: user.uid,
+        name: name,
+        email: user.email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      dispatch(setUser({uid: user.uid, email: user.email, name}));
+      setInputField({
+        name: '',
+        email: '',
+        password: '',
+      })
+      setErrors({
+        email: '',
+        username: '',
+        password: ''
+      })
+      navigation.navigate('bottomStackNavigation')
+    }
+    catch (error) {
       console.log('error: ',error)
       if(error.code == 'auth/email-already-in-use') {
         setLoading(false);
@@ -196,10 +205,10 @@ export const RegisterScreen = () => {
         setLoading(false);
         ToastAndroid.show('Weak Password', ToastAndroid.SHORT);
       }
-    })
-    .finally(() => {
-      setLoading(false)
-    })
+    }
+    finally {
+      setLoading(false);
+    }
   }
 
   const googleButtonSignIn = async () => {
@@ -207,7 +216,7 @@ export const RegisterScreen = () => {
     const { user, idToken } = await GoogleSignin.signIn();
     console.log('user: ', user);
     if(user) {
-      dispatch(registerUser(user));
+      dispatch(setUser(user));
     }
     const googleCredentials = auth.GoogleAuthProvider.credential(idToken);
     return auth().signInWithCredential(googleCredentials);

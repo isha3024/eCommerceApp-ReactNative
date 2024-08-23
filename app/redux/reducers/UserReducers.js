@@ -1,36 +1,28 @@
 import * as actions from '../Types'
 
 const initialState = {
-  products: [],
+  favoriteProducts: [],
 }
 
 export const productReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actions.LOAD_PRODUCTS:
+    case actions.UPDATE_FAVORITES:
       return {
         ...state,
-        products: action.payload,
-      } 
-    case actions.TOGGLE_FAVORITE:
-      const updatedProducts = state.products.map((product) =>
-        product.id === action.payload
-          ? { ...product, isFavorite: !product.isFavorite }
-          : product
-      );
-      return {
-        ...state,
-        products: updatedProducts,
+        favoriteProducts: action.payload 
       };
-    case actions.ADD_TO_CART:
-      const cartProducts = state.products.map((product) =>{
-        if(product.id === action.payload){
-          return {...product, productQuantity: product.productQuantity + 1}
-        }
-        return product
-      })
+    case actions.TOGGLE_FAVORITE:
+      const { productId } = action.payload;
       return {
         ...state,
-        products: cartProducts
+        favoriteProducts: state.favoriteProducts.includes(productId)
+        ? state.favoriteProducts.filter(id => id !== productId)
+        : [...state.favoriteProducts, productId]
+      }
+    case actions.CLEAR_FAVORITES:
+      return {
+        ...state,
+        favoriteProducts: []
       }
     default:
       return state

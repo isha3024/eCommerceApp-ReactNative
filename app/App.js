@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PersistGate } from 'redux-persist/integration/react';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/auth';
 
 import { LocalizationProvider } from './contexts';
@@ -15,7 +15,6 @@ import { uploadNewUserToFireStore } from './firebase';
 
 
 const App = () => {
-
 
   LogBox.ignoreLogs([
     'Tried to modify key `reduceMotion` of an object which has been already passed to a worklet'

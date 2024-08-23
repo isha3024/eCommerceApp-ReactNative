@@ -2,13 +2,17 @@ import React, {createContext, useContext, useEffect, useMemo, useState} from 're
 
 import * as data from '../json'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 
 const context = createContext();
 const initialProducts = data.productList;
 
 export const MainContextProvider = props => {
 
-  const [loading, setLoading] = useState(false)
+  
+  const [currentUser, setCurrentUser] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState('')
   const [allProducts, setAllProducts] = useState(initialProducts);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState({});
@@ -197,7 +201,11 @@ export const MainContextProvider = props => {
 
   const value = useMemo(() => {
     return {
+      currentUser: currentUser,
+      setCurrentUser: setCurrentUser,
       loading: loading,
+      userId: userId,
+      setUserId: setUserId,
       setLoading: setLoading,
       allProducts: allProducts,
       setAllProducts: setAllProducts,
@@ -232,7 +240,9 @@ export const MainContextProvider = props => {
       setFilters: setFilters
     }
   }, [
+    currentUser, setCurrentUser,
     loading, setLoading,
+    userId, setUserId,
     allProducts, setAllProducts,
     saveProducts, fetchProducts,
     addresses, setAddresses,

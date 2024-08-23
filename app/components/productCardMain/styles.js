@@ -124,7 +124,7 @@ export const badgeText = () => ({
 })
 
 export const productInfo = () => ({
-  gap: size.moderateScale(5),
+  gap: size.moderateScale(3),
   paddingTop: size.moderateScale(7),
 })
 

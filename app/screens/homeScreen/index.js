@@ -3,14 +3,15 @@ import { View, ImageBackground, TouchableOpacity, FlatList, BackHandler, Alert, 
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient'
 import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
+import axios from 'axios';
+import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
+import auth from '@react-native-firebase/auth'
 
-import { useMainContext } from '../../contexts/MainContext'
 import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
 import { color, IcBackArrow, images, size } from '../../theme'
 import * as styles from './styles'
-import { loadProducts } from '../../redux'
+import { toggleFavorite, updateFavorites } from '../../redux'
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
@@ -18,7 +19,8 @@ export const HomeScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { saveFavoriteProducts } = useMainContext();
+  const { userInfo } = useSelector(state => state.authUser)
+  const favoriteProducts = useSelector(state => state.favorites.favoriteProducts);
 
   const [loading, setLoading] = useState(false)
   const [products, setProducts] = useState([]);
@@ -40,7 +42,6 @@ export const HomeScreen = () => {
   //     if(response.status === 200) {
   //       const data = response.data.products;
   //       setProducts(data);
-  //       dispatch(loadProducts(data))
   //     }
   //     setLoading(false)
   //   }
@@ -53,53 +54,27 @@ export const HomeScreen = () => {
   // }
 
   const fetchProducts = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const products = await firestore().collection('products').get();
-      const productList = products.docs.map(doc => {
-        return {
-          id: doc.id,
-          ...doc.data()
-        }
-      })
-
-      const filterNewProducts = productList.filter(product => product.isProductNew)
-      setProducts(filterNewProducts);
-      setLoading(false)
-    }
-    catch (error) {
-      console.error('Error fetching products:', error);
-        setLoading(false);
-    }
-    finally {
+      const productsSnapshot = await firestore().collection('products').get();
+      const productList = productsSnapshot.docs.map(doc => {
+        const productData = doc.data();
+        return productData;
+      });
+  
+      // Filter products if needed (e.g., by category)
+      const filteredProducts = productList
+      .sort((a, b) => a.title.localeCompare(b.title))
+      .filter(product => product.category === 'beauty'); // Modify this filter based on your needs
+  
+      setProducts(filteredProducts);
+    } catch (error) {
+      console.error('Error fetching products in homeScreen:', error);
+    } finally {
       setLoading(false);
     }
-  }
-
-  const updateImageUrls = async () => {
-    try {
-      const products = await firestore().collection('products').get();
-      const batch = firestore().batch();
-
-      products.docs.forEach((doc) => {
-        const data = doc.data();
-        if(Array.isArray(data.image)) {
-          const updateImages = data.images.map(imageUrl => {
-            if(imageUrl.startsWith('gs://')) {
-              return imageUrl.replace('gs://', 'https://storage.googleapis.com/')
-            }
-            return imageUrl
-          })
-        }
-      });
-
-      batch.u
-    }
-    catch (error) {
-      console.error('Error updating image URLs:', error);
-    }
-  }
-
+  };
+  
   const handleClosePressSizeSheet = () => {
     setUserSizeOption(false)
     setSizeBottomSheetVisible(false);
@@ -109,44 +84,71 @@ export const HomeScreen = () => {
     size === userSizeOption ? setUserSizeOption(false) : setUserSizeOption(size)
   };
 
-  const handleFavoriteBtn = async (item) => {
-    const updatedProducts = products.map((product) => {
-      if (product.id === item.id) {
-        return {
-          ...product,
-          isFavorite: !product.isFavorite,
-        }
-      }
-      return product
-    })
-    setProducts(updatedProducts);
+  //handleFavoriteBtn using redux and asyncstorage
+  // const handleFavoriteBtn = async (item) => {
+  //   const updatedProducts = products.map((product) => {
+  //     if (product.id === item.id) {
+  //       return {
+  //         ...product,
+  //         isFavorite: !product.isFavorite,
+  //       }
+  //     }
+  //     return product
+  //   })
+  //   setProducts(updatedProducts);
 
-    const updateAllProducts = products.map((product) => {
-      if(product.id === item.id) {
-        return {
-          ...product,
-          isFavorite: !product.isFavorite
-        }
-      }
-      return product;
-    })
-    setProducts(updateAllProducts);
+  //   const updateAllProducts = products.map((product) => {
+  //     if(product.id === item.id) {
+  //       return {
+  //         ...product,
+  //         isFavorite: !product.isFavorite
+  //       }
+  //     }
+  //     return product;
+  //   })
+  //   setProducts(updateAllProducts);
     
-    const favoriteProducts = updateAllProducts.filter((product) => product.isFavorite === true);
+  //   const favoriteProducts = updateAllProducts.filter((product) => product.isFavorite === true);
+
+  //   try {
+  //     await saveFavoriteProducts(favoriteProducts);
+  //   }
+  //   catch (error) {
+  //     console.log('Failed to save favorite products to AsyncStorage:', error);
+  //   }
+
+  //   const message = item.isFavorite 
+  //   ? `${item.name} removed from favs`
+  //   : `${item.name} added to favs` 
+  //   ToastAndroid.show(message, ToastAndroid.SHORT)
+  // };
+
+  
+  const handleFavoriteBtn = async (itemId, itemName) => {
+    const userFavoriteRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
 
     try {
-      await saveFavoriteProducts(favoriteProducts);
+      const doc = await userFavoriteRef.get();
+      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : []; 
+
+      if (favoriteProducts.includes(itemId)) {
+        favoriteProducts = favoriteProducts.filter(id => id !== itemId);
+        await userFavoriteRef.update({ productIds: favoriteProducts });
+        ToastAndroid.show(`${itemName} removed from Favorites`, ToastAndroid.SHORT);
+      } else {
+        favoriteProducts.push(itemId);
+        await userFavoriteRef.set({ productIds: favoriteProducts });
+        ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
+      }
+      
+      dispatch(toggleFavorite(itemId));
+      dispatch(updateFavorites(favoriteProducts))
     }
     catch (error) {
-      console.log('Failed to save favorite products to AsyncStorage:', error);
+      console.log('Error:', error);
     }
-
-    const message = item.isFavorite 
-    ? `${item.name} removed from favs`
-    : `${item.name} added to favs` 
-    ToastAndroid.show(message, ToastAndroid.SHORT)
   };
-
+  
   const handleProductPress = (item) => {
     setSelectedProductId(item.id)
     setSizeBottomSheetVisible(true);
@@ -163,25 +165,29 @@ export const HomeScreen = () => {
   }
 
   const renderProducts = ({ item }) => {
+    const itemTitle = item?.title.length > 15 ? item?.title.substring(0, 13) + '...' : item?.title;
+    const isFavorite = favoriteProducts.includes(item.id);
     return (
       <ProductCardMain
         onProductPress={() => handleProductPress(item)}
         customProductStyle={styles.productCardHome()}
         productImage={item?.images[0]}
         brandName={item?.brand}
-        productTitle={item?.title}
-        originalPrice={item?.originalPrice}
-        ratingsCounts={item?.ratings}
+        productTitle={itemTitle}
+        originalPrice={item?.price}
+        ratingsCounts={item?.rating}
         ratings={item?.ratings}
         newProduct={item?.isProductNew}
         addToFavoriteIcon
-        onAddToFavorite={() => handleFavoriteBtn(item)}
-        isProductFavorite={item?.isFavorite}
+        onAddToFavorite={() => handleFavoriteBtn(item.id, item.title)}
+        isProductFavorite={isFavorite}
         flotingBtnStyle={styles.flotingBtnStyle()}
       />
     )
   }
 
+
+  //back press handler
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
@@ -210,18 +216,29 @@ export const HomeScreen = () => {
   )
 
   useEffect(() => {
-    StatusBar.setBackgroundColor(color.transparent)
-  },[])
+    fetchProducts();
+  }, [])
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    if(userInfo) {
+      const userFavoriteRef =  firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList');
+
+      const unsubscribe = userFavoriteRef.onSnapshot((doc) => {
+        if (doc.exists) {
+          const data = doc.data();
+          const favorites = data.productIds || [];
+          dispatch(updateFavorites(favorites))
+        }
+      })
+      return () => unsubscribe()
+    }
+  }, [userInfo])
 
 
   return (
     <>
-    <Screen withScroll bgColor={color.transparent} translucent={true} loading={loading}>
-      <View style={styles.topView()}>
+      <Screen withScroll bgColor={color.transparent} translucent={true} loading={loading}>
+        <View style={styles.topView()}>
           <ImageBackground source={images.ImgBanner} style={styles.imageBg()}>
             <LinearGradient
               colors={['rgba(0, 0, 0, .7)', 'rgba(255, 255, 255, 0)']}
@@ -260,11 +277,11 @@ export const HomeScreen = () => {
             keyExtractor={(item, index) => item + index}
           />
         </View>
-    </Screen>
-    <BottomSheetContainer
-      isVisible={isSizeBottomSheetVisible}
-      onClose={handleClosePressSizeSheet}
-      customHeight={'47%'}>
+      </Screen>
+      <BottomSheetContainer
+        isVisible={isSizeBottomSheetVisible}
+        onClose={handleClosePressSizeSheet}
+        customHeight={'47%'}>
         <Text style={styles.titleBottomSheet()}>Select Size</Text>
         <View style={styles.sizeContainer()}>
           {

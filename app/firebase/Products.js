@@ -1,12 +1,9 @@
 import firestore from '@react-native-firebase/firestore'
 
-import { productList } from '../json';
-
-export const uploadProductsToFireStore = async () => {
+export const uploadProductsToFireStore = async (products) => {
   const batch = firestore().batch();
   
-  productList.forEach((product) => {
-
+  products.forEach((product) => {
     const cleanProduct = Object.fromEntries(
       Object.entries(product).map(([key, value]) => [key, value === undefined ? null : value])
     );
@@ -14,7 +11,7 @@ export const uploadProductsToFireStore = async () => {
     const productRef = firestore().collection('products').doc();
     batch.set(productRef, cleanProduct);
   });
-  console.log('productList: ', productList)
+  console.log('productList: ', products)
   
   try {
     await batch.commit();
