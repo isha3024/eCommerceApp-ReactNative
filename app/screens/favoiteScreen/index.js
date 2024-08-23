@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ToastAndroid } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ToastAndroid, LogBox } from 'react-native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
+import { firebase } from '@react-native-firebase/auth'
+import { doc, getDoc, getFirestore } from '@react-native-firebase/firestore'
 
 import { IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color } from '../../theme'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
-import * as styles from './styles'
 import { useMainContext } from '../../contexts/MainContext'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as styles from './styles'
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -76,10 +78,15 @@ const sortProductType = [
 export const FavoriteScreen = () => {
 
   const navigation = useNavigation();
-  // const productList = useSelector((state) => state.product.products);
-  const { allProducts, setAllProducts, loadFavoriteProductsFromStorage } = useMainContext();
+  const db = getFirestore();
+  const { userInfo } = useSelector(state => state.authUser);
 
-  const [showProductList, setShowProductList] = useState([]);
+  LogBox.ignoreLogs(['Encountered two children with the same key']);
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [favoriteProductIds, setFavoriteProductIds] = useState([]);
+  console.log('favoriteProductIds: ',favoriteProductIds)
   const [isSheetVisible, setSheetVisible] = useState(false);
   const [isSortOptionSelected, setIsSortOptionSelected] = useState(null);
   const [sortOptionName, setSortOptionName] = useState(null)
@@ -87,19 +94,40 @@ export const FavoriteScreen = () => {
   const [title, showTitle] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
+  const fetchfavoritesProduct = async () => {
+    const userDocId = firebase.firestore()
+    .collection('users')
+    .doc(userInfo.uid).id;
 
-  const loadInitialData = async () => {
-    const storedFavorites = await loadFavoriteProductsFromStorage();
-    if (storedFavorites.length > 0) {
-      const updatedAllProducts = allProducts.map((product) => {
-        const isFavorite = storedFavorites.some((fav) => fav.id === product.id);
-        return { ...product, isFavorite };
-      });
-      setAllProducts(updatedAllProducts);
+    const productsSnapshot = await firebase.firestore().collection('products').get();
+    const productList = productsSnapshot.docs.map(doc => {
+      const productData = doc.data();
+      return productData;
+    });
+    
+    const docRef = doc(db, `users/${userDocId}/favoriteProducts/favoritesList`)
+    setLoading(true)
+    try {
+      const docSnap = await getDoc(docRef);
+
+      if(docSnap.exists) {
+        const data = docSnap.data();
+        const productIds = data.productIds || [];
+        setFavoriteProductIds(productIds);
+        const favoriteProducts = productList.filter(product => productIds.includes(product.id));
+        setProducts(favoriteProducts)
+      }else {
+        console.log('No such document!');
+      }
+      
+    } catch (error) {
+      console.log(error) 
     }
-  };
+    finally {
+      setLoading(false)
+    }
+  }
 
-  //toggling the layout -- grid / list and headerTitle / mainTitle 
   const toggleLayout = () => {
     LayoutAnimation.configureNext({
       duration: 400,
@@ -113,7 +141,7 @@ export const FavoriteScreen = () => {
 
   /**sorting the product based on selection */
   const sortProducts = (sortOption) => {
-    let sortedList = [...showProductList];
+    let sortedList = [...products];
     switch (sortOption.id) {
       case 3:
         sortedList.sort((a, b) => b.ratings - a.ratings);
@@ -127,7 +155,7 @@ export const FavoriteScreen = () => {
       default:
         break;
     }
-    setShowProductList(sortedList);
+    setProducts(sortedList);
   };
 
   //handling the sort option selected but not working as expected
@@ -147,23 +175,7 @@ export const FavoriteScreen = () => {
   }
 
   const handleProductRemove = async (item) => { 
-    
-    const removeProduct = showProductList.filter(product => product.id !== item.id);
-    setShowProductList(removeProduct);
-    
-    const removeProductFromFav = allProducts.map((product) => {
-      if (product.id === item.id) {
-        product.isFavorite = !product.isFavorite
-      }
-      return product
-    })
-    setAllProducts(removeProductFromFav)
-
-    try {
-      await AsyncStorage.setItem('allProducts', JSON.stringify(removeProductFromFav));
-    } catch (error) {
-      console.error('Failed to save the updated products to AsyncStorage:', error);
-    }
+    console.log(item)
   }
 
   const renderProducts = ({ item }) => {
@@ -171,18 +183,16 @@ export const FavoriteScreen = () => {
       <ProductCardMain
         onProductPress={() => { setSelectedProductId(item.id) }}
         productHorizontal={showGrid ? true : false}
-        productTitle={item?.name}
+        productTitle={item?.title}
         brandName={item?.brand}
         showRatings={true}
         showRatingHorizontal={true}
         ratings={item?.ratings}
         showDiscount={showGrid ? false : true}
         ratingsCounts={item?.rating_count}
-        originalPrice={item?.originalPrice}
-        sellingPrice={item?.saleProductPrice}
-        newProduct={showGrid ? false : item?.isProductNew}
+        originalPrice={item?.price}
         isProductSold={item?.isProductSold}
-        productImage={item?.images}
+        productImage={item?.images[0]}
         topRightIcon={true}
         addToFavoriteIcon={false}
         addToCartIcon={true}
@@ -200,18 +210,13 @@ export const FavoriteScreen = () => {
     setSortOptionName(sortProductType[3].name)
   }, [])
 
-  useEffect(() => {
-    const showFavoriteProducts = allProducts.filter((product) => product.isFavorite === true);
-    setShowProductList(showFavoriteProducts);
-  },[allProducts])
-
-  useEffect(() => {
-    loadInitialData()
-  },[])
+    useEffect(() => {
+      fetchfavoritesProduct()
+    },[favoriteProductIds])
 
 
   return (
-    <Screen bgColor={color.white} translucent={true}>
+    <Screen bgColor={color.white} translucent={true} loading={loading}>
       <Header
         title={title ? true : false}
         headerTitle={"Favorites"}
@@ -254,7 +259,7 @@ export const FavoriteScreen = () => {
         </View>
       </View>
       {
-        showProductList.length == 0
+        products.length === 0
           ? (
             <View style={styles.favProductsEmptyView()}>
               <Text style={styles.emptyText()}>No Favorite Products</Text>
@@ -272,7 +277,7 @@ export const FavoriteScreen = () => {
                   <FlatList
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 80 }}
-                    data={showProductList}
+                    data={products}
                     renderItem={renderProducts}
                     key={'_'}
                     keyExtractor={item => '_' + item.name}
@@ -282,7 +287,7 @@ export const FavoriteScreen = () => {
                     showsVerticalScrollIndicator={false}
                     numColumns={2}
                     contentContainerStyle={{ paddingBottom: 80 }}
-                    data={showProductList}
+                    data={products}
                     renderItem={renderProducts}
                     key={'#'}
                     keyExtractor={(item) => item.id.toString()}

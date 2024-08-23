@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react' 
 import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ScrollView, Alert, LogBox, ToastAndroid } from 'react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import firebase from '@react-native-firebase/app'
+import firestore from '@react-native-firebase/firestore'
+import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 
-import { useMainContext } from '../../contexts/MainContext'
 import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { toggleFavorite, updateFavorites } from '../../redux'
 import * as styles from './styles'
-import { useDispatch, useSelector } from 'react-redux'
-import { toggleFavorite } from '../../redux'
-import axios from 'axios'
+
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -73,14 +74,12 @@ export const CatalogeScreen = ({route}) => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { userInfo } = useSelector(state => state.authUser);
+  const favoriteProducts = useSelector(state => state.favorites.favoriteProducts);
   const { categoryUrl } = route.params;
-  console.log('categoryUrl: ', categoryUrl);
-  const productsFetch = useSelector(state => state.product.products);
 
-
-  const { allProducts, setAllProducts } = useMainContext();
   const [loading, setLoading] = useState(false)
-  const [showProductList, setShowProductList] = useState([]);
+  const [products, setProducts] = useState([]);
   const [isSheetVisible, setSheetVisible] = useState(false);
   const [sortOptionName, setSortOptionName] = useState(null)
   const [isSortOptionSelected, setIsSortOptionSelected] = useState(sortProductType[3])
@@ -95,6 +94,23 @@ export const CatalogeScreen = ({route}) => {
     'Tried to modify key `reduceMotion` of an object which has been already passed to a worklet'
   ]);
 
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const productsSnapshot = await firestore().collection('products').get();
+      const productList = productsSnapshot.docs.map(doc => {
+        const productData = doc.data();
+        return productData;
+      });
+  
+      setProducts(productList);
+    } catch (error) {
+      console.error('Error fetching products in homeScreen:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const showProductsByCategorySelected = async () => {
     const options = {
       method: 'GET',
@@ -107,7 +123,7 @@ export const CatalogeScreen = ({route}) => {
       const response = await axios(categoryUrl.url,options);
       if(response.status === 200) {
         const products = response.data.products;
-        setShowProductList(products);
+        setProducts(products);
         setLoading(false)
       }
     }
@@ -130,7 +146,7 @@ export const CatalogeScreen = ({route}) => {
 
   /**sorting the product based on selection */
   const sortProducts = (sortOption) => {
-    let sortedList = [...showProductList];
+    let sortedList = [...products];
     switch (sortOption.id) {
       case 3: 
         sortedList.sort((a, b) => b.rating - a.rating);
@@ -144,7 +160,7 @@ export const CatalogeScreen = ({route}) => {
       default:
         break;
     }
-    setShowProductList(sortedList);
+    setProducts(sortedList);
   };
 
   const handleSortOptionChange = (sortOption) => {
@@ -198,18 +214,34 @@ export const CatalogeScreen = ({route}) => {
     setSizeSheetVisible(false);
   }
 
-  const handleFavoriteBtn = async (item) => {
-    console.log('item: ', item)
-    dispatch(toggleFavorite(item.id));
-    const message = item.isFavorite 
-    ? `${item.title} removed from favs`
-    : `${item.title} added to favs` 
-    ToastAndroid.show(message, ToastAndroid.SHORT)
+  const handleFavoriteBtn = async (itemId, itemName) => {
+    const userFavoriteRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
+
+    try {
+      const doc = await userFavoriteRef.get();
+      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : []; 
+
+      if (favoriteProducts.includes(itemId)) {
+        favoriteProducts = favoriteProducts.filter(id => id !== itemId);
+        await userFavoriteRef.update({ productIds: favoriteProducts });
+        ToastAndroid.show(`${itemName} removed from Favorites`, ToastAndroid.SHORT);
+      } else {
+        favoriteProducts.push(itemId);
+        await userFavoriteRef.set({ productIds: favoriteProducts });
+        ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
+      }
+      
+      dispatch(toggleFavorite(itemId));
+      dispatch(updateFavorites(favoriteProducts))
+    }
+    catch (error) {
+      console.log('Error:', error);
+    }
   };
 
   const filterProducts = () => {
     if(filters !== null) {
-      let filteredProducts = allProducts;
+      let filteredProducts = products;
 
       //filter by category
       if(filters.category && filters.category.length > 0) {
@@ -251,15 +283,16 @@ export const CatalogeScreen = ({route}) => {
         });
        }
 
-      setShowProductList(filteredProducts)
+      setProducts(filteredProducts)
     }
     else {
-      setShowProductList(allProducts)
+      setProducts(products)
     }
   }
   
   const renderProducts = ({item}) => {
-    // console.log('item: ', item)
+    const itemTitle = item?.title.length > 15 ? item?.title.substring(0, 13) + '...' : item?.title;
+    const isFavorite = favoriteProducts.includes(item.id);
     return (
         <ProductCardMain 
           onProductPress={() => {
@@ -267,7 +300,7 @@ export const CatalogeScreen = ({route}) => {
             setSizeSheetVisible(true);
           }}
           productHorizontal={showGrid ? true : false}
-          productTitle={item?.title}
+          productTitle={itemTitle}
           brandName={item?.brand}
           showRatings={true}
           ratingsCounts={item?.rating}
@@ -276,8 +309,8 @@ export const CatalogeScreen = ({route}) => {
           productImage={item?.images[0]}
           topRightIcon={false}
           addToFavoriteIcon
-          onAddToFavorite={() => handleFavoriteBtn(item)}
-          isProductFavorite={item?.isFavorite}
+          onAddToFavorite={() => handleFavoriteBtn(item.id, item.title)}
+          isProductFavorite={isFavorite}
           flotingBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
           customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
         />
@@ -286,8 +319,8 @@ export const CatalogeScreen = ({route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      setShowProductList(allProducts)
-    },[allProducts])
+      setProducts(products)
+    },[products])
   )
 
   useFocusEffect(
@@ -299,7 +332,7 @@ export const CatalogeScreen = ({route}) => {
   useFocusEffect(
     useCallback(() => {
       console.log('filters: ',route.params?.appliedFilters)
-    },[route.params?.appliedFilters, allProducts])
+    },[route.params?.appliedFilters, products])
   )
 
   useEffect(() => {
@@ -316,14 +349,29 @@ export const CatalogeScreen = ({route}) => {
     console.log('filters: ',filtersFromParams)    
     setFilters(filtersFromParams);
     filterProducts();
-  }, [route.params?.appliedFilters, allProducts]);
+  }, [route.params?.appliedFilters, products]);
 
   useEffect(() => {
-    setShowProductList(productsFetch)
-  },[])
+    fetchProducts();
+  }, [])
+
+  useEffect(() => {
+    if(userInfo) {
+      const userFavoriteRef =  firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList');
+
+      const unsubscribe = userFavoriteRef.onSnapshot((doc) => {
+        if (doc.exists) {
+          const data = doc.data();
+          const favorites = data.productIds || [];
+          dispatch(updateFavorites(favorites))
+        }
+      })
+      return () => unsubscribe()
+    }
+  }, [userInfo])
 
   return (
-      <Screen bgColor={color.white} translucent={true}>
+      <Screen bgColor={color.white} translucent={true} loading={loading}>
         <Header
           title={title ? true : false}
           headerTitle={categoryUrl.name}
@@ -382,7 +430,7 @@ export const CatalogeScreen = ({route}) => {
               <FlatList
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 80 }}
-                data={showProductList}
+                data={products}
                 renderItem={renderProducts}
                 key={'_'}
                 keyExtractor={(item, index) => { 
@@ -395,7 +443,7 @@ export const CatalogeScreen = ({route}) => {
                 showsVerticalScrollIndicator={false}
                 numColumns={2}
                 contentContainerStyle={{ paddingBottom: 80 }}
-                data={showProductList}
+                data={products}
                 renderItem={renderProducts}
                 key={'#'}
                 keyExtractor={(item, index) => { 

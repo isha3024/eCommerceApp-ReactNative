@@ -25,7 +25,6 @@ export const RegisterScreen = () => {
   const dispatch = useDispatch();
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const userInfo = useSelector(state => state.authUser.userInfo);
-  console.log('userInfo in registerScreen: ', userInfo);
 
   const { setCurrentUser} = useMainContext()
 

@@ -2,7 +2,6 @@ import React, {createContext, useContext, useEffect, useMemo, useState} from 're
 
 import * as data from '../json'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useSelector } from 'react-redux';
 
 const context = createContext();
 const initialProducts = data.productList;
@@ -14,6 +13,7 @@ export const MainContextProvider = props => {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState('')
   const [allProducts, setAllProducts] = useState(initialProducts);
+  const [favoriteProductIds, setFavoriteProductIds] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState({});
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0)
@@ -209,6 +209,8 @@ export const MainContextProvider = props => {
       setLoading: setLoading,
       allProducts: allProducts,
       setAllProducts: setAllProducts,
+      favoriteProductIds: favoriteProductIds,
+      setFavoriteProductIds: setFavoriteProductIds,
       saveProducts: saveProducts,
       saveFavoriteProducts: saveFavoriteProducts,
       loadFavoriteProductsFromStorage: loadFavoriteProductsFromStorage,
@@ -244,6 +246,7 @@ export const MainContextProvider = props => {
     loading, setLoading,
     userId, setUserId,
     allProducts, setAllProducts,
+    favoriteProductIds, setFavoriteProductIds,
     saveProducts, fetchProducts,
     addresses, setAddresses,
     saveAddress, getAddressesFromStorage,

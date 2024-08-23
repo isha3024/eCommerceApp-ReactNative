@@ -6,12 +6,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios';
 import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
-import auth from '@react-native-firebase/auth'
 
 import { BottomSheetContainer, Button, ProductCardMain, Screen, Text, Title } from '../../components'
 import { color, IcBackArrow, images, size } from '../../theme'
 import * as styles from './styles'
 import { toggleFavorite, updateFavorites } from '../../redux'
+import { useMainContext } from '../../contexts/MainContext'
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
@@ -21,6 +21,8 @@ export const HomeScreen = () => {
   const dispatch = useDispatch();
   const { userInfo } = useSelector(state => state.authUser)
   const favoriteProducts = useSelector(state => state.favorites.favoriteProducts);
+  
+  const {setFavoriteProductIds} = useMainContext()
 
   const [loading, setLoading] = useState(false)
   const [products, setProducts] = useState([]);
@@ -142,7 +144,10 @@ export const HomeScreen = () => {
       }
       
       dispatch(toggleFavorite(itemId));
-      dispatch(updateFavorites(favoriteProducts))
+      dispatch(updateFavorites(favoriteProducts));
+      setFavoriteProductIds((prevId) => 
+        [...prevId, itemId]
+      )
     }
     catch (error) {
       console.log('Error:', error);
