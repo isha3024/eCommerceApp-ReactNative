@@ -1,79 +1,103 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# E-Commerce Mobile App
 
-# Getting Started
+A fully functional e-commerce mobile application developed using React Native for Android. The app offers user authentication, product management, cart and wishlist functionalities, order placement, and product reviews. The backend is powered by Firebase, and Redux is used for state management and data persistence.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Features
 
-## Step 1: Start the Metro Server
+### 1. User Authentication
+- Secure user registration and login.
+- Managed through Firebase Authentication.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+### 2. Data Persistence
+- User data and app state are persisted across sessions.
+- Implemented using Redux and Firebase.
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### 3. Product Management
+- **Product Listing:** Display of all available products with details.
+- **Product Filtering:** Filter products by category, price, and other attributes.
+- **Product Sorting:** Sort products by relevance, price, or ratings.
 
-```bash
-# using npm
-npm start
+### 4. Cart & Wishlist
+- **Cart:** Users can add products to their cart, view, and manage items before purchase.
+- **Wishlist:** Users can add products to their wishlist, view, and remove items as desired.
 
-# OR using Yarn
-yarn start
-```
+### 5. Order Management
+- Users can place orders directly from their cart.
 
-## Step 2: Start your Application
+### 6. Product Reviews
+- Users can write and view reviews for products.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## Ongoing Development
 
-### For Android
+### 1. Payment Integration
+- Integration of secure payment gateways is in progress.
 
-```bash
-# using npm
-npm run android
+### 2. Image-based Product Search
+- Planning to add functionality for searching products by uploading photos.
 
-# OR using Yarn
-yarn android
-```
+## Technologies Used
 
-### For iOS
+- **Frontend:** React Native, JavaScript
+- **State Management:** Redux
+- **Backend:** Firebase (Authentication, Firestore, Storage)
+- **Development Environment:** VS Code, Android Studio
 
-```bash
-# using npm
-npm run ios
+## Setup and Installation
 
-# OR using Yarn
-yarn ios
-```
+1. **Clone the Repository:**
+    ```bash
+    git clone https://github.com/isha3024/eCommerceApp-ReactNative.git
+    cd eCommerceApp-ReactNative
+    ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+2. **Install Dependencies:**
+    ```bash
+    npm install
+    ```
+    or
+   ```bash
+   yarn
+   ```
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+4. **Setup Firebase:**
+   - Create a Firebase project.
+   - Enable Authentication, Firestore, and Storage.
+   - Replace the Firebase config in the project with your own Firebase config details.
 
-## Step 3: Modifying your App
+5. **Run the Application:**
+    ```bash
+    npm run android
+    ```
+    or
+   ```bash
+    yarn android
+    ```
 
-Now that you have successfully run the app, let's modify it.
+## Usage
 
-1. Open `App.js` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+- Register or log in to the app.
+- Browse the product listings, filter or sort products as desired.
+- Add products to your cart or wishlist.
+- Place orders and leave reviews for products.
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+## Screenshots
 
-## Congratulations! :tada:
+![Home Screen](screenshots/home-screen.png)
+![Product Listing](screenshots/product-listing.png)
+![Cart Screen](screenshots/cart-screen.png)
+![Wishlist Screen](screenshots/wishlist-screen.png)
 
-You've successfully run and modified your React Native App. :partying_face:
+## Contributing
 
-### Now what?
+Contributions are welcome! If you find any bugs or have feature requests, please open an issue or submit a pull request.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+## License
 
-# Troubleshooting
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## Contact
 
-# Learn More
+If you have any questions or feedback, feel free to reach out:
+- **Email:** gandhiisha45516@gmail.com
+- **LinkedIn:** [Isha Patel](https://www.linkedin.com/in/isha-patel-509441217)
 
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
