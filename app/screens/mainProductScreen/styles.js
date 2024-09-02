@@ -31,12 +31,14 @@ export const mainProduct = () => ({
 })
 
 export const scrollImageView = () => ({
-  gap: size.moderateScale(4)
+  gap: size.moderateScale(10),
+  backgroundColor: color.white
 })
 
 export const mainProductImage = () => ({
   width: size.deviceWidth,
   height: size.deviceHeight - 400,
+  marginRight: size.moderateScale(10),
 })
 
 export const productOptions = () => ({

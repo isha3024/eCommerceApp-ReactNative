@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { View, ScrollView, Image, TouchableOpacity, FlatList, ToastAndroid, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
 
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, StarRatings, Text } from '../../components';
 import { IcBackArrow, IcFilledHeart, IcHeart, IcShare, color, size } from '../../theme';
 import { useMainContext } from '../../contexts/MainContext';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { addToCart } from '../../redux';
 import * as styles from './styles'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useSelector } from 'react-redux';
 
 
 // const productDetail = productData.productList;
@@ -42,7 +44,8 @@ const colorsList = [
 
 export const MainProductScreen = ({ route }) => {
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const dispatch = useDispatch()
   const { cartProductList, setCartProductList } = useMainContext();
   const { userInfo } = useSelector(state => state.authUser)
   const productId = route.params.productId;
@@ -53,11 +56,11 @@ export const MainProductScreen = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const [productDetail, setProductDetail] = useState({});
   const [showRelatedProducts, setShowRelatedProducts] = useState([]);
-  // console.log('productDetails[0]', productDetail.images[0])
+  // console.log('productDetail', productDetail)
   const [isSizeBottomSheetVisible, setIsSizeBottomSheetVisible] = useState(false);
   const [isColorBottomSheetVisible, setIsColorBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(selectedSize);
-  console.log(userSizeOption)
+  // console.log(userSizeOption)
   const [userColorSelected, setUserColorSelected] = useState('');
 
   const fetchProduct = async () => {
@@ -68,14 +71,13 @@ export const MainProductScreen = ({ route }) => {
         const productData = doc.data();
         return productData;
       });
-      
+
 
       const mainProduct = productList.filter(product => product.id === productId) || [0];
       setProductDetail(mainProduct[0] || {});
 
-      const showRelatedProductList = productList.filter(product => product.category === mainProduct[0].category);
-      const removeMainProduct = showRelatedProductList.filter(product => product.id !== mainProduct[0].id);
-      setShowRelatedProducts(removeMainProduct)
+      const showRelatedProductList = productList.filter(product => product.category === mainProduct[0].category).filter(product => product.id !== mainProduct[0].id);
+      setShowRelatedProducts(showRelatedProductList)
 
       const userFavoriteRef = firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList');
       const userFavoriteSnapshot = await userFavoriteRef.get();
@@ -96,11 +98,11 @@ export const MainProductScreen = ({ route }) => {
   }
 
   const onAddToFavorite = async () => {
-    const userFavoriteRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
+    const userFavoriteRef = firebase.firestore.collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
 
     try {
       const doc = await userFavoriteRef.get();
-      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : []; 
+      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : [];
 
       if (favoriteProducts.includes(productId)) {
         favoriteProducts = favoriteProducts.filter(id => id !== itemId);
@@ -111,7 +113,7 @@ export const MainProductScreen = ({ route }) => {
         await userFavoriteRef.set({ productIds: favoriteProducts });
         ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
       }
-      
+
       dispatch(toggleFavorite(itemId));
       dispatch(updateFavorites(favoriteProducts));
     }
@@ -125,7 +127,7 @@ export const MainProductScreen = ({ route }) => {
 
     try {
       const doc = await userFavoriteRef.get();
-      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : []; 
+      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : [];
 
       if (favoriteProducts.includes(productId)) {
         favoriteProducts = favoriteProducts.filter(id => id !== itemId);
@@ -136,7 +138,7 @@ export const MainProductScreen = ({ route }) => {
         await userFavoriteRef.set({ productIds: favoriteProducts });
         ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
       }
-      
+
       dispatch(toggleFavorite(itemId));
       dispatch(updateFavorites(favoriteProducts));
     }
@@ -146,7 +148,7 @@ export const MainProductScreen = ({ route }) => {
   }
 
   const handleRelatedProductPress = (item) => {
-    navigation.push('mainProductScreen', {productId: item.id})
+    navigation.push('mainProductScreen', { productId: item.id })
   }
 
   const toggleColors = (colorName) => {
@@ -173,57 +175,97 @@ export const MainProductScreen = ({ route }) => {
     setUserSizeOption(size);
   }
 
+  // const handleAddToCartBtn = async (item) => {
+  //   if (userColorSelected === '') {
+  //     Alert.alert(
+  //       'Error',
+  //       'Please select color',
+  //       [{ text: 'OK', onPress: () => null }]
+  //     );
+  //     return;
+  //   }
+
+  //   if(userSizeOption == undefined) {
+  //     Alert.alert(
+  //       'Error',
+  //       'Please select size',
+  //       [{ text: 'OK', onPress: () => null }]
+  //     );
+  //     return;
+  //   }
+
+  //   const productExists = cartProductList.some(cartItem => {
+  //     return cartItem.id === item.id
+  //       && cartItem.color === userColorSelected
+  //       && cartItem.size === userSizeOption
+  //   });
+
+  //   if (productExists) {
+  //     ToastAndroid.show('Product already exists', ToastAndroid.SHORT)
+  //     return
+  //   }
+
+  //   const updatedCartList = [...cartProductList, {
+  //     ...item,
+  //     productColor: userColorSelected,
+  //     size: userSizeOption,
+  //     productQuantity: 1,
+  //     stocks: item.stocks - 1
+  //   }]
+
+  //   setCartProductList(updatedCartList);
+
+  //   try {
+  //     await AsyncStorage.setItem('cartList', JSON.stringify(updatedCartList))
+  //     ToastAndroid.show(`${item.name} added to cart`, ToastAndroid.SHORT);
+  //   }
+  //   catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const handleAddToCartBtn = async (item) => {
-    if (userColorSelected === '') {
-      Alert.alert(
-        'Error',
-        'Please select color',
-        [{ text: 'OK', onPress: () => null }]
-      );
-      return;
-    }
-
-    if(userSizeOption == undefined) {
-      Alert.alert(
-        'Error',
-        'Please select size',
-        [{ text: 'OK', onPress: () => null }]
-      );
-      return;
-    }
-
-    const productExists = cartProductList.some(cartItem => {
-      return cartItem.id === item.id
-        && cartItem.color === userColorSelected
-        && cartItem.size === userSizeOption
-    });
-
-    if (productExists) {
-      ToastAndroid.show('Product already exists', ToastAndroid.SHORT)
-      return
-    }
-
-    const updatedCartList = [...cartProductList, {
-      ...item,
-      productColor: userColorSelected,
-      size: userSizeOption,
-      productQuantity: 1,
-      stocks: item.stocks - 1
-    }]
-
-    setCartProductList(updatedCartList);
+    // console.log('mainItem: ', item)
+    const userCartRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('cartProducts').doc('cartList');
 
     try {
-      await AsyncStorage.setItem('cartList', JSON.stringify(updatedCartList))
-      ToastAndroid.show(`${item.name} added to cart`, ToastAndroid.SHORT);
+      const doc = await userCartRef.get();
+      let cartProducts = doc.exists ? (doc.data().productIds || []) : [];
+
+      if (cartProducts.includes(item.id)) {
+        cartProducts = cartProducts.filter(id => id !== item.id);
+        await userCartRef.update({
+          productIds: cartProducts,
+          selectedSize: userSizeOption,
+          selectedColor: userColorSelected,
+        });
+        ToastAndroid.show(`${item.title} removed from Cart List`, ToastAndroid.SHORT);
+      } else {
+        cartProducts.push(item.id);
+        await userCartRef.set({
+          productIds: cartProducts,
+          selectedSize: userSizeOption,
+          selectedColor: userColorSelected,
+        });
+        ToastAndroid.show(`${item.title} added to Cart List`, ToastAndroid.SHORT);
+      }
+      dispatch(addToCart(item.id));
+      // dispatch(updateFavorites(cartProducts));
+      // setFavoriteProductIds((prevId) => 
+      //   [...prevId, itemId]
+      // )
     }
     catch (error) {
-      console.log(error);
+      console.log('Error:', error);
     }
-  };
+  }
 
   const handleRatingsReviews = () => {
-    navigation.navigate('ratingsReviewsScreen', { productReview: productDetail.ratings })
+    navigation.navigate('ratingsReviewsScreen', { productReview: productDetail.rating })
+  }
+
+  const showShippingDetails = (message) => {
+    ToastAndroid.show(message, ToastAndroid.LONG);
   }
 
   useEffect(() => {
@@ -255,11 +297,11 @@ export const MainProductScreen = ({ route }) => {
             alwaysBounceHorizontal={true}
             contentContainerStyle={styles.scrollImageView()}>
             {
-              loading 
-              ? (
-                  <Text>Loading...</Text>
-                ) : productDetail.images && productDetail.images.length > 0 
+              loading
                 ? (
+                  <Text>Loading...</Text>
+                ) : productDetail.images && productDetail.images.length > 0
+                  ? (
                     productDetail.images.map((imageUri, index) => (
                       <Image
                         key={index}
@@ -267,8 +309,8 @@ export const MainProductScreen = ({ route }) => {
                         source={{ uri: imageUri }}
                       />
                     ))
-                   ) 
-                   : ( <Text>No images available</Text> )}
+                  )
+                  : (<Text>No images available</Text>)}
           </ScrollView>
           <View style={styles.productOptions()}>
             <TouchableOpacity onPress={handleSizeDropdownPress} activeOpacity={0.5} style={styles.productDropdown(userSizeOption)}>
@@ -302,7 +344,7 @@ export const MainProductScreen = ({ route }) => {
             <Text style={styles.productDetailText()}>Item details</Text>
             <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.5} style={styles.productDetails()}>
+          <TouchableOpacity onPress={() => showShippingDetails(productDetail.shippingInformation)} activeOpacity={0.5} style={styles.productDetails()}>
             <Text style={styles.productDetailText()}>Shipping Info</Text>
             <IcBackArrow style={styles.forwardArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
           </TouchableOpacity>
@@ -319,9 +361,9 @@ export const MainProductScreen = ({ route }) => {
           <View>
             <FlatList
               horizontal
-              contentContainerStyle={{ paddingBottom: size.moderateScale(80), gap:size.moderateScale(10) }}
+              contentContainerStyle={{ paddingBottom: size.moderateScale(80), gap: size.moderateScale(10) }}
               data={showRelatedProducts}
-              renderItem={({item}) => {
+              renderItem={({ item }) => {
                 const itemTitle = item?.title.length > 15 ? item?.title.substring(0, 13) + '...' : item?.title
                 return (
                   <ProductCardMain
@@ -346,13 +388,18 @@ export const MainProductScreen = ({ route }) => {
           </View>
         </View>
       </Screen>
-      <View style={styles.bottomView()}>
-        <Button
-          title={soldOut ? 'SOLD OUT' : 'ADD TO CART'}
-          disabled={soldOut}
-          onPress={() => handleAddToCartBtn(productDetail)}
-        />
-      </View>
+      {
+        !loading && (
+          <View style={styles.bottomView()}>
+            <Button
+              title={productDetail.stock > 0 ? 'ADD TO CART' : 'SOLD OUT'}
+              disabled={productDetail.stock > 0 ? false : true}
+              onPress={() => handleAddToCartBtn(productDetail)}
+            />
+          </View>
+        )
+      }
+
       {/* Bottom Sheet Containers */}
       <BottomSheetContainer
         isVisible={isSizeBottomSheetVisible}

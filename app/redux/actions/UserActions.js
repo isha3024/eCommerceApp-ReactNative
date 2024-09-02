@@ -22,9 +22,10 @@ export const clearFavorites = () => {
   }
 }
 
-  export const addToCart = (productId) => {
+  export const addToCart = (cartProductId) => {
+    console.log('product Id in addToCart UserAction: ', cartProductId)
     return {
       type: actions.ADD_TO_CART,
-      payload: productId
+      payload: {cartProductId}
     }
   }

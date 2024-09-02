@@ -228,7 +228,7 @@ export const cartOptions = () => ({
   backgroundColor: color.white,
   borderRadius: size.moderateScale(8),
   position: 'absolute',
-  top: size.moderateScale(-17),
+  top: size.moderateScale(-10),
   right: size.moderateScale(33),
   elevation: size.moderateScale(10),
 })

@@ -7,7 +7,7 @@ import { ShopStackNavigation } from '../shopStackNavigation';
 import { ProfileStackNavigation } from '../profileStackNavigation';
 import { FavoriteStackNavigation } from '../favoriteStackNavigation';
 import { CartStackNavigation } from '../cartStackNavigation';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+// import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 
 const Tab = createBottomTabNavigator();

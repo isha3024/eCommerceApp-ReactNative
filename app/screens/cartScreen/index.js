@@ -2,43 +2,94 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Animated, FlatList, Image, LogBox, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useSelector, useDispatch } from 'react-redux'
+import firebase from '@react-native-firebase/app'
+// import firestore from '@react-native-firebase/firestore'
+import { doc, getDoc, getFirestore } from '@react-native-firebase/firestore'
 
 import * as data from '../../json'
 import { color, IcChevronRight, IcClose, IcSearch, size } from '../../theme'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import { useMainContext } from '../../contexts/MainContext'
 import * as styles from './styles'
+import { toggleFavorite, updateFavorites } from '../../redux'
 
 export const CartScreen = () => {
 
   const navigation = useNavigation();
+  const db = getFirestore();
+  const dispatch = useDispatch()
+  const { userInfo } = useSelector(state => state.authUser);
   const {
-    cartProductList,
-    setCartProductList,
-    allProducts,
-    setAllProducts,
-    saveProducts,
-    saveCartProductList
+    cartProductIds,
+    setCartProductIds,
   } = useMainContext();
 
-  const [orderedProducts, setOrderedProducts] = useState(cartProductList);
+  const [orderedProducts, setOrderedProducts] = useState([]);
   const [showPromoCodeSheet, setShowPromoCodeSheet] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showCartOptions, setShowCartOptions] = useState(null);
   const [selectedPromoCode, setSelectedPromoCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [promoCodeValue, setPromoCodeValue] = useState('');
   const [originalPromoCodes, setOriginalPromoCodes] = useState(data.promoCards);
-  const [totalAmount, setTotalAmount] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [visible, setVisible] = useState(false); // state for opacity
 
 
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const opacityStyle = { opacity: opacityAnim };
 
+  const fetchCartProduct = async () => {
+    const userDocId = firebase.firestore()
+        .collection('users')
+        .doc(userInfo.uid).id;
+
+    const productsSnapshot = await firebase.firestore().collection('products').get();
+    const productList = productsSnapshot.docs.map(doc => {
+        const productData = doc.data();
+        return productData;
+    });
+
+    const docRef = doc(db, `users/${userDocId}/cartProducts/cartList`);
+    setLoading(true);
+    try {
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists) {  // Accessing exists as a property
+            const data = docSnap.data();
+            const cartItems = data.cartList || []; // now it's an array of objects
+            setCartProductIds(cartItems.map(item => item.productId));
+
+            const cartProducts = productList.filter(product =>
+                cartItems.some(cartItem => cartItem.productId === product.id)
+            );
+
+            // Map through the cartProducts and add quantity
+            const orderedProductsWithQuantity = cartProducts.map(product => {
+                const cartItem = cartItems.find(item => item.productId === product.id);
+                return {
+                    ...product,
+                    productQuantity: cartItem?.productQuantity || 1
+                };
+            });
+
+            setOrderedProducts(orderedProductsWithQuantity);
+        } else {
+            console.log('No such document!');
+        }
+    } catch (error) {
+        console.log(error);
+    } finally {
+        setLoading(false);
+    }
+};
+
+
   const fadeAnim = () => {
     Animated.timing(opacityAnim, {
       toValue: visible ? 0 : 1,
-      duration: 200,
+      duration: 150,
       useNativeDriver: true
     }).start();
   };
@@ -55,7 +106,7 @@ export const CartScreen = () => {
   }
 
   const showCartOptionsOfProduct = (item) => {
-    cartProductList.forEach((cartProduct) => {
+    orderedProducts.forEach((cartProduct) => {
       if (cartProduct.id === item.id) {
         setVisible((prev) => {
           fadeAnim();
@@ -66,41 +117,76 @@ export const CartScreen = () => {
     })
   }
 
-  const handleAddToFavorites = (id) => {
-    const updatedProducts = allProducts.map((product) => {
-      if (product.id === id) {
-        if (product.isFavorite) {
-          ToastAndroid.show(`${product.name} is already in your favorites`, ToastAndroid.SHORT);
-        } else {
-          product.isFavorite = true;
-          ToastAndroid.show(`${product.name} has been added to your favorites`, ToastAndroid.SHORT);
-        }
-      }
-      return product;
-    });
-    setVisible(false)
-    setAllProducts(updatedProducts);
+  const handleAddToFavorites = async (item) => {
+    const userFavoriteRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
 
-    const updatedCartProduct = cartProductList.map((cartProduct) => {
-      if (cartProduct.id == id) {
-        return {
-          ...cartProduct,
-          isFavorite: true
-        }
+    try {
+      const doc = await userFavoriteRef.get();
+      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : [];
+
+      if (favoriteProducts.includes(item?.id)) {
+        ToastAndroid.show(`${item?.title} already exists in Favorites`, ToastAndroid.SHORT);
+      } else {
+        favoriteProducts.push(item?.id);
+        await userFavoriteRef.set({ productIds: favoriteProducts });
+        ToastAndroid.show(`${item?.title} added to Favorites`, ToastAndroid.SHORT);
       }
-      return cartProduct
-    })
-    setCartProductList(updatedCartProduct)
+
+      dispatch(toggleFavorite(item.id));
+      dispatch(updateFavorites(favoriteProducts));
+    }
+    catch (error) {
+      console.log('Error:', error);
+    }
   }
 
   const handleDeleteFromCartList = async (item) => {
+    const userDocId = firebase.firestore()
+      .collection('users')
+      .doc(userInfo.uid).id;
+    console.log('userDocId: ', userDocId);
+
+    const productsSnapshot = await firebase.firestore().collection('products').get();
+    const productList = productsSnapshot.docs.map(doc => {
+      const productData = doc.data();
+      return productData;
+    });
+
+    const docRef = doc(db, `users/${userDocId}/cartProducts/cartList`);
     try {
-      const updateCartList = cartProductList.filter((cartProduct) => cartProduct.id !== item.id);
-      await AsyncStorage.setItem('cartList', JSON.stringify(updateCartList));
-      setCartProductList(updateCartList);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists) {
+        const data = docSnap.data();
+        const productIds = data.productIds || [];
+        console.log('productIds: ', productIds);
+        console.log('itemId: ', item.id)
+        if (productIds.includes(item.id)) {
+          const index = productIds.indexOf(item.id);
+          productIds.splice(index, 1);
+          await firebase.firestore().collection('users').doc(userInfo.uid)
+            .collection('cartProducts')
+            .doc('cartList')
+            .update({
+              productIds: productIds
+            });
+          console.log('Updated Firebase with productIds:', productIds);
+          setCartProductIds(productIds);
+          const cartProducts = productList.filter(product => productIds.includes(product.id));
+          setOrderedProducts(cartProducts);
+        }
+        setCartProductIds(productIds);
+        const favoriteProducts = productList.filter(product => productIds.includes(product.id));
+        setOrderedProducts(favoriteProducts)
+      } else {
+        console.log('No such document!');
+      }
+
+    } catch (error) {
+      console.log(error)
     }
-    catch (error) {
-      console.log('error: ', error);
+    finally {
+      setLoading(false)
     }
   }
 
@@ -116,94 +202,73 @@ export const CartScreen = () => {
     }
   }
 
-  const increaseProductQuantity = async (item) => {
-    const updatedCartProduct = cartProductList.map((cartProduct) => {
-      if (cartProduct.id === item.id) {
-        if (cartProduct.stocks <= 0) {
-          ToastAndroid.show(`${cartProduct.name} is out of stock`, ToastAndroid.SHORT);
-        } else {
-          cartProduct.productQuantity += 1;
-          cartProduct.productPrice = (cartProduct.originalPrice * cartProduct.productQuantity).toFixed(2);
-          cartProduct.stocks -= 1;
-        }
-      }
-      return cartProduct;
-    })
-    setCartProductList(updatedCartProduct);
-
-    const updateAllProducts = allProducts.map((product) => {
-      if (product.id === item.id) {
-        product.productQuantity += 1;
-        product.stocks -= 1;
-      }
-      return product;
-    })
-    setAllProducts(updateAllProducts);
-
-    await saveCartProductList(updatedCartProduct);
-    await saveProducts(updateAllProducts)
+  const removePromoCode = () => {
+    setPromoCodeValue('');
+    setOriginalPromoCodes(data.promoCards);
   }
 
-  const decreaseProductQuantity = async (item) => {
-    const updatedCartProduct = cartProductList.map((cartProduct) => {
-      if (cartProduct.id === item.id) {
-        cartProduct.productQuantity -= 1;
-        cartProduct.productPrice = (cartProduct.originalPrice * cartProduct.productQuantity).toFixed(2);
-        cartProduct.stocks += 1;
+  const updateProductQuantity  = async (item, newQuantity) => {
+    const userDocId = firebase.firestore()
+      .collection('users')
+      .doc(userInfo.uid).id;
 
-        if (cartProduct.productQuantity < 1) {
-          handleDeleteFromCartList(item)
-          return null
-        }
-      }
-      return cartProduct;
-    }).filter(Boolean)
-    setCartProductList(updatedCartProduct);
+    const docRef = doc(db, `users/${userDocId}/cartProducts/cartList`);
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const cartItems = data.cartList || [];
 
-    const updateAllProducts = allProducts.map((product) => {
-      if (product.id === item.id) {
-        product.productQuantity -= 1;
-        product.stocks += 1;
-      }
-      return product;
-    })
-    setAllProducts(updateAllProducts);
+        const updatedCartItems = cartItems.map((cartItem) => {
+          if (cartItem.id === item.id) {
+            return { ...cartItem, productQuantity: newQuantity };
+          }
+          return cartItem
+        })
 
+        await firebase.firestore().collection('users').doc(userInfo.uid)
+          .collection('cartProducts')
+          .doc('cartList')
+          .update({
+            cartList: updatedCartItems
+          })
 
-
-    await saveCartProductList(updatedCartProduct);
-    await saveProducts(updateAllProducts)
-
-  }
-
-  const orderTotalAmount = () => {
-    let total = 0;
-    cartProductList.forEach((item) => {
-      if (appliedDiscount && selectedPromoCode.length > 0) {
-        total += item.originalPrice * item.productQuantity;
-        const discountedTotal = (total - ((appliedDiscount * total) / 100)).toFixed(2);
-        setTotalAmount(discountedTotal)
+        setOrderedProducts(prevProducts =>
+          prevProducts.map(product =>
+            product.id === item.id
+              ? { ...product, productQuantity: newQuantity }
+              : product
+          )
+        );
       }
       else {
-        total += item.originalPrice * item.productQuantity;
-        setTotalAmount(total.toFixed(2))
+        console.log('No such document!');
       }
-    })
+    } catch (error) {
+      console.log('Error: ', error)
+    }
   }
 
-  useEffect(() => {
-    LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
-  }, [])
+  const increaseProductQuantity = async (item) => {
+    const newQuantity = item?.productQuantity ? item.productQuantity + 1 : 2;
+    await updateProductQuantity(item, newQuantity);
+};
 
-  useFocusEffect(
-    useCallback(() => {
-      setOrderedProducts(cartProductList)
-    }, [cartProductList])
-  )
+const decreaseProductQuantity = async (item) => {
+  const newQuantity = item?.productQuantity > 1 ? item.productQuantity - 1 : 1;
+  await updateProductQuantity(item, newQuantity);
+};
 
-  useEffect(() => {
-    orderTotalAmount()
-  }, [cartProductList, appliedDiscount, selectedPromoCode])
+  const calculateTotalAmount = () => {
+    if (!orderedProducts || orderedProducts.length === 0) return 0;
+
+    let total = 0;
+    orderedProducts.forEach((product) => {
+      const quantity = product.quantity || 1;
+      total += product.price * quantity;
+    });
+    setTotalAmount(total.toFixed(2))
+  }
 
   const renderProducts = ({ item }) => {
     return (
@@ -211,16 +276,12 @@ export const CartScreen = () => {
         <ProductCardMain
           activeOpacity={1}
           productHorizontal
-          productTitle={item?.name}
+          productTitle={item?.title}
           brandName={item?.brand}
-          productImage={item?.images}
-          originalPrice={item?.productPrice ?? item?.originalPrice}
-          productColor={item?.productColor}
-          productSize={item?.size}
-          showRatings={false}
-          showRatingHorizontal={false}
+          productImage={item?.images[0]}
+          originalPrice={item?.price}
           productQuantitySelection={true}
-          selectQuantity={item?.productQuantity}
+          selectQuantity={item?.productQuantity} 
           cartOptions={true}
           cartOptionPress={() => showCartOptionsOfProduct(item)}
           increaseQuantity={() => increaseProductQuantity(item)}
@@ -229,7 +290,7 @@ export const CartScreen = () => {
         {
           showCartOptions === item.id && (
             <Animated.View style={[styles.cartOptions(), opacityStyle]}>
-              <TouchableOpacity onPress={() => handleAddToFavorites(item.id)} activeOpacity={0.6} style={[styles.cartOptionItem(), styles.cartOptionItemBorder()]}>
+              <TouchableOpacity onPress={() => handleAddToFavorites(item)} activeOpacity={0.6} style={[styles.cartOptionItem(), styles.cartOptionItemBorder()]}>
                 <Text style={styles.cartOptionText()}>Add to favorites</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDeleteFromCartList(item)} activeOpacity={0.6} style={styles.cartOptionItem()}>
@@ -242,8 +303,33 @@ export const CartScreen = () => {
     )
   }
 
+  useEffect(() => {
+    calculateTotalAmount();
+  }, [orderedProducts]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAndCalculateTotal = async () => {
+        await fetchCartProduct();
+        calculateTotalAmount();
+      };
+
+      fetchAndCalculateTotal();
+    }, [])
+  );
+
+  useEffect(() => {
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      opacityAnim.stopAnimation(); // Ensure animation stops on unmount
+    };
+  }, []);
+
   return (
-    <>
+    <Screen loading={loading}>
       <View style={styles.topView()}>
         <Header
           headerStyle={styles.header()}
@@ -254,7 +340,7 @@ export const CartScreen = () => {
         />
         <Text style={styles.mainTitle()}>My Bag</Text>
       </View>
-      <Screen withScroll bgColor={color.primary} style={styles.mainView()} translucent={true}>
+      <Screen withScroll bgColor={color.primary} translucent={true} style={styles.mainView()}>
         <View style={styles.middleView()}>
           {
             orderedProducts.length > 0
@@ -266,7 +352,7 @@ export const CartScreen = () => {
                       data={orderedProducts}
                       renderItem={renderProducts}
                       style={styles.flatList()}
-                      keyExtractor={(item) => item?.id?.toString() ?? Math.random().toString()}
+                      keyExtractor={(item) => item?.id?.toString() + item?.title ?? Math.random().toString()}
                       contentContainerStyle={styles.contentContainerStyle()}
                       ListFooterComponent={<View />}
                     />
@@ -326,10 +412,10 @@ export const CartScreen = () => {
               <Button
                 title='CHECK OUT'
                 btnStyle={styles.button()}
-                onPress={() => navigation.navigate('checkoutScreen', { orderTotal: totalAmount, cartList: cartProductList })}
+                onPress={() => navigation.navigate('checkoutScreen', { orderTotal: totalAmount, cartList: orderedProducts })}
               />
             </View>
-          ) 
+          )
           : (
             <View />
           )
@@ -352,7 +438,7 @@ export const CartScreen = () => {
           />
           {
             promoCodeValue.length > 0 ? (
-              <TouchableOpacity onPress={() => setPromoCodeValue('')} activeOpacity={0.7} style={styles.forwardButton()}>
+              <TouchableOpacity onPress={removePromoCode} activeOpacity={0.7} style={styles.forwardButton()}>
                 <IcClose width={size.moderateScale(20)} height={size.moderateScale(20)} fill={color.white} />
               </TouchableOpacity>
             ) : (
@@ -392,6 +478,6 @@ export const CartScreen = () => {
         </View>
 
       </BottomSheetContainer>
-    </>
+    </Screen>
   )
 }

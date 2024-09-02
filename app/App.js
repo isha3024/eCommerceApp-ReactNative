@@ -10,7 +10,6 @@ import { MainContextProvider } from './contexts/MainContext';
 import { MainStackNavigation } from './navigation';
 import { color, fonts, size } from './theme';
 import { persistor, store } from './redux';
-import { uploadNewUserToFireStore } from './firebase';
 
 
 
@@ -19,12 +18,6 @@ const App = () => {
   LogBox.ignoreLogs([
     'Tried to modify key `reduceMotion` of an object which has been already passed to a worklet'
   ]);
-
-  useEffect(() => {
-    if(!firebase.apps.length) {
-      firebase.initializeApp()
-    }
-  },[])
 
   useEffect(() => {
     if(!firebase.apps.length) {

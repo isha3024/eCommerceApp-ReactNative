@@ -7,6 +7,7 @@ import * as styles from './styles'
 export const StarRatings = ({customStarRatingStyle, ratings, ratingsCounts}) => {
   
   const [defaultRating, setDefaultRating] = useState(ratings);
+  // console.log('defaultRating: ', defaultRating)
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
   if(ratingsCounts < 2 && ratingsCounts > 1) {

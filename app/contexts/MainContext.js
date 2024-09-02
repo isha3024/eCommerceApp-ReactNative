@@ -21,6 +21,7 @@ export const MainContextProvider = props => {
   const [paymentCardSelected, setPaymentCardSelected] = useState({});
   const [paymentCardSelectedIndex, setPaymentCardSelectedIndex] = useState(0)
   const [cartProductList, setCartProductList] = useState([]);
+  const [cartProductIds, setCartProductIds] = useState([]);
   const [orders, setOrders] = useState([]);
   const [filters, setFilters] = useState({
     colors: [],
@@ -233,6 +234,8 @@ export const MainContextProvider = props => {
       setPaymentCardSelectedIndex: setPaymentCardSelectedIndex,
       cartProductList: cartProductList,
       setCartProductList: setCartProductList,
+      cartProductIds: cartProductIds,
+      setCartProductIds: setCartProductIds,
       saveCartProductList: saveCartProductList,
       orders: orders,
       setOrders: setOrders,
@@ -259,6 +262,7 @@ export const MainContextProvider = props => {
     paymentCardSelectedIndex, setPaymentCardSelectedIndex,
     paymentCardSelected, setPaymentCardSelected,
     cartProductList, setCartProductList,
+    cartProductIds, setCartProductIds,
     orders, setOrders,
     saveOrders, getOrdersFromStorage,
     filters , setFilters

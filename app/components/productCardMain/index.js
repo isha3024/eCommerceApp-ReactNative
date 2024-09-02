@@ -47,7 +47,6 @@ export const ProductCardMain = ({
 }) => {
   // const discount = Math.floor(((originalPrice - sellingPrice)/originalPrice) * 100);
 
-
   if (productHorizontal) {
     return (
       <View style={styles.mainViewHorizontal(isProductSold)}>
@@ -203,8 +202,12 @@ export const ProductCardMain = ({
                 </View>
               )
             }
-            <Text style={styles.brandName()}>{brandName}</Text>
-            <Text style={styles.productTitle()}>{productTitle}</Text>
+            {
+              brandName && (<Text style={styles.brandName()}>{brandName}</Text>)
+            }
+            {
+              productTitle && (<Text style={styles.productTitle()}>{productTitle}</Text>)
+            }
             <View style={styles.colorAndSizeWrapperVertical()}>
               {
                 productColor && (

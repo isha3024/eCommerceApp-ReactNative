@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator();
 export const MainStackNavigation = () => {
 
   const isUserLoggedIn = useSelector(state => state.authUser.isUserLoggedIn);
-  console.log('isUserLoggedIn: ', isUserLoggedIn)
+  // console.log('isUserLoggedIn: ', isUserLoggedIn)
 
   const [showSplashScreen, setHideSplashScreen] = useState(true);
 
