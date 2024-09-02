@@ -7,7 +7,7 @@ import LottieView from 'lottie-react-native';
 
 export const SplashScreen = () => {
   return (
-    <Screen bgColor={color.white} style={styles.rootContainer()}>
+    <Screen bgColor={color.primary} style={styles.rootContainer()}>
       <StatusBar translucent={true} />
       <LottieView 
         source={lottieIcons.spalshAnimation}

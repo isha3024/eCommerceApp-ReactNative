@@ -243,7 +243,8 @@ export const LoginScreen = () => {
             placeholder={'Email'}
             label={'Email'}
             onChangeText={(val) => handleChange(val, 'email')}
-            keyboardType='default'
+            keyboardType='email-address'
+            autoCapitalize='none'
             editable={loading ? false : true}
             icon
             iconPlace='right'

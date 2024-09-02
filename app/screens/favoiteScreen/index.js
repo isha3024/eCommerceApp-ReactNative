@@ -80,13 +80,12 @@ export const FavoriteScreen = () => {
   const navigation = useNavigation();
   const db = getFirestore();
   const { userInfo } = useSelector(state => state.authUser);
+  const {favoriteProductIds, setFavoriteProductIds} = useMainContext()
 
   LogBox.ignoreLogs(['Encountered two children with the same key']);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [favoriteProductIds, setFavoriteProductIds] = useState([]);
-  console.log('favoriteProductIds: ',favoriteProductIds)
   const [isSheetVisible, setSheetVisible] = useState(false);
   const [isSortOptionSelected, setIsSortOptionSelected] = useState(null);
   const [sortOptionName, setSortOptionName] = useState(null)
@@ -115,7 +114,58 @@ export const FavoriteScreen = () => {
         const productIds = data.productIds || [];
         setFavoriteProductIds(productIds);
         const favoriteProducts = productList.filter(product => productIds.includes(product.id));
-        setProducts(favoriteProducts)
+        setProducts(favoriteProducts);
+      }else {
+        console.log('No such document!');
+      }
+      
+    } catch (error) {
+      console.log(error) 
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+
+  
+  const handleProductRemove = async (item) => { 
+    const userDocId = firebase.firestore()
+    .collection('users')
+    .doc(userInfo.uid).id;
+    console.log('userDocId: ', userDocId);
+
+    const productsSnapshot = await firebase.firestore().collection('products').get();
+    const productList = productsSnapshot.docs.map(doc => {
+      const productData = doc.data();
+      return productData;
+    });
+
+    const docRef = doc(db, `users/${userDocId}/favoriteProducts/favoritesList`);
+    try {
+      const docSnap = await getDoc(docRef);
+
+      if(docSnap.exists) {
+        const data = docSnap.data();
+        const productIds = data.productIds || [];
+        console.log('productIds: ', productIds);
+        console.log('itemId: ', item.id)
+        if(productIds.includes(item.id)) {
+          const index = productIds.indexOf(item.id);
+          productIds.splice(index, 1);
+          await firebase.firestore().collection('users').doc(userInfo.uid)
+          .collection('favoriteProducts')
+          .doc('favoritesList')
+          .update({
+            productIds: productIds
+          });
+          console.log('Updated Firebase with productIds:', productIds);
+          setFavoriteProductIds(productIds);
+          const favoriteProducts = productList.filter(product => productIds.includes(product.id));
+          setProducts(favoriteProducts);
+        }
+        // setFavoriteProductIds(productIds);
+        // const favoriteProducts = productList.filter(product => productIds.includes(product.id));
+        // setProducts(favoriteProducts)s
       }else {
         console.log('No such document!');
       }
@@ -174,10 +224,6 @@ export const FavoriteScreen = () => {
     setSheetVisible(false);
   }
 
-  const handleProductRemove = async (item) => { 
-    console.log(item)
-  }
-
   const renderProducts = ({ item }) => {
     return (
       <ProductCardMain
@@ -210,9 +256,11 @@ export const FavoriteScreen = () => {
     setSortOptionName(sortProductType[3].name)
   }, [])
 
-    useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
       fetchfavoritesProduct()
-    },[favoriteProductIds])
+    }, [])
+  )
 
 
   return (

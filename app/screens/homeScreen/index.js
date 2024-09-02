@@ -164,6 +164,7 @@ export const HomeScreen = () => {
       ToastAndroid.show('Please Select Size', ToastAndroid.SHORT)
       return
     }
+    console.log({'selectedSize': userSizeOption, 'productId': selectedProductId})
     navigation.navigate('mainProductScreen', {selectedSize: userSizeOption, productId: selectedProductId})
     setUserSizeOption(false)
     setSizeBottomSheetVisible(false);

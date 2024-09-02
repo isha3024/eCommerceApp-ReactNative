@@ -47,8 +47,8 @@ export const imageHorizontal = () => ({
 
 export const addToFavoriteBtn = () => ({
   position: 'absolute',
-  right: size.moderateScale(-1),
-  top: size.moderateScale(16),
+  right: 0,
+  top: '70%',
   width: size.moderateScale(36),
   height: size.moderateScale(36),
   backgroundColor: color.white,

@@ -18,6 +18,7 @@ export const ProductCardMain = ({
   showDiscount,
   originalPrice,
   sellingPrice,
+  discount,
   ratings,
   ratingsCounts,
   newProduct,
@@ -44,24 +45,24 @@ export const ProductCardMain = ({
   isProductFavorite,
   onAddToFavorite
 }) => {
-  const discount = Math.floor(((originalPrice - sellingPrice)/originalPrice) * 100);
+  // const discount = Math.floor(((originalPrice - sellingPrice)/originalPrice) * 100);
 
 
   if (productHorizontal) {
     return (
       <View style={styles.mainViewHorizontal(isProductSold)}>
-        <TouchableOpacity style={[styles.mainProductCardHorizontal(),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
+        <TouchableOpacity style={[styles.mainProductCardHorizontal(), customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
           <View style={styles.imageViewHorizontal()}>
             <Image source={typeof productImage === 'string' ? { uri: productImage } : productImage} style={styles.imageHorizontal()} resizeMode='cover' />
             <View style={[styles.badge(newProduct), sellingPrice && showDiscount && styles.discountBadge()]}>
               {
-                sellingPrice && showDiscount ? 
-                (
-                  <Text style={styles.badgeText()}>-{discount}%</Text>
-                )
-                : newProduct ? (
+                sellingPrice && showDiscount ?
+                  (
+                    <Text style={styles.badgeText()}>-{discount}%</Text>
+                  )
+                  : newProduct ? (
                     <Text style={styles.badgeText()}>NEW</Text>
-                ) : (<Text></Text>)
+                  ) : (<Text></Text>)
               }
             </View>
           </View>
@@ -112,7 +113,7 @@ export const ProductCardMain = ({
                     </TouchableOpacity>
                     <Text style={styles.quantityText()}>{selectQuantity}</Text>
                     <TouchableOpacity onPress={increaseQuantity} activeOpacity={0.8} style={styles.circle()}>
-                      <IcPlus fill={color.darkGray}/>
+                      <IcPlus fill={color.darkGray} />
                     </TouchableOpacity>
                   </View>
                 )
@@ -137,9 +138,9 @@ export const ProductCardMain = ({
           addToFavoriteIcon && (
             <TouchableOpacity activeOpacity={0.9} style={[styles.addToFavoriteBtnHorizontal(), flotingBtnStyle]} onPress={onAddToFavorite}>
               {
-                isProductFavorite 
-                ? (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
-                : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+                isProductFavorite
+                  ? (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
+                  : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
               }
             </TouchableOpacity>
           )
@@ -147,10 +148,10 @@ export const ProductCardMain = ({
         {
           addToCartIcon && !isProductSold && (
             <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtnHorizontal(), addToCartBtnStyle]} onPress={addToCartPress}>
-              <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)}/>
+              <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)} />
             </TouchableOpacity>
           )
-        }   
+        }
         {
           topRightIcon && (
             <TouchableOpacity onPress={removeFromListIconPress} style={[styles.closeIconHorizontal(), closeIconStyle]}>
@@ -175,10 +176,10 @@ export const ProductCardMain = ({
   } else {
     return (
       <View>
-        <TouchableOpacity style={[styles.mainProductCard(isProductSold),customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
+        <TouchableOpacity style={[styles.mainProductCard(isProductSold), customProductStyle]} onPress={onProductPress} activeOpacity={activeOpacity ?? 0.7}>
           <View style={styles.imageView()}>
             <Image source={typeof productImage === 'string' ? { uri: productImage } : productImage} style={[styles.image(), customProductImageStyle]} />
-            <View style={[styles.badge(newProduct),  sellingPrice && styles.discountBadge()]}>
+            <View style={[styles.badge(newProduct), sellingPrice && styles.discountBadge()]}>
               {
                 sellingPrice ? (
                   <Text style={styles.badgeText()}>-{discount}%</Text>
@@ -195,9 +196,13 @@ export const ProductCardMain = ({
             }
           </View>
           <View style={styles.productInfo()}>
-            <View style={styles.ratingsContainer()}>
-              <StarRatings ratings={ratings} ratingsCounts={ratingsCounts} />
-            </View>
+            {
+              ratings && (
+                <View style={styles.ratingsContainer()}>
+                  <StarRatings ratings={ratings} ratingsCounts={ratingsCounts} />
+                </View>
+              )
+            }
             <Text style={styles.brandName()}>{brandName}</Text>
             <Text style={styles.productTitle()}>{productTitle}</Text>
             <View style={styles.colorAndSizeWrapperVertical()}>
@@ -215,7 +220,7 @@ export const ProductCardMain = ({
                     <Text style={styles.lightText()}>Size: </Text>
                     <Text style={styles.darkText()}>{productSize}</Text>
                   </View>
-                )   
+                )
               }
             </View>
             {
@@ -249,7 +254,7 @@ export const ProductCardMain = ({
         {
           addToCartIcon && !isProductSold && (
             <TouchableOpacity activeOpacity={0.8} style={[styles.addToCartBtn(), addToCartBtnStyle]} onPress={addToCartPress}>
-              <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)}/>
+              <IcCartActive fill={color.white} width={size.moderateScale(12)} height={size.moderateScale(12)} />
             </TouchableOpacity>
           )
         }

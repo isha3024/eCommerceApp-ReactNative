@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, ScrollView, Image, TouchableOpacity, FlatList, ToastAndroid, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore'
 
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, StarRatings, Text } from '../../components';
 import { IcBackArrow, IcFilledHeart, IcHeart, IcShare, color, size } from '../../theme';
 import { useMainContext } from '../../contexts/MainContext';
 import * as styles from './styles'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 
 
 // const productDetail = productData.productList;
@@ -42,41 +44,109 @@ export const MainProductScreen = ({ route }) => {
 
   const navigation = useNavigation()
   const { cartProductList, setCartProductList } = useMainContext();
+  const { userInfo } = useSelector(state => state.authUser)
   const productId = route.params.productId;
   const selectedSize = route.params.selectedSize;
-  const { allProducts, setAllProducts } = useMainContext();
-  const selectedProduct = allProducts.find(product => product.id === productId);
-  const favoriteProduct = selectedProduct.isFavorite;
-  const soldOut = selectedProduct.isProductSold;
+  const favoriteProduct = false;
+  const soldOut = false;
 
+  const [loading, setLoading] = useState(false);
+  const [productDetail, setProductDetail] = useState({});
+  const [showRelatedProducts, setShowRelatedProducts] = useState([]);
+  // console.log('productDetails[0]', productDetail.images[0])
   const [isSizeBottomSheetVisible, setIsSizeBottomSheetVisible] = useState(false);
   const [isColorBottomSheetVisible, setIsColorBottomSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(selectedSize);
-  const [userColorSelected, setUserColorSelected] = useState('')
+  console.log(userSizeOption)
+  const [userColorSelected, setUserColorSelected] = useState('');
 
-  const onAddToFavorite = () => {
-    if (favoriteProduct) {
-      setAllProducts(allProducts.map((product) => {
-        if (product.id === productId) {
-          return { ...product, isFavorite: false }
-        }
-        return product
+  const fetchProduct = async () => {
+    setLoading(true);
+    try {
+      const productsSnapshot = await firestore().collection('products').get();
+      const productList = productsSnapshot.docs.map(doc => {
+        const productData = doc.data();
+        return productData;
+      });
+      
+
+      const mainProduct = productList.filter(product => product.id === productId) || [0];
+      setProductDetail(mainProduct[0] || {});
+
+      const showRelatedProductList = productList.filter(product => product.category === mainProduct[0].category);
+      const removeMainProduct = showRelatedProductList.filter(product => product.id !== mainProduct[0].id);
+      setShowRelatedProducts(removeMainProduct)
+
+      const userFavoriteRef = firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList');
+      const userFavoriteSnapshot = await userFavoriteRef.get();
+      const favoriteProductIds = userFavoriteSnapshot.exists ? (userFavoriteSnapshot.data().productIds || []) : [];
+
+      const isFavorite = favoriteProductIds.includes(productId);
+      setProductDetail(prevState => ({
+        ...prevState,
+        isFavorite: isFavorite,
       }))
-    } 
-    else {
-      setAllProducts(allProducts.map((product) => {
-        if (product.id === productId) {
-          return { ...product, isFavorite: true }
-        }
-        return product
-      }))
+
     }
+    catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-    const message = selectedProduct.isFavorite
-    ? `${selectedProduct.name} removed from favorites`
-    : `${selectedProduct.name} added to favorites`;
-    ToastAndroid.show(message, ToastAndroid.SHORT)
+  const onAddToFavorite = async () => {
+    const userFavoriteRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
 
+    try {
+      const doc = await userFavoriteRef.get();
+      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : []; 
+
+      if (favoriteProducts.includes(productId)) {
+        favoriteProducts = favoriteProducts.filter(id => id !== itemId);
+        await userFavoriteRef.update({ productIds: favoriteProducts });
+        ToastAndroid.show(`${itemName} removed from Favorites`, ToastAndroid.SHORT);
+      } else {
+        favoriteProducts.push(itemId);
+        await userFavoriteRef.set({ productIds: favoriteProducts });
+        ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
+      }
+      
+      dispatch(toggleFavorite(itemId));
+      dispatch(updateFavorites(favoriteProducts));
+    }
+    catch (error) {
+      console.log('Error:', error);
+    }
+  }
+
+  const addRelatedProductToFavorite = async () => {
+    const userFavoriteRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
+
+    try {
+      const doc = await userFavoriteRef.get();
+      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : []; 
+
+      if (favoriteProducts.includes(productId)) {
+        favoriteProducts = favoriteProducts.filter(id => id !== itemId);
+        await userFavoriteRef.update({ productIds: favoriteProducts });
+        ToastAndroid.show(`${itemName} removed from Favorites`, ToastAndroid.SHORT);
+      } else {
+        favoriteProducts.push(itemId);
+        await userFavoriteRef.set({ productIds: favoriteProducts });
+        ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
+      }
+      
+      dispatch(toggleFavorite(itemId));
+      dispatch(updateFavorites(favoriteProducts));
+    }
+    catch (error) {
+      console.log('Error:', error);
+    }
+  }
+
+  const handleRelatedProductPress = (item) => {
+    navigation.push('mainProductScreen', {productId: item.id})
   }
 
   const toggleColors = (colorName) => {
@@ -113,13 +183,22 @@ export const MainProductScreen = ({ route }) => {
       return;
     }
 
+    if(userSizeOption == undefined) {
+      Alert.alert(
+        'Error',
+        'Please select size',
+        [{ text: 'OK', onPress: () => null }]
+      );
+      return;
+    }
+
     const productExists = cartProductList.some(cartItem => {
-      return cartItem.id === item.id 
-      && cartItem.color === userColorSelected
-      && cartItem.size === userSizeOption
+      return cartItem.id === item.id
+        && cartItem.color === userColorSelected
+        && cartItem.size === userSizeOption
     });
 
-    if(productExists){
+    if (productExists) {
       ToastAndroid.show('Product already exists', ToastAndroid.SHORT)
       return
     }
@@ -131,22 +210,25 @@ export const MainProductScreen = ({ route }) => {
       productQuantity: 1,
       stocks: item.stocks - 1
     }]
-    
+
     setCartProductList(updatedCartList);
 
     try {
       await AsyncStorage.setItem('cartList', JSON.stringify(updatedCartList))
       ToastAndroid.show(`${item.name} added to cart`, ToastAndroid.SHORT);
     }
-    catch(error) {
+    catch (error) {
       console.log(error);
     }
   };
-  
 
   const handleRatingsReviews = () => {
-    navigation.navigate('ratingsReviewsScreen', { productReview: selectedProduct.ratings })
+    navigation.navigate('ratingsReviewsScreen', { productReview: productDetail.ratings })
   }
+
+  useEffect(() => {
+    fetchProduct()
+  }, [])
 
   return (
     <>
@@ -154,7 +236,7 @@ export const MainProductScreen = ({ route }) => {
         <Header
           title={true}
           headerStyle={styles.header()}
-          headerTitle={selectedProduct.name}
+          headerTitle={productDetail.title}
           leftIconPress={() => navigation.goBack()}
           headerLeftIcon
           leftIcon={() => {
@@ -166,14 +248,27 @@ export const MainProductScreen = ({ route }) => {
           }}
         />
       </View>
-      <Screen withScroll bgColor={color.white} translucent={true}>
+      <Screen withScroll bgColor={color.white} translucent={true} loading={loading}>
         <View style={styles.mainProduct()}>
           <ScrollView
             horizontal={true}
             alwaysBounceHorizontal={true}
             contentContainerStyle={styles.scrollImageView()}>
-            <Image style={styles.mainProductImage()} source={selectedProduct?.mainProductImageOne} />
-            <Image style={styles.mainProductImage()} source={selectedProduct?.mainProductImageTwo} />
+            {
+              loading 
+              ? (
+                  <Text>Loading...</Text>
+                ) : productDetail.images && productDetail.images.length > 0 
+                ? (
+                    productDetail.images.map((imageUri, index) => (
+                      <Image
+                        key={index}
+                        style={styles.mainProductImage()}
+                        source={{ uri: imageUri }}
+                      />
+                    ))
+                   ) 
+                   : ( <Text>No images available</Text> )}
           </ScrollView>
           <View style={styles.productOptions()}>
             <TouchableOpacity onPress={handleSizeDropdownPress} activeOpacity={0.5} style={styles.productDropdown(userSizeOption)}>
@@ -186,7 +281,7 @@ export const MainProductScreen = ({ route }) => {
             </TouchableOpacity>
             <TouchableOpacity style={[styles.addToFavorite()]} onPress={onAddToFavorite}>
               {
-                favoriteProduct ?
+                productDetail.isFavorite ?
                   (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
                   : (<IcHeart fill={color.darkGray} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
               }
@@ -194,14 +289,14 @@ export const MainProductScreen = ({ route }) => {
           </View>
           <View style={styles.productInfo()}>
             <View style={styles.productBrandPrice()}>
-              <Text style={styles.productBrand()}>{selectedProduct.brand}</Text>
-              <Text style={styles.productPrice()}>${selectedProduct.originalPrice}</Text>
+              <Text style={styles.productBrand()}>{productDetail.brand}</Text>
+              <Text style={styles.productPrice()}>${productDetail.price}</Text>
             </View>
-            <Text style={styles.productTitle()}>{selectedProduct.name}</Text>
+            <Text style={styles.productTitle()}>{productDetail.title}</Text>
             <TouchableOpacity activeOpacity={0.7} onPress={handleRatingsReviews}>
-              <StarRatings ratings={selectedProduct.ratings} ratingsCounts={selectedProduct.rating_count} customStarRatingStyle={styles.starRatings()} />
+              <StarRatings ratings={productDetail.rating} ratingsCounts={productDetail.rating} customStarRatingStyle={styles.starRatings()} />
             </TouchableOpacity>
-            <Text style={styles.productDescription()}>{selectedProduct.description}</Text>
+            <Text style={styles.productDescription()}>{productDetail.description}</Text>
           </View>
           <TouchableOpacity activeOpacity={0.5} style={styles.productDetails()}>
             <Text style={styles.productDetailText()}>Item details</Text>
@@ -219,26 +314,30 @@ export const MainProductScreen = ({ route }) => {
         <View style={styles.relatedProducts()}>
           <View style={styles.relatedProductsHeading()}>
             <Text style={styles.relatedProductsTitle()}>You can also like this</Text>
-            <Text style={styles.relatedProductsItems()}>12 items</Text>
+            <Text style={styles.relatedProductsItems()}>{showRelatedProducts.length} items</Text>
           </View>
           <View>
             <FlatList
               horizontal
-              contentContainerStyle={{ paddingBottom: size.moderateScale(80) }}
-              data={allProducts}
+              contentContainerStyle={{ paddingBottom: size.moderateScale(80), gap:size.moderateScale(10) }}
+              data={showRelatedProducts}
               renderItem={({item}) => {
+                const itemTitle = item?.title.length > 15 ? item?.title.substring(0, 13) + '...' : item?.title
                 return (
                   <ProductCardMain
-                    onProductPress={() => navigation.push('mainProductScreen', { productId: item.id })}
-                    customProductStyle={styles.productCardHome()}
-                    productImage={item?.images}
+                    onProductPress={() => handleRelatedProductPress(item)}
+                    productTitle={itemTitle}
                     brandName={item?.brand}
-                    productTitle={item?.name}
-                    originalPrice={item?.originalPrice}
+                    showRatings={true}
+                    showRatingHorizontal={true}
+                    productImage={item?.images[0]}
+                    originalPrice={item?.price}
                     sellingPrice={item?.sellingPrice}
-                    ratings={item.ratings}
-                    ratingsCounts={item.rating_count}
-                    newProduct={item?.isProductNew}
+                    showDiscount={true}
+                    ratings={item?.rating}
+                    addToFavoriteIcon={true}
+                    flotingBtnStyle={styles.flotingBtnStyle()}
+                    onAddToFavorite={addRelatedProductToFavorite}
                   />
                 )
               }}
@@ -246,16 +345,15 @@ export const MainProductScreen = ({ route }) => {
             />
           </View>
         </View>
-
       </Screen>
       <View style={styles.bottomView()}>
-        <Button 
+        <Button
           title={soldOut ? 'SOLD OUT' : 'ADD TO CART'}
           disabled={soldOut}
-          onPress={() => handleAddToCartBtn(selectedProduct)} 
-          />
+          onPress={() => handleAddToCartBtn(productDetail)}
+        />
       </View>
-        {/* Bottom Sheet Containers */}
+      {/* Bottom Sheet Containers */}
       <BottomSheetContainer
         isVisible={isSizeBottomSheetVisible}
         onClose={handleSizeDropdownPressClose}
@@ -288,7 +386,7 @@ export const MainProductScreen = ({ route }) => {
           {
             colorsList.map((color) => {
               return (
-                <TouchableOpacity onPress={() => toggleColors(color.name)} activeOpacity={0.7} style={[styles.colorItem(),  userColorSelected === color.name && styles.colorItemActive()]} key={color.name+color.color}>
+                <TouchableOpacity onPress={() => toggleColors(color.name)} activeOpacity={0.7} style={[styles.colorItem(), userColorSelected === color.name && styles.colorItemActive()]} key={color.name + color.color}>
                   <View style={styles.colors(color.color)}></View>
                 </TouchableOpacity>
               )

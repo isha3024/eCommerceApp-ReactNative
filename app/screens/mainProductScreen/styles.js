@@ -35,7 +35,7 @@ export const scrollImageView = () => ({
 })
 
 export const mainProductImage = () => ({
-  width: size.deviceWidth - 70,
+  width: size.deviceWidth,
   height: size.deviceHeight - 400,
 })
 
@@ -172,6 +172,10 @@ export const relatedProductsItems = () => ({
   fontSize: fontSize.mediumSmall,
   color: color.darkGray,
   fontFamily: fonts.metropolisRegular
+})
+
+export const flotingBtnStyle = () => ({
+  // top: '50%'
 })
 
 export const productCardHome = () => ({
