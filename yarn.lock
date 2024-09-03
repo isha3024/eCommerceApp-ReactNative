@@ -3022,6 +3022,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/netinfo@npm:^11.3.2":
+  version: 11.3.2
+  resolution: "@react-native-community/netinfo@npm:11.3.2"
+  peerDependencies:
+    react-native: ">=0.59"
+  checksum: 10c0/1f54960ca49edbc226e48e7b7788e457e25d1a0770501c09f63e587873a905b80168231ebd13f4013bb34c865f5a36f26e330058c3e1be84e865c21b5aca92b6
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/app@npm:^20.4.0":
   version: 20.4.0
   resolution: "@react-native-firebase/app@npm:20.4.0"
@@ -5271,6 +5280,7 @@ __metadata:
     "@gorhom/bottom-sheet": "npm:^4.6.3"
     "@react-native-async-storage/async-storage": "npm:^1.24.0"
     "@react-native-camera-roll/camera-roll": "npm:^7.8.3"
+    "@react-native-community/netinfo": "npm:^11.3.2"
     "@react-native-firebase/app": "npm:^20.4.0"
     "@react-native-firebase/auth": "npm:^20.4.0"
     "@react-native-firebase/firestore": "npm:^20.4.0"

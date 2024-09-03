@@ -1,11 +1,14 @@
 import React from 'react';
 import {Image, StatusBar} from 'react-native';
-import {color, images, lottieIcons, size} from '../../theme';
-import * as styles from './styles';
-import { Screen } from '../../components';
+
 import LottieView from 'lottie-react-native';
 
+import {color, images, lottieIcons, size} from '../../theme';
+import { Screen } from '../../components';
+import * as styles from './styles';
+
 export const SplashScreen = () => {
+
   return (
     <Screen bgColor={color.primary} style={styles.rootContainer()}>
       <StatusBar translucent={true} />

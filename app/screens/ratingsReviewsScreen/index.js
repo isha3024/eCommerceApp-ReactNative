@@ -20,6 +20,7 @@ export const RatingsReviewsScreen = ({route}) => {
   const reviewData = data.reviewsList;
   const navigation = useNavigation();
   
+  const [productReview, setProductReview] = useState([]);
   const [showHeaderTitle, setShowHeaderTitle] = useState(false);
   const [showReviewWithImg, setShowReviewWithImg] = useState(false);
   const [showAddReview, setShowAddReview] = useState(false);
@@ -41,11 +42,11 @@ export const RatingsReviewsScreen = ({route}) => {
   const handleAddReview = () => {
     setShowAddReview(true);
   }
+
   const handleCloseReview = () => {
     setShowAddReview(false);
   }
   
-
   const openImagePicker = () => {
     const options = {
       mediaType: 'photo',
@@ -92,17 +93,17 @@ export const RatingsReviewsScreen = ({route}) => {
     return(
       <View style={styles.customerReviewBlock()}>
         <View style={styles.avatar()}>
-          <Image style={styles.img()} source={item.customerImg} />
+          <Image style={styles.img()} source={images.imgAvatarLogo} />
         </View>
         <View style={styles.customerReview()}>
-          <Text style={styles.customerName()}>{item.customerName}</Text>
+          <Text style={styles.customerName()}>{item.reviewerName}</Text>
           <View style={styles.spaceBetween()}>
-            <StarRatings ratings={item.customerRatings} />
-            <Text style={styles.lightText()}>{item.reviewPostedDate}</Text>
+            <StarRatings ratings={item?.rating} ratingsCounts={item?.rating} />
+            <Text style={styles.lightText()}>{item?.date.split("T")[0]}</Text>
           </View>
-          <Text style={styles.reviewDesc()}>{item.reviewDescription}</Text>
+          <Text style={styles.reviewDesc()}>{item?.comment}</Text>
           {
-            showReviewWithImg && ( 
+            showReviewWithImg && item?.image ( 
               <ScrollView 
                 horizontal={true} 
                 showsHorizontalScrollIndicator={false}
@@ -121,6 +122,11 @@ export const RatingsReviewsScreen = ({route}) => {
       </View>
     )
   }
+
+  useEffect(() => {
+    const { productReview } = route.params;
+    setProductReview(productReview.reviews)
+  },[route.params.productReview])
 
   return (
     <View withScroll style={styles.mainView()}>
@@ -189,9 +195,10 @@ export const RatingsReviewsScreen = ({route}) => {
           </View>
           <View style={styles.customerReviewMainBlock()}>
             <FlatList
-              data={reviewData}
+              data={productReview}
               showsVerticalScrollIndicator={false}
               renderItem={renderReviewsBlock}
+              contentContainerStyle={styles.flatListContainer()}
               keyExtractor={(item, index) => item+index}
               onScroll={(e) => {
                 const scrolling = e.nativeEvent.contentOffset.y;
@@ -201,7 +208,6 @@ export const RatingsReviewsScreen = ({route}) => {
                   handleOnScrollDOWN()
                 }
               }}
-              contentContainerStyle={styles.flatListContainer()}
             />
           </View>
         </View>

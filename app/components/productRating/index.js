@@ -9,7 +9,6 @@ export const ProductRating = () => {
   const [starRating, setStarRating] = useState(0);
   const starRatingOptions = [1, 2, 3, 4, 5];
 
-
   return (
     <View style={styles.rateStars()}>
       {

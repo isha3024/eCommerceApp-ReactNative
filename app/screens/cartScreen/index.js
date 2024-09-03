@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useSelector, useDispatch } from 'react-redux'
 import firebase from '@react-native-firebase/app'
 // import firestore from '@react-native-firebase/firestore'
-import { doc, getDoc, getFirestore } from '@react-native-firebase/firestore'
+import { doc, getDoc, getFirestore, updateDoc } from '@react-native-firebase/firestore'
 
 import * as data from '../../json'
 import { color, IcChevronRight, IcClose, IcSearch, size } from '../../theme'
@@ -42,48 +42,32 @@ export const CartScreen = () => {
 
   const fetchCartProduct = async () => {
     const userDocId = firebase.firestore()
-        .collection('users')
-        .doc(userInfo.uid).id;
+      .collection('users')
+      .doc(userInfo.uid).id;
 
-    const productsSnapshot = await firebase.firestore().collection('products').get();
-    const productList = productsSnapshot.docs.map(doc => {
-        const productData = doc.data();
-        return productData;
-    });
+    const userDocRef = firebase.firestore().collection('users')
+      .doc(userDocId).collection('cartProducts').doc('cartList');
 
-    const docRef = doc(db, `users/${userDocId}/cartProducts/cartList`);
-    setLoading(true);
+    setLoading(true)
     try {
-        const docSnap = await getDoc(docRef);
+      const docSnap = await getDoc(userDocRef);
+      if (docSnap.exists) {
+        const data = docSnap.data();
+        const cartProducts = data.productsInCart || [];
 
-        if (docSnap.exists) {  // Accessing exists as a property
-            const data = docSnap.data();
-            const cartItems = data.cartList || []; // now it's an array of objects
-            setCartProductIds(cartItems.map(item => item.productId));
-
-            const cartProducts = productList.filter(product =>
-                cartItems.some(cartItem => cartItem.productId === product.id)
-            );
-
-            // Map through the cartProducts and add quantity
-            const orderedProductsWithQuantity = cartProducts.map(product => {
-                const cartItem = cartItems.find(item => item.productId === product.id);
-                return {
-                    ...product,
-                    productQuantity: cartItem?.productQuantity || 1
-                };
-            });
-
-            setOrderedProducts(orderedProductsWithQuantity);
-        } else {
-            console.log('No such document!');
-        }
+        const productsSnapshot = await firebase.firestore().collection('products').get();
+        const productLists = productsSnapshot.docs.map(doc => doc.data());
+        const showCartProducts = productLists.filter(product => cartProducts.some(cartItem => cartItem.id === product.id));
+        setOrderedProducts(showCartProducts);
+      } else {
+        console.log('No cart document found for the user!');
+      }
     } catch (error) {
-        console.log(error);
+      console.log('Error fetching cart products:', error);
     } finally {
-        setLoading(false);
+      setLoading(false)
     }
-};
+  };
 
 
   const fadeAnim = () => {
@@ -144,7 +128,6 @@ export const CartScreen = () => {
     const userDocId = firebase.firestore()
       .collection('users')
       .doc(userInfo.uid).id;
-    console.log('userDocId: ', userDocId);
 
     const productsSnapshot = await firebase.firestore().collection('products').get();
     const productList = productsSnapshot.docs.map(doc => {
@@ -207,67 +190,58 @@ export const CartScreen = () => {
     setOriginalPromoCodes(data.promoCards);
   }
 
-  const updateProductQuantity  = async (item, newQuantity) => {
+  const increaseProductQuantity = async (item) => {
     const userDocId = firebase.firestore()
       .collection('users')
       .doc(userInfo.uid).id;
 
     const docRef = doc(db, `users/${userDocId}/cartProducts/cartList`);
+    
+
     try {
       const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const cartItems = data.cartList || [];
-
-        const updatedCartItems = cartItems.map((cartItem) => {
-          if (cartItem.id === item.id) {
-            return { ...cartItem, productQuantity: newQuantity };
-          }
-          return cartItem
-        })
-
-        await firebase.firestore().collection('users').doc(userInfo.uid)
-          .collection('cartProducts')
-          .doc('cartList')
-          .update({
-            cartList: updatedCartItems
+      if (docSnap.exists) {
+        const cartProducts = docSnap.data().productsInCart || [];
+        console.log('cartProducts: ',cartProducts)
+        const index = cartProducts.findIndex(product => product.id === item.id);
+        
+        if(index !== -1) {
+          cartProducts[index].productQuantity += 1;
+          await updateDoc(docRef, {
+            productsInCart: cartProducts
           })
-
-        setOrderedProducts(prevProducts =>
-          prevProducts.map(product =>
-            product.id === item.id
-              ? { ...product, productQuantity: newQuantity }
-              : product
-          )
-        );
+        }
+        else {
+          console.log('Product not found in cart');
+        }
       }
       else {
-        console.log('No such document!');
+        console.log('Cart document does not exist');
       }
     } catch (error) {
-      console.log('Error: ', error)
+      console.error('Error updating product quantity:', error);
     }
-  }
+  };
 
-  const increaseProductQuantity = async (item) => {
-    const newQuantity = item?.productQuantity ? item.productQuantity + 1 : 2;
-    await updateProductQuantity(item, newQuantity);
-};
-
-const decreaseProductQuantity = async (item) => {
-  const newQuantity = item?.productQuantity > 1 ? item.productQuantity - 1 : 1;
-  await updateProductQuantity(item, newQuantity);
-};
+  const decreaseProductQuantity = async (item) => {
+    console.log('decreaseProductQuantity: ',item)
+  };
 
   const calculateTotalAmount = () => {
-    if (!orderedProducts || orderedProducts.length === 0) return 0;
+    if (!orderedProducts || orderedProducts.length === 0) {
+      return 0;
+    };
 
     let total = 0;
     orderedProducts.forEach((product) => {
-      const quantity = product.quantity || 1;
-      total += product.price * quantity;
-    });
-    setTotalAmount(total.toFixed(2))
+      if(appliedDiscount && selectedPromoCode.length > 0) {
+        total += (product.price * product.productQuantity) - (product.price * (appliedDiscount / 100));
+        setTotalAmount(total.toFixed(2))
+      }else {
+        total += product.price * product.productQuantity;
+        setTotalAmount(total.toFixed(2))
+      }
+    })
   }
 
   const renderProducts = ({ item }) => {
@@ -278,10 +252,13 @@ const decreaseProductQuantity = async (item) => {
           productHorizontal
           productTitle={item?.title}
           brandName={item?.brand}
-          productImage={item?.images[0]}
+          showRatings={true}
+          ratingsCounts={item?.rating}
+          ratings={item?.rating}
           originalPrice={item?.price}
+          productImage={item?.images[0]}
           productQuantitySelection={true}
-          selectQuantity={item?.productQuantity} 
+          selectQuantity={item?.productQuantity}
           cartOptions={true}
           cartOptionPress={() => showCartOptionsOfProduct(item)}
           increaseQuantity={() => increaseProductQuantity(item)}
@@ -305,7 +282,7 @@ const decreaseProductQuantity = async (item) => {
 
   useEffect(() => {
     calculateTotalAmount();
-  }, [orderedProducts]);
+  }, [orderedProducts, appliedDiscount,selectedPromoCode]);
 
   useFocusEffect(
     useCallback(() => {

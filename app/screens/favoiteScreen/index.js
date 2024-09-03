@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ToastAndroid, LogBox } from 'react-native'
+import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation, ToastAndroid, LogBox, ScrollView } from 'react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { firebase } from '@react-native-firebase/auth'
 import { doc, getDoc, getFirestore } from '@react-native-firebase/firestore'
 
-import { IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color } from '../../theme'
+import { IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import { useMainContext } from '../../contexts/MainContext'
 import * as styles from './styles'
@@ -80,7 +80,7 @@ export const FavoriteScreen = () => {
   const navigation = useNavigation();
   const db = getFirestore();
   const { userInfo } = useSelector(state => state.authUser);
-  const {favoriteProductIds, setFavoriteProductIds} = useMainContext()
+  const { favoriteProductIds, setFavoriteProductIds } = useMainContext()
 
   LogBox.ignoreLogs(['Encountered two children with the same key']);
 
@@ -93,45 +93,14 @@ export const FavoriteScreen = () => {
   const [title, showTitle] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
-  const fetchfavoritesProduct = async () => {
+  const userDocId = firebase.firestore()
+      .collection('users')
+      .doc(userInfo.uid).id;
+
+  const handleProductRemove = async (item) => {
     const userDocId = firebase.firestore()
-    .collection('users')
-    .doc(userInfo.uid).id;
-
-    const productsSnapshot = await firebase.firestore().collection('products').get();
-    const productList = productsSnapshot.docs.map(doc => {
-      const productData = doc.data();
-      return productData;
-    });
-    
-    const docRef = doc(db, `users/${userDocId}/favoriteProducts/favoritesList`)
-    setLoading(true)
-    try {
-      const docSnap = await getDoc(docRef);
-
-      if(docSnap.exists) {
-        const data = docSnap.data();
-        const productIds = data.productIds || [];
-        setFavoriteProductIds(productIds);
-        const favoriteProducts = productList.filter(product => productIds.includes(product.id));
-        setProducts(favoriteProducts);
-      }else {
-        console.log('No such document!');
-      }
-      
-    } catch (error) {
-      console.log(error) 
-    }
-    finally {
-      setLoading(false)
-    }
-  }
-
-  
-  const handleProductRemove = async (item) => { 
-    const userDocId = firebase.firestore()
-    .collection('users')
-    .doc(userInfo.uid).id;
+      .collection('users')
+      .doc(userInfo.uid).id;
     console.log('userDocId: ', userDocId);
 
     const productsSnapshot = await firebase.firestore().collection('products').get();
@@ -144,20 +113,20 @@ export const FavoriteScreen = () => {
     try {
       const docSnap = await getDoc(docRef);
 
-      if(docSnap.exists) {
+      if (docSnap.exists) {
         const data = docSnap.data();
         const productIds = data.productIds || [];
         console.log('productIds: ', productIds);
         console.log('itemId: ', item.id)
-        if(productIds.includes(item.id)) {
+        if (productIds.includes(item.id)) {
           const index = productIds.indexOf(item.id);
           productIds.splice(index, 1);
           await firebase.firestore().collection('users').doc(userInfo.uid)
-          .collection('favoriteProducts')
-          .doc('favoritesList')
-          .update({
-            productIds: productIds
-          });
+            .collection('favoriteProducts')
+            .doc('favoritesList')
+            .update({
+              productIds: productIds
+            });
           console.log('Updated Firebase with productIds:', productIds);
           setFavoriteProductIds(productIds);
           const favoriteProducts = productList.filter(product => productIds.includes(product.id));
@@ -166,12 +135,12 @@ export const FavoriteScreen = () => {
         // setFavoriteProductIds(productIds);
         // const favoriteProducts = productList.filter(product => productIds.includes(product.id));
         // setProducts(favoriteProducts)s
-      }else {
+      } else {
         console.log('No such document!');
       }
-      
+
     } catch (error) {
-      console.log(error) 
+      console.log(error)
     }
     finally {
       setLoading(false)
@@ -232,10 +201,9 @@ export const FavoriteScreen = () => {
         productTitle={item?.title}
         brandName={item?.brand}
         showRatings={true}
-        showRatingHorizontal={true}
-        ratings={item?.ratings}
+        ratingsCounts={item?.rating}
+        ratings={item?.rating}
         showDiscount={showGrid ? false : true}
-        ratingsCounts={item?.rating_count}
         originalPrice={item?.price}
         isProductSold={item?.isProductSold}
         productImage={item?.images[0]}
@@ -256,11 +224,38 @@ export const FavoriteScreen = () => {
     setSortOptionName(sortProductType[3].name)
   }, [])
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchfavoritesProduct()
-    }, [])
-  )
+  useEffect(() => {
+    const favoriteRef = firebase.firestore().collection('users').doc(userDocId)
+    .collection('favoriteProducts')
+    .doc('favoritesList');
+
+    setLoading(true)
+    const unsuscribe = favoriteRef.onSnapshot(async (doc) => {
+      if(doc.exists) {
+        const { productIds } = doc.data();
+        if(productIds.length > 0) {
+          const productsQuery = firebase.firestore().collection('products').where('id', 'in', productIds);
+          const productSnapshot = await productsQuery.get();
+          const products = productSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+
+          setProducts(products);
+          setLoading(false)
+        } else {
+          setProducts([]);
+          setLoading(false)
+        }
+      } 
+      else {
+        setProducts([]);
+        setLoading(false)
+      }
+    });
+
+    return () => unsuscribe();
+  }, [userDocId])
 
 
   return (
@@ -279,16 +274,21 @@ export const FavoriteScreen = () => {
           {title ? null : (<Text style={styles.title()}>Favorites</Text>)}
         </View>
         <View style={styles.horizontalScroll(title)}>
-          <View style={styles.flatList()}>
-            <FlatList
-              horizontal
-              contentContainerStyle={{ paddingRight: 10 }}
-              showsHorizontalScrollIndicator={false}
-              data={womenTopCategory}
-              renderItem={renderWomenTop}
-              keyExtractor={item => item.id}
-            />
-          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.flatList()}
+            contentContainerStyle={{ paddingBottom: size.moderateScale(4), flexDirection: 'row', paddingRight: size.moderateScale(20) }}>
+            {
+              womenTopCategory.map((item, index) => {
+                return (
+                  <View style={styles.listItem()} key={index}>
+                    <Text style={styles.listText()}>{item.name}</Text>
+                  </View>
+                )
+              })
+            }
+          </ScrollView>
           <View style={styles.filterContainer()}>
             <TouchableOpacity onPress={() => navigation.navigate('filterScreen')} style={styles.filterItem()}>
               <IcFilter />
@@ -311,7 +311,7 @@ export const FavoriteScreen = () => {
           ? (
             <View style={styles.favProductsEmptyView()}>
               <Text style={styles.emptyText()}>No Favorite Products</Text>
-              <Button 
+              <Button
                 title='ADD PRODUCTS'
                 border
                 onPress={() => navigation.navigate('homeStackNavigation')}

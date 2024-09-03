@@ -9,7 +9,7 @@ import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, StarRati
 import { IcBackArrow, IcFilledHeart, IcHeart, IcShare, color, size } from '../../theme';
 import { useMainContext } from '../../contexts/MainContext';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addToCart } from '../../redux';
+import { addToCart, toggleFavorite, updateFavorites } from '../../redux';
 import * as styles from './styles'
 
 
@@ -50,8 +50,6 @@ export const MainProductScreen = ({ route }) => {
   const { userInfo } = useSelector(state => state.authUser)
   const productId = route.params.productId;
   const selectedSize = route.params.selectedSize;
-  const favoriteProduct = false;
-  const soldOut = false;
 
   const [loading, setLoading] = useState(false);
   const [productDetail, setProductDetail] = useState({});
@@ -68,10 +66,8 @@ export const MainProductScreen = ({ route }) => {
     try {
       const productsSnapshot = await firestore().collection('products').get();
       const productList = productsSnapshot.docs.map(doc => {
-        const productData = doc.data();
-        return productData;
+        return doc.data();
       });
-
 
       const mainProduct = productList.filter(product => product.id === productId) || [0];
       setProductDetail(mainProduct[0] || {});
@@ -88,7 +84,6 @@ export const MainProductScreen = ({ route }) => {
         ...prevState,
         isFavorite: isFavorite,
       }))
-
     }
     catch (error) {
       console.log(error);
@@ -97,24 +92,51 @@ export const MainProductScreen = ({ route }) => {
     }
   }
 
-  const onAddToFavorite = async () => {
-    const userFavoriteRef = firebase.firestore.collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
+  const mainProductAddToFavorite = async (item) => {
+    const userFavoriteRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
 
     try {
       const doc = await userFavoriteRef.get();
       let favoriteProducts = doc.exists ? (doc.data().productIds || []) : [];
 
-      if (favoriteProducts.includes(productId)) {
-        favoriteProducts = favoriteProducts.filter(id => id !== itemId);
+      if (favoriteProducts.includes(item.id)) {
+        favoriteProducts = favoriteProducts.filter(id => id !== item.id);
         await userFavoriteRef.update({ productIds: favoriteProducts });
-        ToastAndroid.show(`${itemName} removed from Favorites`, ToastAndroid.SHORT);
+        ToastAndroid.show(`${item.title} removed from Favorites`, ToastAndroid.SHORT);
       } else {
-        favoriteProducts.push(itemId);
+        favoriteProducts.push(item.id);
         await userFavoriteRef.set({ productIds: favoriteProducts });
-        ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
+        ToastAndroid.show(`${item.title} added to Favorites`, ToastAndroid.SHORT);
       }
 
-      dispatch(toggleFavorite(itemId));
+      setProductDetail(prevState => ({
+        ...prevState,
+        isFavorite: !prevState.isFavorite
+      }));
+    }
+    catch (error) {
+      console.log('Error:', error);
+    }
+  }
+
+  const addRelatedProductToFavorite = async (item) => {
+    const userFavoriteRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
+
+    try {
+      const doc = await userFavoriteRef.get();
+      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : [];
+
+      if (favoriteProducts.includes(item.id)) {
+        favoriteProducts = favoriteProducts.filter(id => id !== item.id);
+        await userFavoriteRef.update({ productIds: favoriteProducts });
+        ToastAndroid.show(`${item.title} removed from Favorites`, ToastAndroid.SHORT);
+      } else {
+        favoriteProducts.push(item.id);
+        await userFavoriteRef.set({ productIds: favoriteProducts });
+        ToastAndroid.show(`${item.title} added to Favorites`, ToastAndroid.SHORT);
+      }
+
+      dispatch(toggleFavorite(item.id));
       dispatch(updateFavorites(favoriteProducts));
     }
     catch (error) {
@@ -122,28 +144,46 @@ export const MainProductScreen = ({ route }) => {
     }
   }
 
-  const addRelatedProductToFavorite = async () => {
-    const userFavoriteRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('favoriteProducts').doc('favoritesList')
+  const handleAddToCartBtn = async (item) => {
+    // console.log('mainItem: ', item)
+    if (userColorSelected === '' || userSizeOption == undefined) {
+      Alert.alert(
+        'Error',
+        'Please select color and size',
+        [{ text: 'OK', onPress: () => null }]
+      );
+      return;
+    }
+    
+    const userCartRef = firebase.firestore().collection('users').doc(userInfo.uid)
+    .collection('cartProducts')
+    .doc('cartList');
 
     try {
-      const doc = await userFavoriteRef.get();
-      let favoriteProducts = doc.exists ? (doc.data().productIds || []) : [];
+      const doc = await userCartRef.get();
+      let productsInCart = [];
 
-      if (favoriteProducts.includes(productId)) {
-        favoriteProducts = favoriteProducts.filter(id => id !== itemId);
-        await userFavoriteRef.update({ productIds: favoriteProducts });
-        ToastAndroid.show(`${itemName} removed from Favorites`, ToastAndroid.SHORT);
-      } else {
-        favoriteProducts.push(itemId);
-        await userFavoriteRef.set({ productIds: favoriteProducts });
-        ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
+      if(doc.exists) {
+        const data = doc.data();
+        productsInCart = data.productsInCart || [];
       }
 
-      dispatch(toggleFavorite(itemId));
-      dispatch(updateFavorites(favoriteProducts));
+      const updateCartProducts = [
+        ...productsInCart,
+        {
+          id: item.id,
+          productQuantity: 1,
+          selectedSize: selectedSize,
+          userColorSelected: userColorSelected
+        }
+      ];
+
+      await userCartRef.set({
+        productsInCart: updateCartProducts
+      }, {merge: true})      
     }
     catch (error) {
-      console.log('Error:', error);
+      console.error('Error adding to cart:', error);
     }
   }
 
@@ -224,44 +264,8 @@ export const MainProductScreen = ({ route }) => {
   //   }
   // };
 
-  const handleAddToCartBtn = async (item) => {
-    // console.log('mainItem: ', item)
-    const userCartRef = firebase.firestore().collection('users').doc(userInfo.uid).collection('cartProducts').doc('cartList');
-
-    try {
-      const doc = await userCartRef.get();
-      let cartProducts = doc.exists ? (doc.data().productIds || []) : [];
-
-      if (cartProducts.includes(item.id)) {
-        cartProducts = cartProducts.filter(id => id !== item.id);
-        await userCartRef.update({
-          productIds: cartProducts,
-          selectedSize: userSizeOption,
-          selectedColor: userColorSelected,
-        });
-        ToastAndroid.show(`${item.title} removed from Cart List`, ToastAndroid.SHORT);
-      } else {
-        cartProducts.push(item.id);
-        await userCartRef.set({
-          productIds: cartProducts,
-          selectedSize: userSizeOption,
-          selectedColor: userColorSelected,
-        });
-        ToastAndroid.show(`${item.title} added to Cart List`, ToastAndroid.SHORT);
-      }
-      dispatch(addToCart(item.id));
-      // dispatch(updateFavorites(cartProducts));
-      // setFavoriteProductIds((prevId) => 
-      //   [...prevId, itemId]
-      // )
-    }
-    catch (error) {
-      console.log('Error:', error);
-    }
-  }
-
-  const handleRatingsReviews = () => {
-    navigation.navigate('ratingsReviewsScreen', { productReview: productDetail.rating })
+  const handleRatingsReviews = (productReview) => {
+    navigation.navigate('ratingsReviewsScreen', { productReview: productReview })
   }
 
   const showShippingDetails = (message) => {
@@ -272,8 +276,36 @@ export const MainProductScreen = ({ route }) => {
     fetchProduct()
   }, [])
 
+  useEffect(() => {
+    const favoriteRef = firebase.firestore().collection('users').doc(userInfo.uid)
+    .collection('favoriteProducts')
+    .doc('favoritesList');
+    setLoading(true)
+    const unsuscribe = favoriteRef.onSnapshot(async (doc) => {
+      if(doc.exists) {
+        const { productIds } = doc.data();
+        if(productIds.length > 0) {
+          const productsQuery = firebase.firestore().collection('products').where('id', 'in', productIds);
+          const productSnapshot = await productsQuery.get();
+          const products = productSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          
+          setLoading(false)
+        } else {
+          // setProducts([]);
+          setLoading(false)
+        }
+      }
+    });
+    setLoading(false)
+
+    return () => unsuscribe();
+  }, [userInfo.uid, productDetail])
+
   return (
-    <>
+    <Screen loading={loading}>
       <View style={styles.topView()}>
         <Header
           title={true}
@@ -321,7 +353,7 @@ export const MainProductScreen = ({ route }) => {
               <Text style={styles.productOptionText()}>Color</Text>
               <IcBackArrow style={styles.dropDownArrow()} width={size.moderateScale(10)} height={size.moderateScale(10)} />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.addToFavorite()]} onPress={onAddToFavorite}>
+            <TouchableOpacity style={[styles.addToFavorite()]} onPress={() => mainProductAddToFavorite(productDetail)}>
               {
                 productDetail.isFavorite ?
                   (<IcFilledHeart fill={color.secondary} width={size.moderateScale(18)} height={size.moderateScale(16)} />)
@@ -335,8 +367,9 @@ export const MainProductScreen = ({ route }) => {
               <Text style={styles.productPrice()}>${productDetail.price}</Text>
             </View>
             <Text style={styles.productTitle()}>{productDetail.title}</Text>
-            <TouchableOpacity activeOpacity={0.7} onPress={handleRatingsReviews}>
-              <StarRatings ratings={productDetail.rating} ratingsCounts={productDetail.rating} customStarRatingStyle={styles.starRatings()} />
+            <TouchableOpacity activeOpacity={0.7} onPress={() => handleRatingsReviews(productDetail)}>
+              {/* <StarRatings ratings={productDetail.rating} ratingsCounts={productDetail.rating} customStarRatingStyle={styles.starRatings()} /> */}
+              <StarRatings customStarRatings={styles.starRatings()} ratings={productDetail?.rating} ratingsCounts={productDetail?.rating} />
             </TouchableOpacity>
             <Text style={styles.productDescription()}>{productDetail.description}</Text>
           </View>
@@ -442,6 +475,6 @@ export const MainProductScreen = ({ route }) => {
         </View>
         {/* <Button title='ADD TO CART' btnStyle={styles.button()} /> */}
       </BottomSheetContainer>
-    </>
+    </Screen>
   )
 }

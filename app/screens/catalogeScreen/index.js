@@ -102,8 +102,10 @@ export const CatalogeScreen = ({route}) => {
         const productData = doc.data();
         return productData;
       });
-  
-      setProducts(productList);
+
+      const filterProduct = productList.filter(product => product.category.toLowerCase() === categoryUrl.name.toLowerCase());
+      setProducts(filterProduct);
+
     } catch (error) {
       console.error('Error fetching products in homeScreen:', error);
     } finally {
@@ -304,6 +306,7 @@ export const CatalogeScreen = ({route}) => {
           brandName={item?.brand}
           showRatings={true}
           ratingsCounts={item?.rating}
+          ratings={item?.rating}
           originalPrice={item?.price}
           newProduct={showGrid ? false : item?.isProductNew}
           productImage={item?.images[0]}
@@ -319,29 +322,13 @@ export const CatalogeScreen = ({route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      setProducts(products)
-    },[products])
-  )
-
-  useFocusEffect(
-    useCallback(() => {
       filterProducts()
     },[filters])
-  )
-
-  useFocusEffect(
-    useCallback(() => {
-      console.log('filters: ',route.params?.appliedFilters)
-    },[route.params?.appliedFilters, products])
   )
 
   useEffect(() => {
     setIsSortOptionSelected(sortProductType[3])
     setSortOptionName(sortProductType[3].name)
-  },[])
-
-  useEffect(() => {
-    showProductsByCategorySelected()
   },[])
 
   useEffect(() => {
@@ -371,7 +358,7 @@ export const CatalogeScreen = ({route}) => {
   }, [userInfo])
 
   return (
-      <Screen bgColor={color.white} translucent={true} loading={loading}>
+      <Screen translucent={true}>
         <Header
           title={title ? true : false}
           headerTitle={categoryUrl.name}
@@ -391,11 +378,11 @@ export const CatalogeScreen = ({route}) => {
             {title ? null : (<Text style={styles.title()}>{categoryUrl.name}</Text>)}
           </View>
           <View style={styles.horizontalScroll(title)}>
-            <View style={styles.flatList()}>
             <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: size.moderateScale(4),flexGrow: 1}}>
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.flatList()}
+              contentContainerStyle={{paddingBottom: size.moderateScale(4), flexDirection: 'row', paddingRight: size.moderateScale(20)}}>
               {
                 womenTopCategory.map((item, index) => {
                   return (
@@ -406,7 +393,6 @@ export const CatalogeScreen = ({route}) => {
                 })
               }
             </ScrollView>
-            </View>
             <View style={styles.filterContainer()}>
               <TouchableOpacity onPress={() => navigation.navigate('filterScreen')} style={styles.filterItem()}>
                 <IcFilter />
@@ -424,7 +410,7 @@ export const CatalogeScreen = ({route}) => {
             </View>
           </View>
         </View>
-        <View style={styles.bottomContainer(showGrid)}>
+        <Screen bgColor={color.white} loading={loading} style={styles.bottomContainer(showGrid)}>
           {
             showGrid ? (
               <FlatList
@@ -453,7 +439,7 @@ export const CatalogeScreen = ({route}) => {
               />
             )
           } 
-        </View>
+        </Screen>
         <BottomSheetContainer
           isVisible={isSheetVisible}
           onClose={handleClosePress}

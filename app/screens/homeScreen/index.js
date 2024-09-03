@@ -181,8 +181,9 @@ export const HomeScreen = () => {
         brandName={item?.brand}
         productTitle={itemTitle}
         originalPrice={item?.price}
+        showRatings={true}
         ratingsCounts={item?.rating}
-        ratings={item?.ratings}
+        ratings={item?.rating}
         newProduct={item?.isProductNew}
         addToFavoriteIcon
         onAddToFavorite={() => handleFavoriteBtn(item.id, item.title)}

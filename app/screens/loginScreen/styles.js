@@ -46,10 +46,24 @@ export const textAlignRight = () => ({
   gap: size.moderateScale(4),
 })
 
+export const textCenter = () => ({
+  textAlign: 'center',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: size.moderateScale(4),
+})
+
 export const text = () => ({
   color: color.mostlyBlack,
   fontSize: fontSize.small,
   fontFamily: fonts.metropolisMedium
+})
+
+export const textBold = () => ({
+  color: color.mostlyBlack,
+  fontSize: fontSize.small,
+  fontFamily: fonts.metropolisSemiBold
 })
 
 export const errorText = () => ({

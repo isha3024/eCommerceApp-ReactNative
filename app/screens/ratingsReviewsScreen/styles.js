@@ -148,7 +148,8 @@ export const bodyText = () => ({
 export const customerReviewMainBlock = () => ({
   marginTop: size.moderateScale(28),
   marginBottom: size.moderateScale(20),
-  // backgroundColor: color.error
+  // backgroundColor: color.error,
+  paddingBottom: size.moderateScale(300)
 })
 
 export const customerReviewBlock = () => ({
@@ -160,24 +161,29 @@ export const customerReviewBlock = () => ({
 
 export const flatListContainer = () => ({
   paddingBottom: size.moderateScale(250),
+  flexGrow: 1,
 })
 
 export const avatar = () => ({
   borderRadius: size.moderateScale(30),
   position: 'absolute',
   left: 0,
-  top: 0
+  top: 0,
 })
 
 export const img = () => ({
   width: size.moderateScale(40),
   height: size.moderateScale(40),
+  borderRadius: size.moderateScale(50),
+  overflow: 'hidden'
 })
 
 export const customerReview = () => ({
   zIndex: size.moderateScale(-10),
   backgroundColor: color.white,
-  padding: size.moderateScale(24),
+  paddingHorizontal: size.moderateScale(24),
+  paddingTop: size.moderateScale(30),
+  paddingBottom: size.moderateScale(24),
   borderRadius: size.moderateScale(8),
   elevation: size.moderateScale(8)
 })
