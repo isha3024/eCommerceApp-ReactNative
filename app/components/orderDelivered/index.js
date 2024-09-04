@@ -1,18 +1,61 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { View, FlatList } from 'react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { firebase } from '@react-native-firebase/app'
+import { doc, getDoc, getFirestore } from '@react-native-firebase/firestore'
 
 import { Button } from '../button'
 import { Text } from '../text'
 import * as styles from './styles'
 import { useMainContext } from '../../contexts/MainContext'
+import { useSelector } from 'react-redux'
+import { Screen } from '../screen'
+import { color, size } from '../../theme'
 
 
 export const OrderDelivered = () => {
 
   const navigation = useNavigation();
+  const db = getFirestore();
+  const { userInfo } = useSelector(state => state.authUser);
+
   const {orders, getOrdersFromStorage} = useMainContext();
-  console.log('orders: ',orders.length)
+  
+  const [orderDetails, setOrderDetails] = useState([]);
+  const [loading, setLoading] = useState(false)
+
+  const fetchUserOrders = async () => {
+    const userDocId = firebase.firestore().collection('users').doc(userInfo.uid).id;
+    const userOrdersRef = doc(db, `users/${userDocId}/userOrders/userOrdersList`);
+
+
+    setLoading(true)
+    try {
+      const docSnap = await getDoc(userOrdersRef);
+      if (docSnap.exists) {
+        const orders = docSnap.data().userOrdersList;
+        setOrderDetails(orders);
+        setLoading(false)
+      }
+      else {
+        setOrdersPlaced(0)
+      }
+    }
+    catch (error) {
+      setLoading(false)
+      console.log("Error fetching user orders from Firestore!!",error)
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+
+  const handleOrderDetailScreen = (item) => {
+    console.log("orderedItem: ",item)
+    navigation.navigate('orderDetailsScreen', { orderDetail: item })
+  }
+
+
   const renderOrderDetailsSelected = ({item}) => {
     return(
       <View style={styles.orderedItem()}>
@@ -39,7 +82,7 @@ export const OrderDelivered = () => {
             border
             title='Details'
             btnStyle={styles.button()}
-            onPress={() => navigation.navigate('orderDetailsScreen', {source: 'orderDelivered', orderDetail: item})}
+            onPress={() => handleOrderDetailScreen(item)}
           />
           <Text style={styles.successText()}>Delivered</Text>
         </View>
@@ -53,13 +96,17 @@ export const OrderDelivered = () => {
     },[])
   )
 
+  useEffect(() => {
+    fetchUserOrders()
+  },[])
+
   return (
-    <View style={styles.orderInfo()}>
+    <Screen style={styles.orderInfo()} loading={loading} bgColor={color.primary} translucent={true} loaderPosition={size.deviceHeight - 300}>
       {
-        orders && orders.length > 0  
+        orderDetails && orderDetails.length > 0  
         ? (
       <FlatList 
-        data={orders}
+        data={orderDetails}
         renderItem={renderOrderDetailsSelected}
         contentContainerStyle={styles.flatListOrder()}
       />
@@ -76,6 +123,6 @@ export const OrderDelivered = () => {
         )
       }
       
-    </View>
+    </Screen>
   )
 }

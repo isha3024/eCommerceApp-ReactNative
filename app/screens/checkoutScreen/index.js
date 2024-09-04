@@ -16,7 +16,7 @@ export const CheckoutScreen = ({ route }) => {
   const { userInfo } = useSelector(state => state.authUser);
   const db = getFirestore
 
-  const orderTotal = route.params.orderTotal;
+  const {orderTotal, appliedDiscount} = route.params;
   let cartList = route.params.cartList;
 
   const deliveryFees = 15;
@@ -75,6 +75,7 @@ export const CheckoutScreen = ({ route }) => {
       orderAmountSummary: orderAmountSummary,
       orderItem: cartList,
       orderAmount: orderTotal,
+      appliedDiscount: appliedDiscount,
       deliveryFees: deliveryFees,
       selectedAddress: selectedAddress,
       paymentCardSelected: paymentCardSelected,
@@ -100,7 +101,7 @@ export const CheckoutScreen = ({ route }) => {
         await userOrdersDocRef.set({ userOrdersList: updatedOrders });
         await emptyCartList()
       }
-      // navigation.navigate('successScreen');
+      navigation.navigate('successScreen');
     } catch (error) {
       console.log('Error!! DocSnap for userOrders does not exist!!!', error);
     } finally {

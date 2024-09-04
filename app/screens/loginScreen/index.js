@@ -312,10 +312,6 @@ export const LoginScreen = () => {
           <Text style={styles.text()}>Forget your password?</Text>
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.textCenter()} activeOpacity={0.5} onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.text()}>Dont have an account?</Text>
-          <Text style={styles.textBold()}>Sign Up</Text>
-        </TouchableOpacity>
         <Button
           activeOpacity={0.8}
           btnStyle={styles.buttonWithText()}

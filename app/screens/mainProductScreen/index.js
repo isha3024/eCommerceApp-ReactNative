@@ -149,7 +149,7 @@ export const MainProductScreen = ({ route }) => {
     if (userColorSelected === '' || userSizeOption == undefined) {
       Alert.alert(
         'Error',
-        'Please select color and size',
+        'Please select both: Color and Size',
         [{ text: 'OK', onPress: () => null }]
       );
       return;
@@ -167,21 +167,28 @@ export const MainProductScreen = ({ route }) => {
         const data = doc.data();
         productsInCart = data.productsInCart || [];
       }
+      const productExists = productsInCart.some(product => 
+        product.id === item.id
+      );
 
-      const updateCartProducts = [
-        ...productsInCart,
-        {
-          id: item.id,
-          productQuantity: 1,
-          selectedSize: selectedSize,
-          userColorSelected: userColorSelected
-        }
-      ];
-
-      await userCartRef.set({
-        productsInCart: updateCartProducts
-      }, {merge: true})
-      ToastAndroid.show(`${item.title} added to Cart`, ToastAndroid.SHORT);
+      if (productExists) {
+        ToastAndroid.show(`${item.title} already exists in the cart`, ToastAndroid.SHORT);
+      } 
+      else {
+        const updateCartProducts = [
+          ...productsInCart,
+          {
+            id: item.id,
+            productQuantity: 1,
+            selectedSize: selectedSize,
+            userColorSelected: userColorSelected
+          }
+        ];
+        await userCartRef.set({
+          productsInCart: updateCartProducts
+        }, { merge: true });
+        ToastAndroid.show(`${item.title} added to Cart`, ToastAndroid.SHORT);
+      }
     }
     catch (error) {
       console.error('Error adding to cart:', error);
@@ -368,9 +375,9 @@ export const MainProductScreen = ({ route }) => {
               <Text style={styles.productPrice()}>${productDetail.price}</Text>
             </View>
             <Text style={styles.productTitle()}>{productDetail.title}</Text>
-            <TouchableOpacity activeOpacity={0.7} onPress={() => handleRatingsReviews(productDetail)}>
+            <TouchableOpacity style={styles.starRatings()} activeOpacity={0.7} onPress={() => handleRatingsReviews(productDetail)}>
               {/* <StarRatings ratings={productDetail.rating} ratingsCounts={productDetail.rating} customStarRatingStyle={styles.starRatings()} /> */}
-              <StarRatings customStarRatings={styles.starRatings()} ratings={productDetail?.rating} ratingsCounts={productDetail?.rating} />
+              <StarRatings ratings={productDetail?.rating} ratingsCounts={productDetail?.rating} />
             </TouchableOpacity>
             <Text style={styles.productDescription()}>{productDetail.description}</Text>
           </View>

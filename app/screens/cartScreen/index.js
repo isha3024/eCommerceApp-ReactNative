@@ -20,7 +20,6 @@ export const CartScreen = () => {
   const dispatch = useDispatch()
   const { userInfo } = useSelector(state => state.authUser);
   const {
-    cartProductIds,
     setCartProductIds,
   } = useMainContext();
 
@@ -336,7 +335,7 @@ export const CartScreen = () => {
               )
               : (
                 <View style={styles.orderListEmpty()}>
-                  <Text style={styles.orderListEmptyText()}>No orders placed</Text>
+                  <Text style={styles.orderListEmptyText()}>No Items In Cart List</Text>
                   <Text style={styles.orderListAddProductText()}>You have products from your wishlist waiting to be yours</Text>
                   <View style={styles.buttonWrapper()}>
                     <Button
@@ -387,7 +386,7 @@ export const CartScreen = () => {
               <Button
                 title='CHECK OUT'
                 btnStyle={styles.button()}
-                onPress={() => navigation.navigate('checkoutScreen', { orderTotal: totalAmount, cartList: orderedProducts })}
+                onPress={() => navigation.navigate('checkoutScreen', { orderTotal: totalAmount, cartList: orderedProducts, appliedDiscount: appliedDiscount })}
               />
             </View>
           )

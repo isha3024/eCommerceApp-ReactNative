@@ -73,13 +73,10 @@ const sortProductType = [
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
 export const CatalogeScreen = ({route}) => {
-  console.log("route.params: ",route)
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { filters, setFilters, categoryUrl, setCategoryUrl } = useMainContext();
-  console.log('categoryUrl: ', categoryUrl)
-  console.log("filters from cataloge screen: ",filters);
   const { userInfo } = useSelector(state => state.authUser);
   const favoriteProducts = useSelector(state => state.favorites.favoriteProducts);
 
@@ -414,7 +411,7 @@ export const CatalogeScreen = ({route}) => {
             </View>
           </View>
         </View>
-        <Screen bgColor={color.white} loading={loading} style={styles.bottomContainer(showGrid)}>
+        <Screen bgColor={color.white} loading={loading} loaderPosition={size.deviceHeight - 300} style={styles.bottomContainer(showGrid)}>
           {
             showGrid ? (
               <FlatList

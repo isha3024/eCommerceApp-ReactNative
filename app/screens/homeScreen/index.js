@@ -232,8 +232,7 @@ export const HomeScreen = () => {
         if (doc.exists) {
           const data = doc.data();
           const favorites = data.productIds || [];
-          // dispatch(updateFavorites(favorites))
-          return favorites
+          dispatch(updateFavorites(favorites))
         }
       })
       return () => unsubscribe()

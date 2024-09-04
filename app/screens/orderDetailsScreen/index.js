@@ -3,8 +3,7 @@ import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { Button, Header, ProductCardMain, Screen, Text } from '../../components'
-import { color, IcBackArrow, IcMasterCard, IcSearch, images } from '../../theme'
-import * as data from '../../json'
+import { color, IcBackArrow, IcMasterCard, IcSearch } from '../../theme'
 import * as styles from './styles'
 
 
@@ -12,6 +11,7 @@ export const OrderDetailsScreen = ({route}) => {
 
   const navigation = useNavigation()
   const {source, orderDetail} = route.params;
+  console.log("orderDetail: ", orderDetail)
 
   const showOrder = () => {
     let order;
@@ -76,12 +76,15 @@ export const OrderDetailsScreen = ({route}) => {
                   key={index}
                   activeOpacity={0.7}
                   productHorizontal={true}
-                  productImage={product.images}
-                  productTitle={product.name}
+                  productImage={product.images[0]}
+                  productTitle={product.title}
                   brandName={product.brand}
+                  showRatings={true}
+                  ratingsCounts={product?.rating}
+                  ratings={product?.rating}
                   productColor={product.productColor}
                   productSize={product.size}
-                  originalPrice={product.productPrice ?? product.originalPrice}
+                  originalPrice={product.price}
                   productUnits={product.productQuantity}
                 />
               )
@@ -114,7 +117,7 @@ export const OrderDetailsScreen = ({route}) => {
           </View>
           <View style={styles.information()}>
             <Text style={styles.lightText()}>Discount:</Text>
-            <Text style={styles.darkTextMedium()}>{orderDetail.orderItem[0].discount}%, Personal promo code</Text>
+            <Text style={styles.darkTextMedium()}>{orderDetail.appliedDiscount}%, Personal promo code</Text>
           </View>
           <View style={styles.information()}>
             <Text style={styles.lightText()}>Total Amount:</Text>

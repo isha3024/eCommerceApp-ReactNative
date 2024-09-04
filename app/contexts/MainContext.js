@@ -31,7 +31,6 @@ export const MainContextProvider = props => {
     priceRange: [0, 500],
     brands: []
   });
-  console.log("filters in mainContext.js: ",filters)
 
   const saveProducts = async (products) => {
 

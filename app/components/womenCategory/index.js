@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 
 import { Text } from '../text'
-import { color, images } from '../../theme'
+import { color, images, size } from '../../theme'
 import * as styles from './styles'
 import { Screen } from '../screen'
 import { useMainContext } from '../../contexts/MainContext'
@@ -104,7 +104,7 @@ export const WomenCategories = () => {
   }
 
   return (
-    <Screen loading={loading} translucent={true} bgColor={color.primary}>
+    <Screen loading={loading} translucent={true} loaderPosition={size.deviceHeight - 200} bgColor={color.primary}>
       <View style={styles.categoriesSection()}>
         <TouchableOpacity activeOpacity={0.9} style={styles.summerSale()}>
           <Text style={styles.title()}>SUMMER SALE</Text>

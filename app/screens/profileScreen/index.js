@@ -1,24 +1,47 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Image, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import auth from '@react-native-firebase/auth'
+import firebase from '@react-native-firebase/app'
+import { doc, getDoc, getFirestore } from '@react-native-firebase/firestore';
+import { useDispatch, useSelector } from 'react-redux';
 
-import * as styles from './styles';
 import { Header, Screen, Text } from '../../components';
 import { color, IcBackArrow, IcLogout, images, size } from '../../theme';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
 import { clearFavorites, clearUser } from '../../redux';
 import { useMainContext } from '../../contexts/MainContext';
+import * as styles from './styles';
 
 export const ProfileScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const userInfo = useSelector(state => state.authUser.userInfo);
+  const db = getFirestore()
+  const { userInfo } = useSelector(state => state.authUser);
   const { addresses, paymentCardSelected, getOrdersFromStorage, orders } = useMainContext();
 
   const [userProfilePhoto, setuserProfilePhoto] = useState(images.imgAvatarLogo);
-  const [currentUser, setCurrentUser] = useState({})
+  const [currentUser, setCurrentUser] = useState({});
+  const [ordersPlaced, setOrdersPlaced] = useState(0);
+
+  const fetchUserOrders = async () => {
+    const userDocId = firebase.firestore().collection('users').doc(userInfo.uid).id;
+    const userOrdersRef = doc(db, `users/${userDocId}/userOrders/userOrdersList`);
+
+    try {
+      const docSnap = await getDoc(userOrdersRef);
+      if (docSnap.exists) {
+        const orders = docSnap.data().userOrdersList.length;
+        setOrdersPlaced(orders);
+      }
+      else {
+        setOrdersPlaced(0)
+      }
+    }
+    catch (error) {
+      console.log("Error fetching user orders from Firestore!!",error)
+    }
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -69,6 +92,10 @@ export const ProfileScreen = () => {
     }
   },[])
 
+  useEffect(() => {
+    fetchUserOrders()
+  },[userInfo])
+
   return (
     <Screen translucent={true} bgColor={color.primary} style={styles.mainContainer()}>
       <Header
@@ -96,7 +123,7 @@ export const ProfileScreen = () => {
           <TouchableOpacity onPress={() => navigation.navigate('orderScreen')} activeOpacity={0.6} style={styles.profileOptionItem()}>
             <View>
               <Text style={styles.profileOptionTitle()}>My Orders</Text>
-              <Text style={styles.message()}>{orders && orders.length > 0 ? `Already have ${orders.length} orders` : 'No orders yet'}</Text>
+              <Text style={styles.message()}>{ordersPlaced ? `Already have ${ordersPlaced} orders` : 'No orders yet'}</Text>
             </View>
             <IcBackArrow fill={color.darkGray} width={size.moderateScale(8)} height={size.moderateScale(12)} style={styles.forwardArrow()} />
           </TouchableOpacity>

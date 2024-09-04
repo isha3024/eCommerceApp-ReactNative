@@ -3,7 +3,7 @@ import { View, FlatList, TouchableOpacity, Platform, UIManager, LayoutAnimation,
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { firebase } from '@react-native-firebase/auth'
-import { doc, getDoc, getFirestore } from '@react-native-firebase/firestore'
+import { doc, getDoc, getFirestore, setDoc } from '@react-native-firebase/firestore'
 
 import { IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, size } from '../../theme'
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
@@ -131,9 +131,6 @@ export const FavoriteScreen = () => {
           const favoriteProducts = productList.filter(product => productIds.includes(product.id));
           setProducts(favoriteProducts);
         }
-        // setFavoriteProductIds(productIds);
-        // const favoriteProducts = productList.filter(product => productIds.includes(product.id));
-        // setProducts(favoriteProducts)s
       } else {
         console.log('No such document!');
       }
@@ -192,6 +189,35 @@ export const FavoriteScreen = () => {
     setSheetVisible(false);
   }
 
+  const addProductToCart = async (item) => {
+    const docRef = doc(db, `users/${userDocId}/cartProducts/cartList`);
+
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists) {
+        const productsInCart = docSnap.data().productsInCart || [];
+        const productExists = productsInCart.some(product => product.id === item.id);
+        if (productExists) {
+          ToastAndroid.show(`${item.title} already exists in cart list`, ToastAndroid.SHORT);
+        }else {
+          const updatedProductsInCart = [...productsInCart, {
+            id: item.id,
+            productQuantity: 1
+          }];
+          await setDoc(docRef, { productsInCart: updatedProductsInCart }, { merge: true });
+          ToastAndroid.show(`${item.title} added to cart`, ToastAndroid.SHORT);
+        }
+      }
+      else {
+        await setDoc(docRef, { productsInCart: [item] });
+        ToastAndroid.show(`${item.title} added to cart`, ToastAndroid.SHORT)
+      }
+    }
+    catch (error) {
+      console.log("Error fetching the cart list from user!! ",error)
+    }
+  }
+
   const renderProducts = ({ item }) => {
     return (
       <ProductCardMain
@@ -210,6 +236,7 @@ export const FavoriteScreen = () => {
         addToFavoriteIcon={false}
         addToCartIcon={true}
         showTopRightIcon={true}
+        addToCartPress={() => addProductToCart(item)}
         addToCartBtnStyle={!showGrid ? styles.flotingButton() : styles.flotingButtonList()}
         customProductStyle={showGrid ? styles.productCardListItem() : styles.productCardGridItem()}
         closeIconStyle={showGrid ? styles.closeIconList() : styles.closeIconGrid()}
