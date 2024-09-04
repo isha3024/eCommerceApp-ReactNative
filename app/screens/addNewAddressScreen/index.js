@@ -110,11 +110,6 @@ export const AddNewAddressScreen = ({ route }) => {
             onChangeText={text => setAddress(prev => ({ ...prev, country: text }))}
             autoCapitalize='words'
             keyboardType='default'
-            icon
-            iconPlace='right'
-            renderRightIcon={() => (
-              <IcBackArrow width={size.moderateScale(10)} height={size.moderateScale(8)} style={styles.backArrow()} />
-            )}
           />
           <Button 
             title={isEditing ? "Update Address" : "Add Address"}

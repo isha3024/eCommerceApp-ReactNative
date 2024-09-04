@@ -143,8 +143,6 @@ export const HomeScreen = () => {
         ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
       }
       
-      dispatch(toggleFavorite(itemId));
-      dispatch(updateFavorites(favoriteProducts));
       setFavoriteProductIds((prevId) => 
         [...prevId, itemId]
       )
@@ -234,7 +232,8 @@ export const HomeScreen = () => {
         if (doc.exists) {
           const data = doc.data();
           const favorites = data.productIds || [];
-          dispatch(updateFavorites(favorites))
+          // dispatch(updateFavorites(favorites))
+          return favorites
         }
       })
       return () => unsubscribe()

@@ -69,16 +69,6 @@ export const RegisterScreen = () => {
       setIsNameValid(true)
     }
 
-    // if(!inputField.username){
-    //   newErrors.username = 'Username is required'
-    //   setIsUsernameValid(false);
-    // }else if(inputField.username.length < 2){
-    //   newErrors.username = 'Username length must be greater than 2 letter'
-    //   setIsUsernameValid(false);
-    // }else {
-    //   setIsUsernameValid(true)
-    // }
-
     if(!inputField.email){
       newErrors.email = 'Email is required'
       setIsEmailValid(false)
@@ -93,10 +83,6 @@ export const RegisterScreen = () => {
       newErrors.password = 'Password is required'
       setIsPasswordValid(false)
     }
-    // else if(inputField.password.length < 8){
-    //   newErrors.password = 'Password length must be greater than 8'
-    //   setIsPasswordValid(false)
-    // }
     else {
       setIsPasswordValid(true)
     }
@@ -157,58 +143,63 @@ export const RegisterScreen = () => {
   //handle submit function using firebase/auth
   
   
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!validateForm()) {
       return;
     }
-
+  
     const { name, email, password } = inputField;
-
-    try{
-      setLoading(true)
-      const userCredentials = await auth().createUserWithEmailAndPassword(email, password);
-      const user = userCredentials.user;
-
-      await firebase.firestore().collection('users').doc(user.uid).set({
-        uid: user.uid,
-        name: name,
-        email: user.email,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  
+    setLoading(true);
+  
+    auth().createUserWithEmailAndPassword(email, password)
+      .then(async (userCredentials) => {
+        const user = userCredentials.user;
+        return firebase.firestore().collection('users').doc(user.uid).set({
+          uid: user.uid,
+          name: name,
+          email: user.email,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        })
+          .then(() => {
+            dispatch(setUser({ uid: user.uid, email: user.email, name }));
+            setInputField({
+              name: '',
+              email: '',
+              password: '',
+            });
+            setErrors({
+              email: '',
+              username: '',
+              password: ''
+            });
+            navigation.navigate('bottomStackNavigation');
+          });
       })
-      dispatch(setUser({uid: user.uid, email: user.email, name}));
-      setInputField({
-        name: '',
-        email: '',
-        password: '',
+      .catch((error) => {
+        console.log('error: ', error);
+        setLoading(false);
+  
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            ToastAndroid.show('Email already exists, Use Different Email', ToastAndroid.SHORT);
+            break;
+          case 'auth/invalid-email':
+            ToastAndroid.show('Invalid Email', ToastAndroid.SHORT);
+            break;
+          case 'auth/weak-password':
+            ToastAndroid.show('Weak Password', ToastAndroid.SHORT);
+            break;
+          default:
+            ToastAndroid.show('An error occurred', ToastAndroid.SHORT);
+            break;
+        }
       })
-      setErrors({
-        email: '',
-        username: '',
-        password: ''
-      })
-      navigation.navigate('bottomStackNavigation')
-    }
-    catch (error) {
-      console.log('error: ',error)
-      if(error.code == 'auth/email-already-in-use') {
+      .finally(() => {
         setLoading(false);
-        ToastAndroid.show('Email already exists', ToastAndroid.SHORT);
-      }
-
-      if(error.code === 'auth/invalid-email') {
-        setLoading(false);
-        ToastAndroid.show('Invalid Email', ToastAndroid.SHORT);
-      }
-
-      if(error.code === 'auth/weak-password') {
-        setLoading(false);
-        ToastAndroid.show('Weak Password', ToastAndroid.SHORT);
-      }
-    }
-    finally {
-      setLoading(false);
-    }
-  }
+      });
+  };
+  
 
   const googleButtonSignIn = async () => {
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true});

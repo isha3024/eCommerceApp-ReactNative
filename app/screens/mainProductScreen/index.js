@@ -136,8 +136,8 @@ export const MainProductScreen = ({ route }) => {
         ToastAndroid.show(`${item.title} added to Favorites`, ToastAndroid.SHORT);
       }
 
-      dispatch(toggleFavorite(item.id));
-      dispatch(updateFavorites(favoriteProducts));
+      // dispatch(toggleFavorite(item.id));
+      // dispatch(updateFavorites(favoriteProducts));
     }
     catch (error) {
       console.log('Error:', error);
@@ -180,7 +180,8 @@ export const MainProductScreen = ({ route }) => {
 
       await userCartRef.set({
         productsInCart: updateCartProducts
-      }, {merge: true})      
+      }, {merge: true})
+      ToastAndroid.show(`${item.title} added to Cart`, ToastAndroid.SHORT);
     }
     catch (error) {
       console.error('Error adding to cart:', error);

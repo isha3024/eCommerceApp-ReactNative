@@ -101,7 +101,6 @@ export const FavoriteScreen = () => {
     const userDocId = firebase.firestore()
       .collection('users')
       .doc(userInfo.uid).id;
-    console.log('userDocId: ', userDocId);
 
     const productsSnapshot = await firebase.firestore().collection('products').get();
     const productList = productsSnapshot.docs.map(doc => {

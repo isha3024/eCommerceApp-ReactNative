@@ -22,6 +22,7 @@ export const MainContextProvider = props => {
   const [paymentCardSelectedIndex, setPaymentCardSelectedIndex] = useState(0)
   const [cartProductList, setCartProductList] = useState([]);
   const [cartProductIds, setCartProductIds] = useState([]);
+  const [categoryUrl, setCategoryUrl] = useState({});
   const [orders, setOrders] = useState([]);
   const [filters, setFilters] = useState({
     colors: [],
@@ -30,6 +31,7 @@ export const MainContextProvider = props => {
     priceRange: [0, 500],
     brands: []
   });
+  console.log("filters in mainContext.js: ",filters)
 
   const saveProducts = async (products) => {
 
@@ -241,8 +243,10 @@ export const MainContextProvider = props => {
       setOrders: setOrders,
       saveOrders: saveOrders,
       getOrdersFromStorage: getOrdersFromStorage,
-      filter: filters,
-      setFilters: setFilters
+      filters: filters,
+      setFilters: setFilters,
+      categoryUrl: categoryUrl,
+      setCategoryUrl: setCategoryUrl,
     }
   }, [
     currentUser, setCurrentUser,
@@ -265,7 +269,8 @@ export const MainContextProvider = props => {
     cartProductIds, setCartProductIds,
     orders, setOrders,
     saveOrders, getOrdersFromStorage,
-    filters , setFilters
+    filters , setFilters,
+    categoryUrl, setCategoryUrl,
   ]);
 
 

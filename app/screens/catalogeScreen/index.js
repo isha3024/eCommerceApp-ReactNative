@@ -10,6 +10,8 @@ import { IcBackArrow, IcFilter, IcGrid, IcList, IcSearch, IcSortIcon, color, siz
 import { BottomSheetContainer, Button, Header, ProductCardMain, Screen, Text } from '../../components'
 import { toggleFavorite, updateFavorites } from '../../redux'
 import * as styles from './styles'
+import { useMainContext } from '../../contexts/MainContext'
+import { cartOptionItem } from '../cartScreen/styles'
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -71,24 +73,28 @@ const sortProductType = [
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
 export const CatalogeScreen = ({route}) => {
+  console.log("route.params: ",route)
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { filters, setFilters, categoryUrl, setCategoryUrl } = useMainContext();
+  console.log('categoryUrl: ', categoryUrl)
+  console.log("filters from cataloge screen: ",filters);
   const { userInfo } = useSelector(state => state.authUser);
   const favoriteProducts = useSelector(state => state.favorites.favoriteProducts);
-  const { categoryUrl } = route.params;
 
   const [loading, setLoading] = useState(false)
   const [products, setProducts] = useState([]);
   const [isSheetVisible, setSheetVisible] = useState(false);
   const [sortOptionName, setSortOptionName] = useState(null)
   const [isSortOptionSelected, setIsSortOptionSelected] = useState(sortProductType[3])
-  const [filters, setFilters] = useState(null)
+  // const [filters, setFilters] = useState(null);
   const [showGrid, setShowGrid] = useState(true);
   const [title, showTitle] = useState(false);
   const [isSizeSheetVisible, setSizeSheetVisible] = useState(false);
   const [userSizeOption, setUserSizeOption] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState(null)
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
   
   LogBox.ignoreLogs([
     'Tried to modify key `reduceMotion` of an object which has been already passed to a worklet'
@@ -107,7 +113,7 @@ export const CatalogeScreen = ({route}) => {
       setProducts(filterProduct);
 
     } catch (error) {
-      console.error('Error fetching products in homeScreen:', error);
+      console.error('Error fetching products in CatalogeScreen:', error);
     } finally {
       setLoading(false);
     }
@@ -233,8 +239,6 @@ export const CatalogeScreen = ({route}) => {
         ToastAndroid.show(`${itemName} added to Favorites`, ToastAndroid.SHORT);
       }
       
-      dispatch(toggleFavorite(itemId));
-      dispatch(updateFavorites(favoriteProducts))
     }
     catch (error) {
       console.log('Error:', error);
@@ -242,7 +246,7 @@ export const CatalogeScreen = ({route}) => {
   };
 
   const filterProducts = () => {
-    if(filters !== null) {
+    if(filters !== null && filters !== undefined) {
       let filteredProducts = products;
 
       //filter by category
@@ -250,6 +254,7 @@ export const CatalogeScreen = ({route}) => {
         filteredProducts = filteredProducts.filter((product) => {
          return product.categories && product.categories.some(category => filters.category.includes(category))
         })
+        console.log("filteredProducts in category: ",filteredProducts)
       }
 
       // filter by size
@@ -320,27 +325,25 @@ export const CatalogeScreen = ({route}) => {
       )
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      filterProducts()
-    },[filters])
-  )
+  useEffect(() => {
+    filterProducts();
+  }, [filters]);
 
   useEffect(() => {
     setIsSortOptionSelected(sortProductType[3])
     setSortOptionName(sortProductType[3].name)
   },[])
 
-  useEffect(() => {
-    const filtersFromParams = route.params?.appliedFilters || null;
-    console.log('filters: ',filtersFromParams)    
-    setFilters(filtersFromParams);
-    filterProducts();
-  }, [route.params?.appliedFilters, products]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchProducts();
+      filterProducts();
+    }, [filters])
+  );
 
   useEffect(() => {
     fetchProducts();
-  }, [])
+  }, [categoryUrl])
 
   useEffect(() => {
     if(userInfo) {
@@ -350,7 +353,8 @@ export const CatalogeScreen = ({route}) => {
         if (doc.exists) {
           const data = doc.data();
           const favorites = data.productIds || [];
-          dispatch(updateFavorites(favorites))
+          // dispatch(updateFavorites(favorites))
+          return favorites;
         }
       })
       return () => unsubscribe()

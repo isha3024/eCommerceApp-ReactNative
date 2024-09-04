@@ -4,7 +4,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useSelector, useDispatch } from 'react-redux'
 import firebase from '@react-native-firebase/app'
-// import firestore from '@react-native-firebase/firestore'
 import { doc, getDoc, getFirestore, updateDoc } from '@react-native-firebase/firestore'
 
 import * as data from '../../json'
@@ -202,7 +201,6 @@ export const CartScreen = () => {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists) {
         const cartProducts = docSnap.data().productsInCart || [];
-        console.log('cartProducts: ',cartProducts)
         const index = cartProducts.findIndex(product => product.id === item.id);
         
         if(index !== -1) {

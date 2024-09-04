@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, StatusBar, ToastAndroid } from 'react-native'
 import {  useNavigation } from '@react-navigation/native'
+import { firebase } from '@react-native-firebase/auth'
+import { useSelector } from 'react-redux'
 
 import { color, IcBackArrow, IcDHL, IcFedEx, IcMasterCard, IcUSPS, size } from '../../theme'
 import { useMainContext } from '../../contexts/MainContext'
-import { Button, Header } from '../../components'
+import { Button, Header, Screen } from '../../components'
 import * as styles from './styles'
+import { doc, getFirestore, updateDoc } from '@react-native-firebase/firestore'
 
 export const CheckoutScreen = ({ route }) => {
 
   const navigation = useNavigation();
+  const { userInfo } = useSelector(state => state.authUser);
+  const db = getFirestore
+
   const orderTotal = route.params.orderTotal;
-  const cartList = route.params.cartList;
+  let cartList = route.params.cartList;
+
   const deliveryFees = 15;
   const orderAmountSummary = (Number(orderTotal) + deliveryFees).toFixed(2);
-
   const { selectedAddress, paymentCardSelected, orders, saveOrders, setCartProductList, saveCartProductList } = useMainContext();
 
 
   const [maskedNumber, setMaskedNumber] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const generateRandomOrderNo = () => {
     return 'Order №'+Math.floor(Math.random() * 101) + 100;
@@ -33,17 +40,32 @@ export const CheckoutScreen = ({ route }) => {
   }
 
   const generateTrackingNumber = () => {
-    return 'IW'+Math.floor(Math.random() * 1000000000) + 1000000000
+    return 'IW'+Math.floor(Math.random() * 100000) + 100000
   }
 
-  const handleCheckOut = () => {
-    if(Object.keys(selectedAddress).length === 0) {
-      ToastAndroid.show('Please select address', ToastAndroid.SHORT);
-      return
+  const emptyCartList = async () => {
+    const db = getFirestore();
+    const userDocId = firebase.firestore().collection('users').doc(userInfo.uid).id;
+    const cartDocRef = doc(db, `users/${userDocId}/cartProducts/cartList`);
+  
+    try {
+      await updateDoc(cartDocRef, {
+        productsInCart: [],
+      });
+      console.log('CartList has been emptied.');
+    } catch (error) {
+      console.error('Error emptying CartList:', error);
     }
-    if(Object.keys(paymentCardSelected).length === 0) {
+  };
+
+  const handleCheckOut = async () => {
+    if (Object.keys(selectedAddress).length === 0) {
+      ToastAndroid.show('Please select address', ToastAndroid.SHORT);
+      return;
+    }
+    if (Object.keys(paymentCardSelected).length === 0) {
       ToastAndroid.show('Please select payment method', ToastAndroid.SHORT);
-      return
+      return;
     }
 
     const newOrder = {
@@ -56,15 +78,35 @@ export const CheckoutScreen = ({ route }) => {
       deliveryFees: deliveryFees,
       selectedAddress: selectedAddress,
       paymentCardSelected: paymentCardSelected,
+    };
+
+    let updatedOrders = [...orders, newOrder];
+
+    const userDocRef = firebase.firestore().collection('users').doc(userInfo.uid);
+    const userOrdersDocRef = userDocRef.collection('userOrders').doc('userOrdersList');
+    setLoading(true);
+    try {
+      const docSnap = await userOrdersDocRef.get();
+      if (docSnap.exists) {
+        const data = docSnap.data();
+
+        const userOrdersList = data.userOrdersList || [];
+
+        updatedOrders = [...userOrdersList, newOrder];
+        const updatedData = { ...data, userOrdersList: updatedOrders };
+        await userOrdersDocRef.update(updatedData);
+        await emptyCartList()
+      } else {
+        await userOrdersDocRef.set({ userOrdersList: updatedOrders });
+        await emptyCartList()
+      }
+      // navigation.navigate('successScreen');
+    } catch (error) {
+      console.log('Error!! DocSnap for userOrders does not exist!!!', error);
+    } finally {
+      setLoading(false);
     }
-
-    const updatedOrders = [...orders, newOrder];
-    saveOrders(updatedOrders);
-
-    setCartProductList([])
-    saveCartProductList([]);
-    navigation.navigate('successScreen')
-  }
+  };
 
   useEffect(() => {
     if (paymentCardSelected && paymentCardSelected.cardNumber) {
@@ -75,7 +117,7 @@ export const CheckoutScreen = ({ route }) => {
   }, [paymentCardSelected]);
 
   return (
-    <View style={styles.mainView()}>
+    <Screen style={styles.mainView()} loading={loading} bgColor={color.primary} translucent={true}>
       <View style={styles.topView()}>
         <StatusBar translucent backgroundColor={color.primary} />
         <Header
@@ -186,6 +228,6 @@ export const CheckoutScreen = ({ route }) => {
           onPress={handleCheckOut}
         />
       </View>
-    </View>
+    </Screen>
   )
 }

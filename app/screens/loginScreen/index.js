@@ -135,7 +135,7 @@ export const LoginScreen = () => {
   // }
 
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!handleValidations()) {
       return;
     }
@@ -143,42 +143,46 @@ export const LoginScreen = () => {
     const email = inputField?.email;
     const password = inputField?.password;
 
-    setLoading(true)
-    try {
-      const userCredential = await auth().signInWithEmailAndPassword(email, password);
-      const user = userCredential.user;
-
-      const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-      const userData = userDoc.data();
-      ToastAndroid.show('User Logged In', ToastAndroid.SHORT)
-      dispatch(setUser({ uid: user.uid, email: user.email, name: userData.name }));
-      setInputField({
-        email: '',
-        password: '',
+    auth().signInWithEmailAndPassword(email, password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        return firebase.firestore().collection('users').doc(user.uid).get()
+          .then((userDoc) => {
+            const userData = userDoc.data();
+            ToastAndroid.show('User Logged In', ToastAndroid.SHORT);
+            dispatch(setUser({ uid: user.uid, email: user.email, name: userData.name }));
+            setInputField({
+              email: '',
+              password: '',
+            });
+            setErrors({
+              email: '',
+              username: '',
+              password: ''
+            });
+            navigation.navigate('bottomStackNavigation');
+          });
       })
-      setErrors({
-        email: '',
-        username: '',
-        password: ''
-      })
-      navigation.navigate('bottomStackNavigation')
-    }
-    catch (error) {
-      console.error(error);
-      if(error.code === 'auth/invalid-email') {
-        setLoading(false);
-        ToastAndroid.show('Invalid Email!', ToastAndroid.SHORT);
-      }
+      .catch((error) => {
 
-      if(error.code === 'auth/weak-password') {
+        console.log(error.code)
+        switch (error.code) {
+          case 'auth/invalid-credential':
+            ToastAndroid.show('Invalid Credentials', ToastAndroid.SHORT);
+            break;
+          case 'auth/weak-password':
+            ToastAndroid.show('Password must be at least 6 characters!', ToastAndroid.SHORT);
+            break;
+          default:
+            ToastAndroid.show('An error occurred!', ToastAndroid.SHORT);
+            break;
+        }
+      })
+      .finally(() => {
         setLoading(false);
-        ToastAndroid.show('Password must be atleast 6 characters!', ToastAndroid.SHORT);
-      }
-    }
-    finally {
-      setLoading(false)
-    }
+      });
   };
+
 
 
   const handleHeaderBackPress = () => {

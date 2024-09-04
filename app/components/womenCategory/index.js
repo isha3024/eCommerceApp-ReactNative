@@ -7,6 +7,7 @@ import { Text } from '../text'
 import { color, images } from '../../theme'
 import * as styles from './styles'
 import { Screen } from '../screen'
+import { useMainContext } from '../../contexts/MainContext'
 
 const womenData = [
   {
@@ -50,9 +51,11 @@ const womenData = [
 export const WomenCategories = () => {
 
   const navigation = useNavigation();
+  const { setCategoryUrl } = useMainContext();
 
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState([]);
+
 
   const loadCategories = async () => {
     const options = {
@@ -77,7 +80,8 @@ export const WomenCategories = () => {
   }
 
   const handleCategory = (item) => {
-    navigation.navigate('catalogeScreen', { categoryUrl: item });
+    setCategoryUrl(item);
+    navigation.navigate('catalogeScreen');
   }
 
   useEffect(() => {

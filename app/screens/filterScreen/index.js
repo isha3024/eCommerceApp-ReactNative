@@ -58,19 +58,26 @@ export const FilterScreen = ({route}) => {
     setSelectCategory([]);
     setMinValue(MIN_DEFAULT);
     setMaxValue(MAX_DEFAULT);
+    resetFilters()
     navigation.goBack()
   }
 
   const applyFilters = () => {
-    const filters = {
+    updateFilters({
       colors: selectColors,
       size: selectSize,
       category: selectCategory,
-      priceRange: [minValue, maxValue],
-      brands: selectedBrands
-    };
-    setFilters(filters)
-    navigation.navigate('catalogeScreen', {appliedFilters: filters})
+      brands: selectedBrands,
+      priceRange: [low, high],
+    });
+    setFilters({
+      colors: selectColors,
+      size: selectSize,
+      category: selectCategory,
+      brands: selectedBrands,
+      priceRange: [low, high],
+    })
+    navigation.goBack()
   }
 
   useEffect(() => {
