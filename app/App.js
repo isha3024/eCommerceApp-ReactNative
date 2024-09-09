@@ -2,14 +2,18 @@ import React, { useEffect } from 'react';
 import { LogBox, SafeAreaView, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PersistGate } from 'redux-persist/integration/react';
+import { LogLevel, OneSignal } from 'react-native-onesignal';
 import { Provider, useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging'
 
 import { LocalizationProvider } from './contexts';
 import { MainContextProvider } from './contexts/MainContext';
+import { OneSignalProvider } from './contexts/OneSignalContext';
 import { MainStackNavigation } from './navigation';
 import { color, fonts, size } from './theme';
 import { persistor, store } from './redux';
+import { ONE_SIGNAL_APP_ID } from './config'
 
 
 
@@ -25,6 +29,14 @@ const App = () => {
     }
   },[])
 
+  useEffect(() => {
+    OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+
+    // OneSignal.setLogLevel(LogLevel.Verbose);
+    OneSignal.initialize(ONE_SIGNAL_APP_ID);
+    OneSignal.Notifications.requestPermission(true);
+  }, []);
+
   return (
     <MainContextProvider>
       <Provider store={store}>
@@ -32,9 +44,11 @@ const App = () => {
           <GestureHandlerRootView>
             <SafeAreaView style={styles.container}>
               <LocalizationProvider>
-                {/* <Text>App</Text> */}
-                <MainStackNavigation />
-                {/* <DemoScreen /> */}
+                <OneSignalProvider>
+                  {/* <Text>App</Text> */}
+                  <MainStackNavigation />
+                  {/* <DemoScreen /> */}
+                </OneSignalProvider>
               </LocalizationProvider>
             </SafeAreaView>
           </GestureHandlerRootView>

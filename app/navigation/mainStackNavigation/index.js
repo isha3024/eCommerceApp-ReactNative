@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { Alert, Linking, Platform, ToastAndroid } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import { OneSignal } from 'react-native-onesignal';
 import NetInfo from "@react-native-community/netinfo";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { AddNewAddressScreen, AddressScreen, BrandScreen, CameraScreen, CaptureImageScreen, CheckoutScreen, DemoScreen, FilterScreen, ImagesScreen, MainProductScreen, NoNetworkScreen, PaymentMethodScreen, RatingsReviewsScreen, SettingsScreen, SplashScreen, SuccessScreen } from '../../screens';
 import { AuthStackNavigation } from '../authStackNavigation';
 import { BottomStackNavigation } from '../bottomStackNavigation';
-import { ToastAndroid } from 'react-native';
+import axios from 'axios';
+import { useNotificationContext } from '../../contexts/OneSignalContext';
+import { sendNotification } from '../../utils/functions';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +23,33 @@ export const MainStackNavigation = () => {
 
   const [showSplashScreen, setHideSplashScreen] = useState(true);
   const [isConnected, setIsConnected] = useState(true);
+  const { isPermissionGranted } = useNotificationContext();
 
+  const openNotificationSetting = () => {
+    if(Platform.OS === 'android') {
+      Linking.openSettings();
+    }
+  }
+
+  useEffect(() => {
+    if(!isPermissionGranted) {
+      Alert.alert(
+        'Enable Notifications',
+        'This app needs notifications to keep you informed. Please enable notifications in your device settings.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {text: 'OK', onPress: () => openNotificationSetting()}
+        ]
+      )
+    }else {
+      // Only send notification if permission is granted
+      OneSignal.User.pushSubscription.getIdAsync().then((subscriptionId) => {
+        if (subscriptionId) {
+          sendNotification(subscriptionId);
+        }
+      });
+    }
+  },[isPermissionGranted])
 
 
   useEffect(() => {

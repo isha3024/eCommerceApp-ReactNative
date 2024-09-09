@@ -1,7 +1,7 @@
-import { BASE_URL } from '@env';
-console.log('🚀 ~ BASE_URL:', BASE_URL);
-console.log('🚀 ~ BASE_URL:', BASE_URL);
+import { BASE_URL, ONE_SIGNAL_APP_ID, ONE_SIGNAL_API_KEY } from '@env';
 
 module.exports = {
-  BASE_URL: BASE_URL
+  BASE_URL: BASE_URL,
+  ONE_SIGNAL_APP_ID: ONE_SIGNAL_APP_ID,
+  ONE_SIGNAL_API_KEY: ONE_SIGNAL_API_KEY,
 };

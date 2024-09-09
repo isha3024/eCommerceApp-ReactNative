@@ -11,6 +11,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { clearFavorites, clearUser } from '../../redux';
 import { useMainContext } from '../../contexts/MainContext';
 import * as styles from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ProfileScreen = () => {
 
@@ -60,6 +61,8 @@ export const ProfileScreen = () => {
       await auth().signOut();
       dispatch(clearUser());
       dispatch(clearFavorites())
+      await AsyncStorage.removeItem('paymentCardDetails');
+      await AsyncStorage.removeItem('addresses');
       ToastAndroid.show('User loggged out', ToastAndroid.SHORT);
       navigation.navigate('authStackNavigation');
     } catch (error) {

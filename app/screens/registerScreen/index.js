@@ -3,16 +3,20 @@ import { Animated, Platform, StatusBar, TouchableOpacity, UIManager, View, Keybo
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
+import { OneSignal } from 'react-native-onesignal'
 import auth, { firebase } from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
-import { EmailValidation } from '../../utils/functions'
+
+import { EmailValidation, sendNotification, sendNotificationToUser } from '../../utils/functions'
+import { ONE_SIGNAL } from '../../config'
 import { uploadNewUserToFireStore } from '../../firebase'
+import { useNotificationContext } from '../../contexts/OneSignalContext'
+import { useMainContext } from '../../contexts/MainContext'
 import { setUser } from '../../redux'
 import { Button, Header, InputField, Text } from '../../components'
 import { IcBackArrow, IcCheck, IcClose, IcFacebook, IcForwardArrow, IcGoogle, color, size } from '../../theme'
 import * as styles from './styles'
-import { useMainContext } from '../../contexts/MainContext'
 
 
 if(Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental){
@@ -23,20 +27,17 @@ export const RegisterScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { isPermissionGranted } = useNotificationContext();
   const shakeAnim = useRef(new Animated.Value(0)).current;
-  const userInfo = useSelector(state => state.authUser.userInfo);
-
-  const { setCurrentUser} = useMainContext()
+  const { userInfo } = useSelector(state => state.authUser);
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [isNameValid, setIsNameValid] = useState(false)
-  // const [isUsernameValid, setIsUsernameValid] = useState(false)
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [inputField, setInputField] = useState({
     name: '',
-    // username: '',
     email: '',
     password: ''
   })
@@ -142,8 +143,28 @@ export const RegisterScreen = () => {
 
   //handle submit function using firebase/auth
   
+  // const sendPushNotification = async (userUID) => {
+  //   const notificationData = {
+  //     app_id: "e021a68b-28d9-45da-9be9-c6325b954c97",
+  //     include_external_user_ids: [userUID],
+  //     headings: { "en": "Welcome!" },
+  //     contents: { "en": "Thank you for registering!" }
+  //   };
+
+  //   try {
+  //     const response = await axios.post('https://onesignal.com/api/v1/notifications', notificationData, {
+  //       headers: {
+  //         'Authorization': `Basic NjVkZTFhOGQtMGQ3ZS00MDU4LThhMTMtNmM1ZTA1ODAwNjU5`,  // Add your REST API Key here
+  //         'Content-Type': 'application/json'
+  //       }
+  //     });
+  //     console.log('Push notification sent successfully:', response.data);
+  //   } catch (error) {
+  //     console.error('Error sending push notification:', error);
+  //   }
+  // }
   
-  const handleSubmit = () => {
+  const handleSubmit =  () => {
     if (!validateForm()) {
       return;
     }
@@ -173,7 +194,8 @@ export const RegisterScreen = () => {
               username: '',
               password: ''
             });
-            navigation.navigate('bottomStackNavigation');
+            // navigation.navigate('bottomStackNavigation');
+            ToastAndroid.show('Congrats, You have registered successfully!', ToastAndroid.SHORT);
           });
       })
       .catch((error) => {
@@ -198,8 +220,7 @@ export const RegisterScreen = () => {
       .finally(() => {
         setLoading(false);
       });
-  };
-  
+  };  
 
   const googleButtonSignIn = async () => {
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true});
@@ -246,6 +267,15 @@ export const RegisterScreen = () => {
     }
   },[userInfo])
 
+  useEffect(() => {
+      OneSignal.User.pushSubscription.getIdAsync().then(res => {
+        console.log(
+          '🚀 ~ OneSignal.User.pushSubscription.getIdAsync ~ res:',
+          res,
+        );
+      });
+  }, [navigation]);
+
   return ( 
     <View style={styles.mainView()}>
       <View style={styles.topContainer()}>
@@ -283,29 +313,6 @@ export const RegisterScreen = () => {
             : (<Text style={styles.noError()}></Text>)
           }
         </Animated.View>
-        {/* <Animated.View style={[styles.inputView(), errors.username && { transform: [{ translateX: shakeAnim }] }]}>
-          <InputField 
-            error={errors.username}
-            value={inputField?.username}
-            placeholder={'Username'}
-            label={'Username'}
-            autoCapitalize='none'
-            onChangeText={(val) => handleChange(val, 'username')}
-            editable={true}
-            keyboardType='default'
-            icon
-            iconPlace='right'
-            renderRightIcon={() => (
-            errors.username 
-            ? (<IcClose width={size.moderateScale(24)} height={size.moderateScale(24)} color={color.error} />)
-            : isNameValid && (<IcCheck width={size.moderateScale(24)} height={size.moderateScale(24)} />) 
-            )}
-          />
-          {errors.username ? 
-            (<Text style={styles.errorText()}>{errors.username}</Text>) 
-            : (<Text style={styles.noError()}></Text>)
-          }
-        </Animated.View> */}
         <Animated.View style={[styles.inputView(), errors.email &&  { transform: [{ translateX: shakeAnim }] }]}>
         <InputField 
           error={errors.email}
@@ -354,7 +361,6 @@ export const RegisterScreen = () => {
           <Text style={styles.text()}>Already have an account?</Text>
           <IcForwardArrow width={size.moderateScale(15)} height={size.moderateScale(10)} />
         </TouchableOpacity>
-        {/* <Button btnStyle={styles.buttonWithText()} title={'SIGN UP'} disabled={false} onPress={() => navigation.navigate('Login')} /> */}
         <Button 
           activeOpacity={0.8} 
           btnStyle={styles.buttonWithText()} 

@@ -181,10 +181,6 @@ export const DemoScreen = () => {
     checkPermissionGranted()
   }, [])
 
-  // useEffect(() => {
-  //   getLocation()
-  // }, [])
-
 
   return (
     <Screen bgColor={color.transparent} style={styles.mainView()} translucent={true}>

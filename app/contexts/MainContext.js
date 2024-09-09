@@ -255,7 +255,7 @@ export const MainContextProvider = props => {
     favoriteProductIds, setFavoriteProductIds,
     saveProducts, fetchProducts,
     addresses, setAddresses,
-    saveAddress, getAddressesFromStorage,
+    saveAddress, getAddressesFromStorage, 
     saveFavoriteProducts, loadFavoriteProductsFromStorage,
     updateFilters, resetFilters,
     selectedAddress, setSelectedAddress,

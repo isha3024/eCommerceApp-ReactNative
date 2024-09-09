@@ -1,10 +1,62 @@
-import {API_URL} from '../../config';
+import { ToastAndroid } from 'react-native';
 import moment from 'moment';
+import axios from 'axios';
+
+import { API_URL, ONE_SIGNAL_API_KEY, ONE_SIGNAL_APP_ID } from '../../config'
 
 // INFO: all global functions will be added here
 export const sum = (a, b) => {
   return a + b;
 };
+
+export const createUserInOneSignal = async () => {
+  const options = {
+    amethod: 'POST',
+    url: `https://api.onesignal.com/apps/e021a68b-28d9-45da-9be9-c6325b954c97/users`,
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'Authorization': `Basic NjVkZTFhOGQtMGQ3ZS00MDU4LThhMTMtNmM1ZTA1ODAwNjU5`
+    }
+  }
+
+  axios
+    .request(options)
+    .then((response) => {
+      console.log("axios post response: ", response.data);
+      ToastAndroid.show('User Created', ToastAndroid.SHORT);
+    })
+    .catch((error) => {
+      console.log("axios post error: ", error)
+      ToastAndroid.show('Error Occured', ToastAndroid.SHORT);
+    })
+
+}
+
+export const sendNotification = async (subscriptionId, externalId) => {
+  const headers = {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Authorization': `Basic ${ONE_SIGNAL_API_KEY}`
+  };
+
+  const data = {
+    app_id: ONE_SIGNAL_APP_ID,
+    include_player_ids: [subscriptionId],
+    external_id: externalId,
+    headings: { "en": "Welcome!" },
+    contents: { "en": "Thank you for registering with our app!" }
+  };
+
+  try {
+    const response = await axios.post('https://onesignal.com/api/v1/notifications', data, { headers });
+    console.log('Notification sent:', response.data);
+  } catch (error) {
+    console.error('Error sending notification:', error);
+  }
+};
+
+
+
 // ** allow only number value
 export const NumberValidation = val => {
   let alphaNumericRegex = /^([0-9])*$/;
@@ -20,6 +72,7 @@ export const StringValidation = val => {
   let characterRegex = /^[a-zA-Z\s?.?]*$/;
   return characterRegex.test(val);
 };
+
 export const passwordValidation = val => {
   passwordPattern =
     /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!%*?&]{8,})$/;
@@ -27,7 +80,7 @@ export const passwordValidation = val => {
 };
 export const formatCreditCardNumber = input => {
   const numericInput = input.replace(/(.{4})/g, '$1 ');
-  let formattedInput = numericInput.replace(numericInput,`**** **** **** ${numericInput.slice(-5)}`);
+  let formattedInput = numericInput.replace(numericInput, `**** **** **** ${numericInput.slice(-5)}`);
   return formattedInput;
 };
 export const invertColor = color => {
